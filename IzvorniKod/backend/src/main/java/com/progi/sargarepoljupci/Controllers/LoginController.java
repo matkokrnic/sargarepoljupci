@@ -7,7 +7,7 @@ import com.progi.sargarepoljupci.Services.KorisnikService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -19,12 +19,11 @@ public class LoginController {
     private final KorisnikService korisnikService;
 
     private final KorisnikRepository korisnikRepository;
-    private final BCryptPasswordEncoder encoder;
+    private final PasswordEncoder encoder;
     @Autowired
-    public LoginController(KorisnikService userService, KorisnikRepository korisnikRepository, BCryptPasswordEncoder encoder) {
-        this.korisnikService = userService;
+    public LoginController(KorisnikService korisnikService, KorisnikRepository korisnikRepository, PasswordEncoder encoder) {
+        this.korisnikService = korisnikService;
         this.korisnikRepository = korisnikRepository;
-
         this.encoder = encoder;
     }
 
