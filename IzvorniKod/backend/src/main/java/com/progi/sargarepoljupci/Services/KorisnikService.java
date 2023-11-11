@@ -2,27 +2,29 @@ package com.progi.sargarepoljupci.Services;
 
 import com.progi.sargarepoljupci.Models.Korisnik;
 import com.progi.sargarepoljupci.Repository.KorisnikRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class KorisnikService {
 
     private final KorisnikRepository korisnikRepository;
-    private final BCryptPasswordEncoder encoder;
+    private final PasswordEncoder passwordEncoder;
 
-    public KorisnikService(KorisnikRepository korisnikRepository, BCryptPasswordEncoder encoder) {
+    @Autowired
+    public KorisnikService(KorisnikRepository korisnikRepository, PasswordEncoder passwordEncoder) {
         this.korisnikRepository = korisnikRepository;
-        this.encoder = encoder;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public boolean doesKorisnikExist(String email){
         return korisnikRepository.existsByEmail(email);
     }
 
-    public void createUser(Korisnik korisnik) {
+    public void createKorisnik(Korisnik korisnik) {
 
-        String encodedPassword = encoder.encode(korisnik.getLozinka());
+        String encodedPassword = passwordEncoder.encode(korisnik.getLozinka());
         korisnik.setLozinka(encodedPassword);
 
         korisnikRepository.save(korisnik);
