@@ -450,14 +450,14 @@
 	
 						\item \textbf{Glavni sudionik: }Klijent
 						\item  \textbf{Cilj:} Platiti parkiranje
-						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Sudionici:} Baza podataka, Voditelj parkirališta
 						\item  \textbf{Preduvjet:} Klijent je prijavljen, parkiralište se plača aplikacijom
 						\item  \textbf{Opis osnovnog tijeka:}
 						
 						\item[] \begin{packed_enum}
 	
-							\item Uzme se određena svota iz računa Klijenta
-							\item Novo stanje se spremi u bazu podataka
+							\item Uzme se određena količina iz računa Klijenta
+							\item Stavlja se na račun Voditelja parkirališta koje se rezervira
 							\item Rezervacija se označi plačenom 
 							
 							
@@ -693,7 +693,7 @@
 						\item[] \begin{packed_enum}
 	
 							\item Izabere se opcija prikaza statistike za parkiralište
-							\item Prikazuje se statistika zauzetosti mjesta dotičnog parkirališta u obliku grafa
+							\item Prikazuje se statistika zauzetosti mjesta dotičnog parkirališta
 							
 							
 						\end{packed_enum}
@@ -719,5 +719,13 @@
 			\textbf{\textit{dio 1. revizije}}\\
 		 
 			 \textit{Nefunkcionalni zahtjevi i zahtjevi domene primjene dopunjuju funkcionalne zahtjeve. Oni opisuju \textbf{kako se sustav treba ponašati} i koja \textbf{ograničenja} treba poštivati (performanse, korisničko iskustvo, pouzdanost, standardi kvalitete, sigurnost...). Primjeri takvih zahtjeva u Vašem projektu mogu biti: podržani jezici korisničkog sučelja, vrijeme odziva, najveći mogući podržani broj korisnika, podržane web/mobilne platforme, razina zaštite (protokoli komunikacije, kriptiranje...)... Svaki takav zahtjev potrebno je navesti u jednoj ili dvije rečenice.}
+			 \begin{packed_enum}
+
+				\item Koristiti OSRM za dohvat rute na mapi
+				\item Koristiti Overpass API za dohvat početne informacije o parkirališnim mjestima
+				\item Sustav mora biti implementiran kao web aplikacija koristeći isključivo objektno-orijentirane jezike
+				\item Statistika parkirališta se prikazuje u obliku grafa
+				
+			 \end{packed_enum}
 			 
 			 
