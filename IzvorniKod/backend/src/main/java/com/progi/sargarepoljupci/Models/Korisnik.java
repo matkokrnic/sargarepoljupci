@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
@@ -14,23 +15,23 @@ public class Korisnik {
 
     @Id
     @GeneratedValue
-    private Long KorisnikID;
+    private Long korisnikID;
 
-    private String KorisnickoIme;
-    private String Lozinka;
+    private String korisnickoIme;
+    private String lozinka;
 
     @Email
     private String email;
 
 
-    private String IBAN;
+    private String iban;
 
 
-    private String Ime;
-    private String Prezime;
+    private String ime;
+    private String prezime;
 
 
-    private String SlikaOsobne;
+    private String slikaOsobne;
 
 
 
