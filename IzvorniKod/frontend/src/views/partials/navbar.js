@@ -1,41 +1,55 @@
-function Navbar(){
+// Funkcija koja definira Navbar komponentu
+function Navbar() {
+    // Provjera je li korisnik prijavljen (pretpostavka da je prijavljen ako postoji korisničko ime u localStorage-u)
     let isLoggedIn = true;
-
-
+  
     if (localStorage.getItem("username") == null) {
-        isLoggedIn = false;
+      isLoggedIn = false;
     }
-
+  
+    // Funkcija za odjavu korisnika
     function logout() {
-        localStorage.removeItem("username");
-        window.location.href = "/";
+      localStorage.removeItem("username");
+      // Preusmjeravanje korisnika na početnu stranicu nakon odjave
+      window.location.href = "/";
     }
-
+  
+    // Inicijalizacija varijabli koje će sadržavati elemente ovisno o tome je li korisnik prijavljen
+    let welcomeText, logoutButton, loginButton, registerButton;
+  
+    // Ako je korisnik prijavljen, postavi tekst dobrodošlice i gumb za odjavu
     if (isLoggedIn) {
-        var welcomeText = <span className = "welcome-text">Pozdrav, {localStorage.getItem("username")}</span>
-        var logoutButton = <button className="button-secondary button" onClick={logout}>Odjava</button>
+      welcomeText = <span className="welcome-text">Pozdrav, {localStorage.getItem("username")}</span>;
+      logoutButton = <button className="button-secondary button" onClick={logout}>Odjava</button>;
     } else {
-        var loginButton = <a href="/login"><button className="button-secondary button">Prijava</button></a>
-        var registerButton = <a href="/register"><button className="button button-primary">Pridruži se</button></a>
+      // Ako korisnik nije prijavljen, postavi gumbe za prijavu i registraciju
+      loginButton = <a href="/login"><button className="button-secondary button">Prijava</button></a>;
+      registerButton = <a href="/register"><button className="button button-primary">Pridruži se</button></a>;
     }
-
-    return(
+  
+    // JSX za prikaz navbara
+    return (
       <div className="navbar-container">
-          <div className="navbar-logo-container">
-            <img src="/images/carlogo.png" className="navbar-logo"/>
-              <span className="navbar-logo-text" alt="logo">SpotPicker</span>
-          </div>
-          <div className="navbar-links">
-              {welcomeText}
-            <a href="/" className="navbar-text navbar-link">Kontakt</a>
-            <a href="/" className="navbar-text navbar-link">Zahtjevi</a>
-            <a href="/" className="navbar-text navbar-link">Oglasi</a>
-              {logoutButton}
-              {loginButton}
-              {registerButton}
-          </div>
+        {/* Logo i naziv aplikacije */}
+        <div className="navbar-logo-container">
+          <img src="/images/carlogo.png" className="navbar-logo" alt="logo" />
+          <span className="navbar-logo-text" alt="logo">SpotPicker</span>
+        </div>
+  
+        {/* Navigacijske poveznice */}
+        <div className="navbar-links">
+          {welcomeText}
+          <a href="/" className="navbar-text navbar-link">Kontakt</a>
+          <a href="/" className="navbar-text navbar-link">Zahtjevi</a>
+          <a href="/" className="navbar-text navbar-link">Oglasi</a>
+          {logoutButton}
+          {loginButton}
+          {registerButton}
+        </div>
       </div>
     );
-}
-
-export default Navbar;
+  }
+  
+  // Izvoz Navbar komponente kako bi se mogla koristiti u drugim dijelovima aplikacije
+  export default Navbar;
+  
