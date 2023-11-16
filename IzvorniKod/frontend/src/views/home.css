@@ -1,0 +1,120 @@
+.home-title {
+    color: white;
+    font-size: 5vmin;
+    line-height: 1.2;
+  }
+  
+  .home-subtitle {
+    color: var(--color-nude);
+    font-size: 1;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  
+  .home-description {
+    color: white;
+    font-size: 2vmin;
+    line-height: 1.5;
+    padding-bottom: 5vh;
+  }
+  
+  .home-secondary-title {
+    font-size: 4.5vmin;
+    padding-bottom: 3vh;
+  }
+  
+  .home-secondary-text {
+    font-size: 2vmin;
+    line-height: 1.5;
+  }
+  
+  
+  
+  /* CONTAINERS */
+  .home-text-content {
+    height: 100vh;
+    width: 60vw;
+    display: flex;
+    flex-direction: column;
+    padding-top: 25vh;
+    padding-left: 7vw;
+    margin: 0;
+  }
+  
+  .home-background-border-storm{
+    width: 60%;
+    border-style: solid;
+    border-color: var(--color-storm);
+    border-width: 0.2em;
+    border-radius: 50px;
+    padding: 3vmin;
+    padding-top: 1.5vh;
+    background-color: white;
+  }
+  
+  .home-button-container {
+    width: 50%;
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+    padding-top: 7vh;
+  }
+  
+  .home-main-image-container {
+    height: 100vh;
+    width: 40vw;
+    padding-top: 20vh;
+    padding-left: 5vw;
+  }
+  
+  .home-second-image-container {
+    height: 100vh;
+    width: 40vw;
+    padding-top: 20vh;
+    padding-left: 10vw;
+  }
+  
+  .home-third-image-container {
+    height: 100vh;
+    width: 40vw;
+    padding-top: 15vh;
+  }
+  
+  
+  
+  
+  /* IMAGES */
+  .home-main-image {
+    height: 60vh;
+    width: 27vw;
+    object-fit: cover;
+    border-style: solid;
+    border-color: white;
+    border-width: 0.1em;
+    border-radius: 5vmin;
+  }
+  
+  .home-second-image {
+    height: 60vh;
+    width: 30vw;
+    object-fit: cover;
+    border-radius: 5vmin;
+  
+  }
+  
+  .home-third-image {
+    height: 70vh;
+    width: 30vw;
+    object-fit: cover;
+    border-radius: 5vmin;
+  }
+  
+  
+  
+  
+  /* HAMBURGER MENU */
+  .home-burger-menu {
+    fill: var(--color-storm);
+    width: 2em;
+    height: 2em;
+  }
