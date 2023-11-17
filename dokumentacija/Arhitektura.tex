@@ -1,13 +1,54 @@
 \chapter{Arhitektura i dizajn sustava}
 		
-		\textbf{\textit{dio 1. revizije}}\\
+		
 
-		\textit{ Potrebno je opisati stil arhitekture te identificirati: podsustave, preslikavanje na radnu platformu, spremišta podataka, mrežne protokole, globalni upravljački tok i sklopovsko-programske zahtjeve. Po točkama razraditi i popratiti odgovarajućim skicama:}
-	\begin{itemize}
-		\item 	\textit{izbor arhitekture temeljem principa oblikovanja pokazanih na predavanjima (objasniti zašto ste baš odabrali takvu arhitekturu)}
-		\item 	\textit{organizaciju sustava s najviše razine apstrakcije (npr. klijent-poslužitelj, baza podataka, datotečni sustav, grafičko sučelje)}
-		\item 	\textit{organizaciju aplikacije (npr. slojevi frontend i backend, MVC arhitektura) }		
-	\end{itemize}
+		Arhitektura sustava je struktura sustava koja sadrži: elemente programa, njihove izvana vidljive karakteristike te odnose među njima.
+		Arhitektura sustava se dijeli na tri manja sustava:
+		\begin{packed_item}
+			\item[$\bullet$] Web poslužitelj
+			\item[$\bullet$] Web aplikacija
+			\item[$\bullet$] Baza podataka
+		\end{packed_item}
+		
+	
+		
+		\underbar {\textit {Web preglednik}} je program preko kojega korisnik može pregledavati web-stranice te multimedijalne sadržaje od tih web-stranica. Web-stranica je napisana u kodu koji web preglednik prevodi tako da svatko razumije web-stranicu. Web preglednik također služi kao kanal između korisnika i web poslužitelja.
+		
+		
+		\underbar {\textit {Web poslužitelj}} služi za komunikaciju između klijenta i aplikacije. Ta komunikacija se odvija preko HTTP-a. HTTP je protokol koji se koristi za prijenos podataka na webu. Web poslužitelj također pokreće web aplikaciju i prosljeđuje joj zahtjeve.
+		
+		
+		\underbar {\textit {Web aplikacija}} obrađuje zahtjeve od korisnika, a za pojedine zahtjeve ona pristupa bazi podataka nakon čega se odgovor šalje korisniku putem web poslužitelja te web preglednika u HTML obliku.
+
+
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.75\textwidth]{slike/arhitektura_sustava.PNG} 
+			\caption{Arhitektura sustava}
+			\label{fig:promjene1} 
+		\end{figure}
+		
+		
+		U našemu sustavu za razvoj radnog okvira na poslužiteljskoj strani (backend-u) odlučili smo koristiti \textit {Spring Boot}, a na klijentskoj strani (frontend-u) smo odlučili koristiti \textit {React}. Programske jezike za koje smo se odlučili su \textit {Java} i \textit {JavaScript}.
+		
+		
+		Korišteni razvojni okvir Spring se služi tzv. MVC arhitekturom. Takva arhitektura podrazumijeva sljedeću podjelu:
+		\begin{itemize}
+			\item[$\bullet$] \textbf{Model}: Središnja komponenta sustava, dohvat te manipulacija podataka
+			\item[$\bullet$] \textbf{View}: dostupni razni prikazi podataka (tablično, grafom)
+			\item[$\bullet$] \textbf{Controller}: upravlja zahtjevima korisnika te na temelju njih izvodi daljnju interakciju s ostalim komponentama
+		\end{itemize}
+		
+		\vspace{3cm}
+		
+		Naša web aplikacija koristi višeslojni stil arhitekture. Prednosti višeslojnog stila arhitekture su brojne:
+		
+		\begin{packed_item}
+			\item[$\bullet$] olakšava razvoj programa
+			\item[$\bullet$] timovi se mogu raspodijeliti na razvoj zasebnih slojeva arhitekture
+			\item[$\bullet$] podjela briga odnosno svaki sloj se mora brinuti za samo svoju zadaću
+			\item[$\bullet$] moguće je jednostavno povećanje i poboljšanje sustava
+		\end{packed_item}
 
 	
 		

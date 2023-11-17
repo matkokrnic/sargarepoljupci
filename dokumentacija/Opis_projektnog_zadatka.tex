@@ -12,7 +12,7 @@
 			\item dohvaćanje početnih informacija o stanju parkirališnih mjesta pri čemu se koristi overpass API
 		\end{packed_item}
 		 
-		Aplikacija se može pokrenuti bez registracije, no za pristup svim alatima aplikacije, potrebna je registracija. Korisnici koji nisu registrirani mogu na karti vidjeti sva dostupna parkirališta i parkirališna mjesta, ali nemaju informacije u njihovom stanju u stvarnom vremenu. Neregistrirani korisnik koji se želi registrirati šalje zahtjev za registraciju pri čemu ima ima opciju birati između dvije uloge (voditelj parkirališta i klijent). Za registraciju su potrebni:
+		Aplikacija se može pokrenuti bez registracije, no za pristup svim alatima aplikacije, potrebna je registracija. Korisnici koji nisu registrirani mogu na karti vidjeti sva dostupna parkirališta i parkirališna mjesta, ali nemaju informacije u njihovom stanju u stvarnom vremenu. Neregistrirani korisnik koji se želi registrirati šalje zahtjev za registraciju pri čemu ima opciju birati između dvije uloge (voditelj parkirališta i klijent). Za registraciju su potrebni:
 		\begin{packed_item}
 			\item korisničko ime
 			\item ime
@@ -24,7 +24,7 @@
 		
 		Za registraciju kao klijent dovoljna je samo potvrda preko email adrese. Ako je riječ o voditelju parkirališta tada je potrebna i potvrda administratora. Registrirani korisnici također imaju mogućnost pregledavanja te izmjene vlastitih podataka, uključujući i opciju da obrišu svoj račun.
 		
-		  \underbar {\textit {Klijent}} otvaranjem aplikacije dobiva pregled nad kartom te odabire lokaciju odredišta, tip vlastitog vozila, i trajanje parkiranja. Klijent može rezervirati parkirališno mjesto na dva načina. Može prvo označiti parkirališna mjesta koja mu odgovaraju te mu tada aplikacija nudi moguće termine u kojima će ta mjesta biti slobodna. Druga opcija je da prvo definira odgovarajući termin nakon čega će mu aplikacija prikazati sva parkirališna mjesta koja su slobodna u tom terminu. Kada je klijent zadovoljan s parkirališnim mjestom, rezervira mjesto na proizvoljno vrijeme ako je slobodno te pri tome ima opciju da napravi rezervaciju ponavljajućom. Klijent jedino može rezervirati mjesto u budućnosti, odnosno, mjesto ne može biti rezervirano u istom datumu u kojem je korisnik otvorio aplikaciju. Plaćanje parkiranja korisnik obavlja tijekom rezervacije ili po dolasku na parkirališno mjesto. Plaćanje se obavlja preko novčanika koji je implementiran unutar aplikacije u koji korisnik može proizvoljno ubaciti novac. 
+		  \underbar {\textit {Klijent}} otvaranjem aplikacije dobiva pregled nad kartom te odabire lokaciju odredišta, tip vlastitog vozila, i trajanje parkiranja. Klijent može rezervirati parkirališno mjesto na dva načina. Može prvo označiti parkirališna mjesta koja mu odgovaraju te mu tada aplikacija nudi moguće termine u kojima će ta mjesta biti slobodna. Druga opcija je da prvo definira odgovarajući termin nakon čega će mu aplikacija prikazati sva parkirališna mjesta koja su slobodna u tom terminu. Aplikacija razlikuje parkirališna mjesta čije su razine različite te korisnik ima mogućnost odabira. Kada je klijent zadovoljan s parkirališnim mjestom, rezervira mjesto na proizvoljno vrijeme ako je slobodno te pri tome ima opciju da napravi rezervaciju ponavljajućom. Klijent jedino može rezervirati mjesto u budućnosti, odnosno, mjesto ne može biti rezervirano u istom datumu u kojem je korisnik otvorio aplikaciju. Plaćanje parkiranja korisnik obavlja tijekom rezervacije ili po dolasku na parkirališno mjesto. Plaćanje se obavlja preko novčanika koji je implementiran unutar aplikacije u koji korisnik može proizvoljno ubaciti novac. 
 		
 		 \underbar {\textit {Voditelj parkirališta}} ima veće ovlasti od klijenta. On ima dozvolu unijeti podatke o vlastitom parkiralištu koje uključuju:
 		  
@@ -37,12 +37,12 @@
 		 	\item cjenik i sl.
 		 \end{packed_item}
 		
-		\noindent Voditelj nad svojim parkiralištem može individualno ucrtati svako parkirališno mjesto prema vlastitim željama. Nakon što ucrta mjesta, on odlučuje je li mjesto dostupno za rezervaciju. Dodatno, voditelj postavlja i senzor koji služi za dohvaćanje informacije o zauzetosti mjesta. Za svoje parkiralište voditelj određuje cijenu rezervacije ovisnu o vremenu. Voditelj također ima i pristup statističkim podacima o svom parkiralištu. Moguće je promatrati zauzetost cijelog parkirališta te pojedinačnih parkirališnih mjesta kroz vrijeme pomoću grafa.
+		\noindent Voditelj nad svojim parkiralištem može individualno ucrtati svako parkirališno mjesto prema vlastitim željama. Nakon što ucrta mjesta, on odlučuje je li mjesto dostupno za rezervaciju. Dodatno, voditelj postavlja i senzor koji služi za dohvaćanje informacije o zauzetosti mjesta. Za svoje parkiralište voditelj određuje cijenu rezervacije ovisnu o vremenu. Voditelj također ima i pristup statističkim podacima o svom parkiralištu. Moguće je promatrati zauzetost cijelog parkirališta te pojedinačnih parkirališnih mjesta kroz vrijeme uz pomoć grafa.
 		
 		
 		\underbar {\textit {Administrator}} aplikacije ima najveće ovlasti i sposoban je vidjeti popis svih registriranih korisnika i njihovih osobnih podataka te im po potrebi može mijenjati osobne podatke.
 		
-		Motivacija za razvoj ovog projekta dolazi od mnogih prednosti koje aplikacija za parkiranje može donijeti u odnosu na klasičan način rezerviranja i plaćanja parkiranja. Za početak, korištenjem ove aplikacije korisniku se značajno smanjuje vrijeme potrebno za pronalaženje parkirališnog mjesta. Dodatno, plaćanje parkirališnog mjesta može biti izvor frustracije zbog korištenja kovanica i gomilanja sitniša ili zbog potrebe za vađenjem kartice. Aplikacija za taj problem nudi praktično rješenje implementacijom novčanika što omogućuje korisniku da sva svoja plaćanja obavi unaprijed preko mobilnog telefona. Jednostavnost i elegantnost ove aplikacije pomaže i pri smanjenju stresa kod korisnika. Pitanja poput: "Gdje ćemo parkirati?", "Smijem li ja parkirati na ovom mjestu?" ili "Ima li uopće slobodnih mjesta?" više neće biti razlog za brigu jer aplikacija obavlja svo razmišljanje za vas. Problem traženja parkirališnog mjesta u nepoznatom gradu će se svesti na samo par klikova na aplikaciji te će uštedjeti korisnicima i novac budući da neće gubiti vrijeme vozajući se po gradu, tražeći slobodno mjesto. Konačno, aplikacija pridonosi i okolišu jer manje vremena potrošeno na potražnju mjesta za parkiranje znači manje vremena koje trošimo na sagorijevanje goriva.
+		Motivacija za razvoj ovog projekta dolazi od mnogih prednosti koje aplikacija za parkiranje može donijeti u odnosu na klasičan način rezerviranja i plaćanja parkiranja. Za početak, korištenjem ove aplikacije korisniku se značajno smanjuje vrijeme potrebno za pronalaženje parkirališnog mjesta. Dodatno, plaćanje parkirališnog mjesta može biti izvor frustracije zbog korištenja kovanica i gomilanja sitniša ili zbog potrebe za vađenjem kartice. Aplikacija za taj problem nudi praktično rješenje implementacijom novčanika što omogućuje korisniku da sva svoja plaćanja obavi unaprijed preko mobilnog telefona. Jednostavnost i elegantnost ove aplikacije pomaže i pri smanjenju stresa kod korisnika. Pitanja poput: "Gdje ćemo parkirati?", "Smijem li ja parkirati na ovom mjestu?" ili "Ima li uopće slobodnih mjesta?" više neće biti razlog za brigu jer aplikacija obavlja sve razmišljanje za vas. Problem traženja parkirališnog mjesta u nepoznatom gradu će se svesti na samo par klikova na aplikaciji te će uštedjeti korisnicima i novac budući da neće gubiti vrijeme vozajući se po gradu, tražeći slobodno mjesto. Konačno, aplikacija pridonosi i okolišu jer manje vremena potrošeno na potražnju mjesta za parkiranje znači manje vremena koje trošimo na sagorijevanje goriva.
 		
 		Neke od aplikacija koje pružaju slična rješenja su:
 		\begin{packed_item}
@@ -58,121 +58,26 @@
 		 \textit {Parkopedia} je još jedna takva slična aplikacija. \textit {Parkopedia} koristi Google Maps kako bi iscrtala najbližu rutu korisniku. Razlika između našeg projekta i ove aplikacije je što \textit {Parkopedia} zahtijeva da se prvo unese adresa odredišta nakon čega nudi popis dostupnih parkirališta. \textit {Parkopedia} na prikazu karte daje opciju između prikazivanja parkirališnih mjesta na ulici i u garaži. Kao i kod \textit {SpotHero-a}, \textit {Parkopedia} ne nudi opciju za bicikle te pretraga prvo po terminu parkiranja nije moguća.
 		
 		\begin{figure}[H]
-			\includegraphics[width=\textwidth]{slike/spothero.PNG} %veličina u odnosu na širinu linije
+			\includegraphics[width=\textwidth]{slike/spothero.PNG} 
 			\caption{Prikaz aplikacije SpotHero}
-			\label{fig:promjene3} %label mora biti drugaciji za svaku sliku
+			\label{fig:promjene3} 
 		\end{figure}
 		
 		\begin{figure}[H]
-			\includegraphics[width=\textwidth]{slike/parkopedia_street.PNG} %veličina u odnosu na širinu linije
+			\includegraphics[width=\textwidth]{slike/parkopedia_street.PNG} 
 			\caption{Prikaz aplikacije Parkopedia s označenim parkiralištima na ulici}
-			\label{fig:promjene4} %label mora biti drugaciji za svaku sliku
+			\label{fig:promjene4} 
 		\end{figure}
 		
 		\begin{figure}[H]
-			\includegraphics[width=\textwidth]{slike/parkopedia_garage.PNG} %veličina u odnosu na širinu linije
+			\includegraphics[width=\textwidth]{slike/parkopedia_garage.PNG}
 			\caption{Prikaz aplikacije Parkopedia s označenim parkiralištima na garaži}
-			\label{fig:promjene5} %label mora biti drugaciji za svaku sliku
+			\label{fig:promjene5} 
 		\end{figure}
 		
-		Vjerujemo da našom aplikacijom možemo zainteresirati ljude koji su već upoznati s parking aplikacijama, ali smatraju da postoje područja u kojima trenutačno najpopularnije aplikacije nisu dovoljno prilagodljive korisničkim željama. Konačan plan i opseg ovog projekta je učiniti ovu aplikaciju dostupnu cijelom svijetu. Ovisno o potrebi i potražnji korisnika, aplikaciju je moguće u budućnosti i nadograditi funkcionalnostima koje druge aplikacije imaju poput mjesečnog rezerviranja parkiranja, razlikovanja parkirališnih mjesta po razini i slično.
+		Vjerujemo da našom aplikacijom možemo zainteresirati ljude koji su već upoznati s parking aplikacijama, ali smatraju da postoje područja u kojima trenutačno najpopularnije aplikacije nisu dovoljno prilagodljive korisničkim željama. Konačan plan i opseg ovog projekta je učiniti ovu aplikaciju dostupnu cijelom svijetu. Ovisno o potrebi i potražnji korisnika, aplikaciju je moguće u budućnosti i nadograditi funkcionalnostima koje druge aplikacije imaju poput mjesečnog rezerviranja parkiranja i slično.
 
 		
-		\section{Primjeri u \LaTeX u}
-		
-		\textit{Ovo potpoglavlje izbrisati.}\\
 
-		U nastavku se nalaze različiti primjeri kako koristiti osnovne funkcionalnosti \LaTeX a koje su potrebne za izradu dokumentacije. Za dodatnu pomoć obratiti se asistentu na projektu ili potražiti upute na sljedećim web sjedištima:
-		\begin{itemize}
-			\item Upute za izradu diplomskog rada u \LaTeX u - \url{https://www.fer.unizg.hr/_download/repository/LaTeX-upute.pdf}
-			\item \LaTeX\ projekt - \url{https://www.latex-project.org/help/}
-			\item StackExchange za Tex - \url{https://tex.stackexchange.com/}\\
-		
-		\end{itemize} 	
-
-
-		
-		\noindent \underbar{podcrtani tekst}, \textbf{podebljani tekst}, 	\textit{nagnuti tekst}\\
-		\noindent \normalsize primjer \large primjer \Large primjer \LARGE {primjer} \huge {primjer} \Huge primjer \normalsize
-				
-		\begin{packed_item}
-			
-			\item  primjer
-			\item  primjer
-			\item  primjer
-			\item[] \begin{packed_enum}
-				\item primjer
-				\item[] \begin{packed_enum}
-					\item[1.a] primjer
-					\item[b] primjer
-				\end{packed_enum}
-				\item primjer
-			\end{packed_enum}
-			
-		\end{packed_item}
-		
-		\noindent primjer url-a: \url{https://www.fer.unizg.hr/predmet/proinz/projekt}
-		
-		\noindent posebni znakovi: \# \$ \% \& \{ \} \_ 
-		$|$ $<$ $>$ 
-		\^{} 
-		\~{} 
-		$\backslash$ 
-		
-		
-		\begin{longtblr}[
-			label=none,
-			entry=none
-			]{
-				width = \textwidth,
-				colspec={|X[8,l]|X[8, l]|X[16, l]|}, 
-				rowhead = 1,
-			} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-			\hline \SetCell[c=3]{c}{\textbf{naslov unutar tablice}}	 \\ \hline[3pt]
-			\SetCell{LightGreen}IDKorisnik & INT	&  	Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  	\\ \hline
-			korisnickoIme	& VARCHAR &   	\\ \hline 
-			email & VARCHAR &   \\ \hline 
-			ime & VARCHAR	&  		\\ \hline 
-			\SetCell{LightBlue} primjer	& VARCHAR &   	\\ \hline 
-		\end{longtblr}
-		
-
-		\begin{longtblr}[
-				caption = {Naslov s referencom izvan tablice},
-				entry = {Short Caption},
-			]{
-				width = \textwidth, 
-				colspec = {|X[8,l]|X[8,l]|X[16,l]|}, 
-				rowhead = 1,
-			}
-			\hline
-			\SetCell{LightGreen}IDKorisnik & INT	&  	Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  	\\ \hline
-			korisnickoIme	& VARCHAR &   	\\ \hline 
-			email & VARCHAR &   \\ \hline 
-			ime & VARCHAR	&  		\\ \hline 
-			\SetCell{LightBlue} primjer	& VARCHAR &   	\\ \hline 
-		\end{longtblr}
-	
-
-
-		
-		
-		%unos slike
-		\begin{figure}[H]
-			\includegraphics[scale=0.4]{slike/aktivnost.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
-			\centering
-			\caption{Primjer slike s potpisom}
-			\label{fig:promjene}
-		\end{figure}
-		
-		\begin{figure}[H]
-			\includegraphics[width=\textwidth]{slike/aktivnost.PNG} %veličina u odnosu na širinu linije
-			\caption{Primjer slike s potpisom 2}
-			\label{fig:promjene2} %label mora biti drugaciji za svaku sliku
-		\end{figure}
-		
-		Referenciranje slike \ref{fig:promjene2} u tekstu.
-		
-		\eject
 		
 	
