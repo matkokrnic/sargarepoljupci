@@ -30,7 +30,7 @@ function Home() {
     <div className="page-container mandatory-scroll-snapping">
       {/* Postavljanje naslova stranice */}
       <Helmet>
-        <title>SpotPicker | Naslovnica</title>
+        <title>SpotPicker</title>
       </Helmet>
 
       {/* Uključivanje Navbar komponente */}
