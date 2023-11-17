@@ -55,14 +55,29 @@ function Login(){
 
     function onSubmit(e) {
         e.preventDefault()
-        //implementirati vezu s backendom ovdje
+        var bodyFormData = new FormData();
+        bodyFormData.append("korisnickoIme", form.username)
+        bodyFormData.append("lozinka", form.password)
+        axios({
+            method: "post",
+            url: "/api/login",
+            data: bodyFormData,
+            headers: { "Content-Type": "multipart/form-data" },
+        }).then(response => {
+            console.log(response)
+            localStorage.setItem("korisnickoIme", form.username)
+            window.location.href = "/";
+        }).catch(err => {
+            console.log(err);
+            alert(err.response.data.message)
+        });
     }
 
     return(
 
         <div className="page-container">
             <Helmet>
-                <title>SpotPicker | Registracija</title>
+                <title>Prijava</title>
             </Helmet>
 
             <Navbar/>
@@ -92,7 +107,7 @@ function Login(){
                                         label="Korisničko ime"
                                         name="username"
                                         onChange={onChange}
-                                        value={form.email}
+                                        value={form.username}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -112,9 +127,9 @@ function Login(){
                                     <div className="form-button-container">
                                     <button
                                         type="submit"
-                                        fullWidth
                                         className="button button-primary"
                                         variant="contained"
+                                        style={{ width: "100%" }}
                                         onClick={onSubmit}
                                         disabled={!isValid()}
                                     >
