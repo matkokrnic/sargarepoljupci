@@ -720,6 +720,14 @@
 				\eject		
 				
 			\subsection{Sekvencijski dijagrami}
+			
+				\textbf {Obrazac uporabe UC1 - Pregled parkirališta}
+				
+				\vspace{1cm}
+				
+				 Korisnik šalje zahtjev za pregledom parkirališta kako bi mogao odabrati parkirališno mjesto. Poslužitelj šalje zahtjev prema bazi podataka i dohvaća iz nje parkirališta. Ako je korisnik neprijavljen tada mu poslužitelj samo prikazuje parkirališta. Ako je riječ o prijavljenom korisniku, odnosno klijentu tada mu poslužitelj prikazuje parkirališta s informacijom o zauzetosti. Klijent zatim odabire odredište pri čemu poslužitelj šalje zahtjev prema OSRM (Open Source Routing Machine) za dohvat rute. OSRM vraća rutu poslužitelju koji ju iscrtava klijentu.  
+				
+				\vspace{1cm}
 				
 				\begin{figure}[H]
 					\centering
@@ -728,6 +736,18 @@
 					\label{fig:promjene8} 
 				\end{figure}
 				
+				\vspace{4cm}
+				
+				\textbf {Obrazac uporabe UC2 - Registracija}
+				
+				\vspace{1cm}
+				
+				Korisnik šalje zahtjev za registraciju sa željenom ulogom za koju se prijavljuje prema poslužitelju. Ako je željena uloga voditelj parkirališta, tada poslužitelj prima zahtjev za registraciju od korisnika i šalje prema administratoru zahtjev za potvrdu voditelja. Ako administrator potvrdi korisnika, potvrda se šalje poslužitelju. Ako je željena uloga klijent samo se šalje zahtjev za registraciju prema poslužitelju te nema potvrde administratora.
+				Neovisno o ulozi koju je korisnik izabrao proces registracije se nastavlja. Poslužitelj šalje zahtjev prema bazi podataka za spremanjem korisnika. Baza podataka sprema korisnika i šalje nazad prema poslužitelju potvrdu spremanja. Konačno, poslužitelj šalje email potvrdu korisniku čime proces registracije završava.
+				
+				\vspace{1cm}
+				
+				
 				\begin{figure}[H]
 					\centering
 					\includegraphics[width=\textwidth]{slike/SD_UC2.JPG} 
@@ -735,12 +755,30 @@
 					\label{fig:promjene9} 
 				\end{figure}
 				
+				\vspace{4cm}
+				
+				\textbf {Obrazac uporabe UC7 - Rezervacija parkirališnog mjesta}
+				
+				\vspace{1cm}
+				
+				Klijent može rezervirati parkirališna mjesta na dva načina. Prvi način je odabir po mjestu, gdje korisnik označuje željena parkirališna mjesta te šalje zahtjev prema poslužitelju. Poslužitelj zatim šalje zahtjev prema bazi podataka za dohvat dostupnih termina. Baza podataka vraća dostupne termine poslužitelju nakon čega ih poslužitelj prikazuje klijentu. Drugi način je odabir po terminu, gdje korisnik odabire željeni termin i šalje zahtjev prema poslužitelju. Poslužitelj šalje zahtjev za dohvat dostupnih mjesta prema bazi podataka. Baza podataka vraća dostupna mjesta poslužitelju koji ih prikazuje klijentu. Nakon odabira načina rezervacije klijent šalje zahtjev za definiranje rezervacije prema poslužitelju. Poslužitelj šalje zahtjev za spremanjem rezervacije prema bazi podataka te baza podataka vraća potvrdu rezervacije. Poslužitelj potvrdu rezervacije prosljeđuje nazad prema klijentu čime rezervacija parkirališnog mjesta završava.
+				  
+				\vspace{1cm}
+				
 				\begin{figure}[H]
 					\centering
 					\includegraphics[width=\textwidth]{slike/SD_UC7.JPG} 
 					\caption{Sekvencijski dijagram za UC7}
 					\label{fig:promjene10} 
 				\end{figure}
+				
+				\textbf {Obrazac uporabe UC17 - Uređivanje podataka o parkiralištu}
+				
+				\vspace{1cm}
+				
+				Vlasnik šalje zahtjev za pregledom parkirališta. Poslužitelj šalje zahtjev za dohvat parkirališta prema bazi podataka. Baza podataka vraća parkirališta poslužitelju koji ih prikazuje voditelju. Voditelj traži pregled statistike zauzetosti parkirališta i parkirališnih mjesta kroz vrijeme. Poslužitelj šalje zahtjev za dohvaćanje statistike prema bazi podataka. Baza podataka vraća povijesne informacije o zauzetosti parkirališta poslužitelju. Poslužitelj na temelju dobivenih povijesnih informacija generira statistiku u obliku grafa. Dobiveni graf statistike prikazuje se vlasniku. Vlasnik šalje zahtjev za promjenu podataka poslužitelju te mu poslužitelj vraća dozvolu za pristup. Vlasnik mijenja podatke i šalje promjene poslužitelju koji promjene prosljeđuje bazi podataka. Baza podataka potvrđuje promjene i vraća potvrdu poslužitelju koji prikazuje promjene vlasniku.
+				
+				\vspace{1cm}
 				
 				\begin{figure}[H]
 					\centering
