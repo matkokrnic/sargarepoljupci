@@ -261,15 +261,16 @@ function Register() {
 
                 <Grid item xs={12}>
                   <div className="form-button-container">
-                    <button
+                    <Button
                       type="submit"
+                      fullwidth
                       className="button button-primary"
                       variant="contained"
                       disabled={!isValid() || isDisabled}
                       onClick={onSubmit}
                     >
                       Registracija
-                    </button>
+                    </Button>
                   </div>
                 </Grid>
               </Grid>

@@ -1,5 +1,5 @@
 import React from 'react'
-import axios, {AxiosError} from "axios";
+import axios from "axios";
 
 import { Helmet } from 'react-helmet'
 import Navbar from './partials/navbar'
@@ -125,16 +125,16 @@ function Login(){
 
                                 <Grid item xs={12}>
                                     <div className="form-button-container">
-                                    <button
+                                    <Button
                                         type="submit"
                                         className="button button-primary"
                                         variant="contained"
-                                        style={{ width: "100%" }}
+                                        fullwidth
                                         onClick={onSubmit}
                                         disabled={!isValid()}
                                     >
                                         Prijava
-                                    </button>
+                                    </Button>
                                     </div>
                                 </Grid>
 

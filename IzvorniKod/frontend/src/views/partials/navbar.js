@@ -3,13 +3,13 @@ function Navbar() {
   // Provjera je li korisnik prijavljen (pretpostavka da je prijavljen ako postoji korisničko ime u localStorage-u)
   let isLoggedIn = true;
 
-  if (localStorage.getItem("username") == null) {
+  if (localStorage.getItem("korisnickoIme") == null) {
     isLoggedIn = false;
   }
 
   // Funkcija za odjavu korisnika
   function logout() {
-    localStorage.removeItem("username");
+    localStorage.removeItem("korisnickoIme");
     // Preusmjeravanje korisnika na početnu stranicu nakon odjave
     window.location.href = "/";
   }
@@ -19,7 +19,7 @@ function Navbar() {
 
   // Ako je korisnik prijavljen, postavi tekst dobrodošlice i gumb za odjavu
   if (isLoggedIn) {
-    welcomeText = <span className="welcome-text">Pozdrav, {localStorage.getItem("username")}</span>;
+    welcomeText = <span className="welcome-text">Pozdrav, {localStorage.getItem("korisnickoIme")}</span>;
     logoutButton = <button className="button-secondary button" onClick={logout}>Odjava</button>;
   } else {
     // Ako korisnik nije prijavljen, postavi gumbe za prijavu i registraciju
