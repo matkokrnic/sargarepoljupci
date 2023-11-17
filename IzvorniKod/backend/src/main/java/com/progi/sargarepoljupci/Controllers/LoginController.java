@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -20,6 +21,7 @@ public class LoginController {
 
     private final KorisnikRepository korisnikRepository;
     private final PasswordEncoder encoder;
+
     @Autowired
     public LoginController(KorisnikService korisnikService, KorisnikRepository korisnikRepository, PasswordEncoder encoder) {
         this.korisnikService = korisnikService;
@@ -28,21 +30,18 @@ public class LoginController {
     }
 
     @PostMapping
-    public ResponseEntity<String> loginKorisnik(@RequestBody Korisnik korisnik){
+    public ResponseEntity<String> loginKorisnik(@RequestBody Korisnik korisnik) {
         Optional<Korisnik> existingUser = korisnikRepository.findByEmail(korisnik.getEmail());
-        if(existingUser.isPresent()){
-            if(encoder.matches(korisnik.getEmail(), existingUser.get().getEmail()) && korisnik.getKorisnickoIme().equals(existingUser.get().getKorisnickoIme())){
-               return ResponseEntity.status(HttpStatus.ACCEPTED).body("Ulogiran");
-            }else{
+        if (existingUser.isPresent()) {
+            if(encoder.matches(korisnik.getPassword(), existingUser.get().getPassword())){
+//            if (encoder.matches(korisnik.getEmail(), existingUser.get().getEmail()) && korisnik.getKorisnickoIme().equals(existingUser.get().getKorisnickoIme())) {
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Ulogiran");
+            } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Uneseni podatci su neispravni");
             }
-        }
-        else {
+        } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Korisnik ne postoji");
         }
-
     }
-
-
 
 }
