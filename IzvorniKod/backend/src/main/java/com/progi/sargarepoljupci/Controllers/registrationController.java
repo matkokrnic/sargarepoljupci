@@ -6,6 +6,7 @@ import com.progi.sargarepoljupci.Repository.korisnikRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -35,7 +36,7 @@ public class registrationController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerKorisnik(@RequestBody korisnik korisnik) throws MessagingException {
+    public ResponseEntity<String> registerKorisnik(@RequestBody korisnik korisnik, HttpServletRequest httpServletRequest) throws MessagingException {
 //        return new ResponseEntity<>("OK", HttpStatus.OK);
 
         if (korisnikService.doesKorisnikExistByEmail(korisnik.getEmail())) {
@@ -45,12 +46,18 @@ public class registrationController {
 
             log.info(String.valueOf(korisnik));
             korisnikService.createKorisnik(korisnik);
-
-            sendHtmlEmail(korisnik, "localhost:8080");
+            String url = getSiteURL(httpServletRequest);
+            System.out.println(url);
+            sendHtmlEmail(korisnik, url);
 
 
             return ResponseEntity.status(HttpStatus.CREATED).body("Stvorili smo korisnika " + korisnik + "\n Provjeriti mail za verifikaciju");
         }
+    }
+
+    private String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(), "");
     }
 
 
@@ -91,7 +98,7 @@ public class registrationController {
 
         String htmlContent = "Kliknite na link kako biste zavrsili s registracijom:<br>"
                 + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>";
-        String verifyURL = "http://" +siteURL + "/api/registration/verify?code=" + korisnik.getVerifikacijaToken();
+        String verifyURL = siteURL + "/api/registration/verify?code=" + korisnik.getVerifikacijaToken();
         System.out.println("verifikacijaURL "+ verifyURL);
         System.out.println(htmlContent);
         htmlContent = htmlContent.replace("[[URL]]", verifyURL);
