@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SargarepoljupciApplication {
+public class sargarepoljupciApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SargarepoljupciApplication.class, args);
+		SpringApplication.run(sargarepoljupciApplication.class, args);
 	}
 
 }
