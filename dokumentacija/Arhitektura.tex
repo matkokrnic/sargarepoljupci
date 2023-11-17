@@ -70,14 +70,14 @@
 		Baza podataka sastoji se od sljedećih entiteta:
 		
 		\begin{itemize}
-			\item \textbf{Korisnik}\textit{Korisnicko\_ime}, \textit{Lozinka}, \textit{Ime}, \textit{Prezime}, \textit{Slika\_osobne}, \textit{IBAN}, \textit{email}, \textit{Uloga}, \textit{stanjeNaRacunu})
+			\item \textbf{Korisnik} \hspace{0.15cm}\textit{Korisnicko\_ime}, \textit{Lozinka}, \textit{Ime}, \textit{Prezime}, \textit{Slika\_osobne}, \textit{IBAN}, \textit{email}, \textit{Uloga}, \textit{stanjeNaRacunu}, \textit{potvrdenVoditelj}, \textit{verificiranKorisnik})
 			
 			
 			\item \textbf{ParkiralisteAutomobili} (\textit{fotografija}, \textit{Naziv}, \textit{Opis}, \textit{CijenaPoSatu}, \textit{ParkiralisteId}) 
 			
 			\item \textbf{Parking\_mjesto} (\textit{identifikacija}, \textit{Oznaka}, \textit{Slobodno}, \textit{Dostupno}, \textit{ParkiralisteId})
 			
-			\item \textbf{Voditelj} (\textit{jePrihvacen}, \textit{korisnickoIme}, \textit{ParkiralisteId})
+			\item \textbf{Voditelj} (\textit{korisnickoIme}, \textit{ParkiralisteId})
 			
 			\item \textbf{Rezervacija} (\textit{RezervacijaID}, \textit{cijena}, \textit{pocetakRezervacije}, \textit{krajRezervacije}, \textit{RRule}, \textit{KorisnickoIme}, \textit{Identifikacija})
 			
@@ -92,7 +92,7 @@
 				
 			
 				
-			\textbf{Korisnik:} sadržava sve bitne informacije o registriranim korisnicima u sustavu. Sadrži atribute: ID korisnika, korisničko ime, lozinka, ime, prezime, slika osobne iskaznice, IBAN, email, uloga (enum za 'klijent', 'voditelj', 'administrator') i stanje na računu. Ovaj entitet je preko korisnickogImena u vezi One-to-Many s entitetom Rezervacija i u One-to-One vezi s entitetom Voditelj.
+			\textbf{Korisnik:} sadržava sve bitne informacije o registriranim korisnicima u sustavu. Sadrži atribute: ID korisnika, korisničko ime, lozinka, ime, prezime, slika osobne iskaznice, IBAN, email, uloga (enum za 'klijent', 'voditelj', 'administrator') i stanje na računu. Također sadrži dodatne atribute putem kojih pratimo je li korisnik verificirao e-mail (verificiranKorisnik) te, u slučaju uloge=voditelj, je li potvrđen od strane administratora (potvrdenVoditelj). Ovaj entitet je preko korisnickogImena u vezi One-to-Many s entitetom Rezervacija i u One-to-One vezi s entitetom Voditelj.
 				\begin{longtblr}[
 					label=none,
 					entry=none,
@@ -111,6 +111,8 @@
 					slikaOsobne & BYTEA & Byte array slike osobne iskaznice\\ \hline
 					Uloga & INT & Enum koji označava ulogu korisnika ('klijent', 'voditelj', 'administrator')\\ \hline
 					stanjeNaRacunu & NUMERIC & Decimalni broj koji označava koliko novaca se nalazi u novčaniku \\ \hline
+					potvrdenVoditelj & BOOLEAN & Označava je li voditelj potvrđen od strane admina. \\ \hline
+					verificiranKorisnik & BOOLEAN & Je li korisnik verificiran preko emaila? \\ \hline
 				
 				\end{longtblr}
 				
@@ -154,7 +156,7 @@
 				
 				\end{longtblr}
 				
-				\noindent\textbf{Voditelj:} sadrži informacije o voditeljima parkirališta. Sadrži status prihvaćenosti voditelja i povezuje voditelja sa parkiralištem. Ima vezu s One-to-one s entitetima Korisnik i ParkirališteAutomobila.
+				\noindent\textbf{Voditelj:} sadrži informacije o voditeljima parkirališta. Povezuje voditelja sa parkiralištem. Ima vezu s One-to-one s entitetima Korisnik i ParkirališteAutomobila.
 				\begin{longtblr}[
 					label=none,
 					entry=none
@@ -164,7 +166,7 @@
 						rowhead = 1,
 					}
 					\hline \SetCell[c=3]{c}{\textbf{Voditelj}} \\ \hline[3pt]
-					jePrihvacen & BOOLEAN & Je li voditelj prihvaćen\\ \hline
+					
 					\SetCell{LightBlue}korisnickoIme & VARCHAR & Jedinstveno korisničko ime \\ \hline
 					\SetCell{LightBlue}ParkiralisteId & INT & Jedinstven ID parkinga \newline(ParkiralisteAutomobili.ParkiralisteID)\\ \hline
 				\end{longtblr}
@@ -208,14 +210,14 @@
 				
 				\subsection{Dijagram baze podataka}
 				\begin{figure}[H]
-					\includegraphics[width=\textwidth]{slike/erl.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+					\includegraphics[width=\textwidth]{slike/erldiagram.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 					\centering
 					\caption{E-R dijagram baze podataka}
 					\label{fig:erldijagram}
 				\end{figure}
 				
 				\begin{figure}[H]
-					\includegraphics[scale=0.7]{slike/rlc.PNG} %veličina u odnosu na širinu linije
+					\includegraphics[scale=0.7]{slike/rlcdiagram.PNG} %veličina u odnosu na širinu linije
 					\caption{Relacijska shema}
 					\label{fig:relshema} %label mora biti drugaciji za svaku sliku
 				\end{figure}
