@@ -1,0 +1,58 @@
+1. sastanak
+– Datum: 16. listopada 2023.
+– Prisustvovali: D.Jenjić, M.Krnić, F.Martinović, L. Matić, J. Rončević,
+L. Varga, R. Vojinović
+– Teme sastanka:
+∗ međusobno upoznavanje
+∗ prvi sastanak s asistentom i demonstratorom
+∗ rasprava o temi i osnovnim funkcionalnostima
+
+
+2. sastanak
+– Datum: 25. listopada 2023.
+– Prisustvovali: D.Jenjić, M.Krnić, F.Martinović, L. Matić, J. Rončević,
+L. Varga, R. Vojinović
+– Teme sastanka:
+∗ prva podjela poslova
+∗ rasprava o korištenim tehnologijama
+ 
+
+3. sastanak
+– Datum: 29. listopada 2023.
+– Prisustvovali: D.Jenjić, M.Krnić, F.Martinović, L. Matić, J. Rončević,
+L. Varga, R. Vojinović
+– Teme sastanka:
+∗ konačna raspodjela dužnosti vezano uz frontend, backend i dokumentaciju
+
+∗ rasprava o napravljenoj dokumentaciji
+
+
+4. sastanak
+– Datum: 30. listopada 2023.
+– Prisustvovali: D.Jenjić, M.Krnić, F.Martinović, L. Matić, J. Rončević,
+L. Varga, R. Vojinović
+– Teme sastanka:
+∗ uživo termin s asistentom i demonstratorom
+∗ detaljna rasprava o pojedinim funkcionalnostima aplikacije
+∗ komentiranje napravljenih obrazaca uporabe i sekvencijskih dijagrama
+
+
+5. sastanak
+– Datum: 14. studenog 2023.
+– Prisustvovali: D.Jenjić, M.Krnić, F.Martinović, L. Matić, J. Rončević,
+L. Varga, R. Vojinović
+– Teme sastanka:
+∗ rasprava o dosad napravljenom backendu i frontendu
+∗ rasprava o dijelu dokumentacije koji se tiče baze podataka i ER 
+dijagrama
+∗ dodatna podjela posla unutar frontenda, backenda i dokumentacije
+
+
+6. sastanak
+– Datum: 16. studenog 2023.
+– Prisustvovali: D.Jenjić, M.Krnić, F.Martinović, L. Matić, J. Rončević,
+L. Varga, R. Vojinović
+– Teme sastanka:
+∗ rasprava o povezivanju frontenda i backenda
+∗ podjela posla oko preostale dokumentacije
+∗ rasprava o deploymentu aplikacije
