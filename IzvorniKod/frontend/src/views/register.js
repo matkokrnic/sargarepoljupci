@@ -49,6 +49,8 @@ function Register() {
     lastName: '',
     username: '',
     email: '',
+    iban: '',
+    slikaOsobne: '',
     role: '',
     password: '',
     confirmPassword: '',
@@ -62,14 +64,16 @@ function Register() {
 
   // Provjera ispravnosti forme
   function isValid() {
-    const { firstName, lastName, username, email, role, password, confirmPassword } = form;
+    const { firstName, lastName, username, email, iban, slikaOsobne, role, password, confirmPassword } = form;
     return (
       firstName.length > 0 &&
       lastName.length > 0 &&
       username.length > 0 &&
+      slikaOsobne.length > 0 &&
       password.length >= 8 &&
       password == confirmPassword &&
       /\S+@\S+\.\S+/.test(email) &&
+      /^[A-Z]{2}/.test(iban) &&
       role != 0
     );
   }
@@ -79,13 +83,15 @@ function Register() {
     e.preventDefault();
     setIsDisabled(true);
     axios
-      .post('/api/registration', {
-        username: form.username,
-        firstName: form.firstName,
-        lastName: form.lastName,
-        password: form.password,
+      .post("/api/registration", {
+        korisnickoIme: form.username,
+        lozinka: form.password,
         email: form.email,
-        roleId: form.role,
+        iban: form.iban,
+        ime: form.firstName,
+        prezime: form.lastName,
+        slikaOsobne: form.slikaOsobne,
+        Uloga: form.role,
       })
       .then(async (response) => {
         console.log(response);
@@ -101,7 +107,7 @@ function Register() {
   return (
     <div className="page-container">
       <Helmet>
-        <title>SpotPicker | Registracija</title>
+        <title>Registracija</title>
       </Helmet>
 
       <Navbar />
@@ -167,20 +173,44 @@ function Register() {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <NativeSelect
-                    inputProps={{
-                      name: 'role',
-                      id: 'role',
-                    }}
-                    fullWidth
+                  <StyledTextField
                     required
-                    defaultValue={0}
+                    fullWidth
+                    id="iban"
+                    label="IBAN"
+                    name="iban"
                     onChange={onChange}
-                    value={form.role}
-                  >
+                    value={form.iban}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <StyledTextField
+                    required
+                    fullWidth
+                    id="slikaOsobne"
+                    label="Slika osobne"
+                    name="slikaOsobne"
+                    onChange={onChange}
+                    value={form.slikaOsobne}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                <NativeSelect
+                  inputProps={{
+                  name: 'role',
+                  id: 'role',
+                  }}
+                  fullWidth
+                  required
+                  onChange={onChange}
+                  value={form.role}
+                >
+
                     <option value={0}>Odabir uloge</option>
-                    <option value={1}>Klijent</option>
-                    <option value={2}>Voditelj parkinga</option>
+                    <option value={"KLIJENT"}>Klijent</option>
+                    <option value={"VODITELJ"}>Voditelj parkinga</option>
                   </NativeSelect>
                 </Grid>
 
@@ -231,15 +261,16 @@ function Register() {
 
                 <Grid item xs={12}>
                   <div className="form-button-container">
-                    <button
+                    <Button
                       type="submit"
+                      fullwidth
                       className="button button-primary"
                       variant="contained"
                       disabled={!isValid() || isDisabled}
                       onClick={onSubmit}
                     >
                       Registracija
-                    </button>
+                    </Button>
                   </div>
                 </Grid>
               </Grid>

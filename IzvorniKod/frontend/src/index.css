@@ -16,7 +16,6 @@
 
 /* PAGE */
 html {
-  scroll-snap-type: y mandatory;
   font-family: "Roboto Regular";
 }
 
