@@ -13,6 +13,7 @@ RUN chmod +x mvnw
 
 # Pokretanje builda
 RUN apk add --no-cache maven
+RUN ./mvnw clean package
 
 # Stvaranje containera u kojem će se vrtiti aplikacija
 FROM openjdk:17-alpine
