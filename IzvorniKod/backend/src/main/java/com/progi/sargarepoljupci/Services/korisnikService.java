@@ -1,7 +1,7 @@
 package com.progi.sargarepoljupci.Services;
 
-import com.progi.sargarepoljupci.Exceptions.korisnikNotFoundException;
-import com.progi.sargarepoljupci.Exceptions.requestDeniedException;
+import com.progi.sargarepoljupci.Exceptions.UserNotFoundException;
+import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.korisnik;
 import com.progi.sargarepoljupci.Models.uloga;
 import com.progi.sargarepoljupci.Utilities.verificationTokenGenerator;
@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-import org.springframework.core.KotlinReflectionParameterNameDiscoverer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,10 +47,10 @@ public class korisnikService implements korisnikServiceInterface {
     public void createKorisnik(korisnik korisnik) {
 
         if(korisnikRepository.existsByEmail(korisnik.getEmail())){
-            throw new requestDeniedException("Korisnik s tim emailom vec postoji u bazi podataka");
+            throw new RequestDeniedException("Korisnik s tim emailom vec postoji u bazi podataka");
         }
         if(korisnikRepository.existsByKorisnickoIme(korisnik.getKorisnickoIme())){
-            throw new requestDeniedException("Korisnik s tim usernameom vec postoji u bazi podataka");
+            throw new RequestDeniedException("Korisnik s tim usernameom vec postoji u bazi podataka");
         }
 
 
@@ -88,25 +87,25 @@ public class korisnikService implements korisnikServiceInterface {
     private void validate(korisnik korisnik) {
 
         if(korisnik == null){
-            throw new requestDeniedException("Korisnik ne smije biti null");
+            throw new RequestDeniedException("Korisnik ne smije biti null");
         }
         String email = korisnik.getEmail();
 
         Long id = korisnik.getId();
         if(!korisnikRepository.existsById(id)){
-            throw new korisnikNotFoundException("Korisnik ne postoji u bazi podataka");
+            throw new UserNotFoundException("Korisnik ne postoji u bazi podataka");
 
         }
         Optional<korisnik> tempKorisnik = korisnikRepository.findById(id);
         // postoji sansa da postoji vec neki drugi user sa tim mailom
         // id razlicit, email isti --> error
         if(!korisnikRepository.existsByEmailAndIdNot(korisnik.getEmail(), id)){
-            throw new requestDeniedException("Email u koji zelite promijeniti vec postoji u bazi podataka " + korisnik.getEmail());
+            throw new RequestDeniedException("Email u koji zelite promijeniti vec postoji u bazi podataka " + korisnik.getEmail());
         }
         // postoji sansa da postoji vec neki drugi user sa tim usernameom
         // analogno za ovaj slucaj id razlicit, username isti --> error
         if(!korisnikRepository.existsByEmailAndIdNot(korisnik.getKorisnickoIme(), id)){
-            throw new requestDeniedException("Korisnicko ime u koje zelite promijeniti vec postoji u bazi podataka " + korisnik.getKorisnickoIme());
+            throw new RequestDeniedException("Korisnicko ime u koje zelite promijeniti vec postoji u bazi podataka " + korisnik.getKorisnickoIme());
         }
 
     }

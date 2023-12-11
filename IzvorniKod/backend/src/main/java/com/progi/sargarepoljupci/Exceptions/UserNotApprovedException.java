@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
-public class korisnikNotApprovedException extends RuntimeException {
-    public korisnikNotApprovedException() {
+public class UserNotApprovedException extends RuntimeException {
+    public UserNotApprovedException() {
     }
 
-    public korisnikNotApprovedException(String message) {
+    public UserNotApprovedException(String message) {
         super(message);
     }
 }

@@ -1,7 +1,9 @@
 package com.progi.sargarepoljupci.Controllers;
 
-import com.progi.sargarepoljupci.Exceptions.requestDeniedException;
+import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
+import com.progi.sargarepoljupci.Models.ResponseObject;
 import com.progi.sargarepoljupci.Models.korisnik;
+import com.progi.sargarepoljupci.Models.registrationDTO;
 import com.progi.sargarepoljupci.Repository.korisnikRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -20,7 +22,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/registration")
 @Slf4j
-public class registrationController {
+public class RegistrationController {
 
     private final com.progi.sargarepoljupci.Services.korisnikService korisnikService;
     private final korisnikRepository repo;
@@ -28,7 +30,7 @@ public class registrationController {
 
     private final JavaMailSender mailSender;
     @Autowired
-    public registrationController(com.progi.sargarepoljupci.Services.korisnikService korisnikService, korisnikRepository repo, JavaMailSender mailSender) {
+    public RegistrationController(com.progi.sargarepoljupci.Services.korisnikService korisnikService, korisnikRepository repo, JavaMailSender mailSender) {
         this.korisnikService = korisnikService;
 
         this.repo = repo;
@@ -36,22 +38,29 @@ public class registrationController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerKorisnik(@RequestBody korisnik korisnik, HttpServletRequest httpServletRequest) throws MessagingException {
+    public ResponseObject registerKorisnik(@RequestBody registrationDTO registerDTO, HttpServletRequest httpServletRequest) throws MessagingException {
 //        return new ResponseEntity<>("OK", HttpStatus.OK);
 
-        if (korisnikService.doesKorisnikExistByEmail(korisnik.getEmail())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email vec postoji.");
+        if (korisnikService.doesKorisnikExistByEmail(registerDTO.getEmail())) {
+            ResponseObject responseObject = new ResponseObject();
+            responseObject.setMessage("Email vec postoji");
+            responseObject.setStatus(HttpStatus.BAD_REQUEST.value());
+            return responseObject;
 
         } else {
 
-            log.info(String.valueOf(korisnik));
-            korisnikService.createKorisnik(korisnik);
+            log.info(String.valueOf(registerDTO));
+            var user = new korisnik(registerDTO);
+            korisnikService.createKorisnik(user);
             String url = getSiteURL(httpServletRequest);
             System.out.println(url);
-            sendHtmlEmail(korisnik, url);
+            sendHtmlEmail(user, url);
 
-
-            return ResponseEntity.status(HttpStatus.CREATED).body("Stvorili smo korisnika " + korisnik + "\n Provjeriti mail za verifikaciju");
+            log.info(String.valueOf(ResponseEntity.status(HttpStatus.CREATED).body("Stvorili smo korisnika " + registerDTO + "\n Provjeriti mail za verifikaciju")));
+            ResponseObject responseObject = new ResponseObject();
+            responseObject.setMessage("Stvorili smo korisnika " + registerDTO + "\n Provjeriti mail za verifikaciju");
+            responseObject.setStatus(HttpStatus.ACCEPTED.value());
+            return responseObject;
         }
     }
 
@@ -67,7 +76,7 @@ public class registrationController {
             return false;
         } else {
             if(korisnik.get().getVerificiran()!=null && korisnik.get().getVerificiran()){
-                throw new requestDeniedException("Korisnik je vec verificiran");
+                throw new RequestDeniedException("Korisnik je vec verificiran");
             }
 
             korisnik.get().setVerificiran(true);

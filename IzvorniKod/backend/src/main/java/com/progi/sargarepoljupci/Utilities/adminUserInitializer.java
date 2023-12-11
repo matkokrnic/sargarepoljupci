@@ -1,4 +1,4 @@
-/*
+
 
 package com.progi.sargarepoljupci.Utilities;
 
@@ -31,6 +31,7 @@ public class adminUserInitializer implements CommandLineRunner {
             korisnik adminUser = new korisnik();
             adminUser.setKorisnickoIme("admin");
             adminUser.setLozinka(passwordEncoder.encode("123"));
+            adminUser.setSlikaOsobne("halotamostanimalo");
 
 
             adminUser.setUloga(uloga.ADMIN);
@@ -48,9 +49,8 @@ public class adminUserInitializer implements CommandLineRunner {
             korisnikRepository.save(adminUser);
             System.out.println("Admin uspjesno inicijaliziran " + adminUser.getKorisnickoIme() + " 123");
         } else
-            System.out.println("Admin user already exists.");
+            System.out.println("Admin user already exists. username: admin, password: 123");
         }
 
 
 }
-*/
