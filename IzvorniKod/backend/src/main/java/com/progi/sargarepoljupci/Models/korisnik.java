@@ -44,7 +44,22 @@ public class korisnik {
 
     private String verifikacijaToken;
 
+    public korisnik() {
+    }
 
+    public korisnik(registrationDTO dto) {
+        this.korisnickoIme = dto.getKorisnickoIme();
+        this.lozinka = dto.getLozinka();
+        this.email = dto.getEmail();
+        this.iban = dto.getIban();
+        this.ime = dto.getIme();
+        this.prezime = dto.getPrezime();
+        this.slikaOsobne = dto.getSlikaOsobne();
+        this.uloga = dto.getUloga();
+        this.potvrden = false; // Default value for potvrden
+        this.verificiran = false; // Default value for verificiran
+        this.verifikacijaToken = null; // Default value for verifikacijaToken
+    }
 
 
 
