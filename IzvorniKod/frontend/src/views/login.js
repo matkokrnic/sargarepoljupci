@@ -62,7 +62,7 @@ function Login(){
             method: "post",
             url: "/api/login",
             data: bodyFormData,
-            headers: { "Content-Type": "multipart/form-data" },
+            headers: { "Content-Type": "application/json" },
         }).then(response => {
             console.log(response)
             localStorage.setItem("korisnickoIme", form.username)
