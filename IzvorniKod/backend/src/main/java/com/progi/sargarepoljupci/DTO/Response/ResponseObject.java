@@ -1,4 +1,4 @@
-package com.progi.sargarepoljupci.Models;
+package com.progi.sargarepoljupci.DTO.Response;
 
 import lombok.Data;
 

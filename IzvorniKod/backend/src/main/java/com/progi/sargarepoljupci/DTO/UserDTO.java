@@ -1,14 +1,13 @@
-package com.progi.sargarepoljupci.Models;
+package com.progi.sargarepoljupci.DTO;
 
+import com.progi.sargarepoljupci.Models.Korisnik;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Data
@@ -20,7 +19,7 @@ public class UserDTO implements UserDetails {
 
 
     // PREIMENOVATI U PERSONALUSERDETAILS ILI TAKO NESTO
-    public UserDTO(korisnik user) {
+    public UserDTO(Korisnik user) {
 
         username = user.getKorisnickoIme();
         password = user.getLozinka();

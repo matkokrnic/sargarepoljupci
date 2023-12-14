@@ -1,5 +1,6 @@
-package com.progi.sargarepoljupci.Models;
+package com.progi.sargarepoljupci.DTO;
 
+import com.progi.sargarepoljupci.Models.uloga;
 import lombok.Data;
 
 @Data

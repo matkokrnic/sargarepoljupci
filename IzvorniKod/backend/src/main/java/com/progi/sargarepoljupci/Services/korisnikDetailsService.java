@@ -1,6 +1,6 @@
 package com.progi.sargarepoljupci.Services;
 
-import com.progi.sargarepoljupci.Models.UserDTO;
+import com.progi.sargarepoljupci.DTO.UserDTO;
 import com.progi.sargarepoljupci.Repository.korisnikRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

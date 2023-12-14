@@ -1,6 +1,7 @@
 package com.progi.sargarepoljupci.Models;
 
 
+import com.progi.sargarepoljupci.DTO.registrationDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -8,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class korisnik {
+public class Korisnik {
 
     // ako imamo mogucnost promjene korisnickogImena nema smisla da je
     // PK, mislim da je lakse staviti samo generiran id
@@ -44,10 +45,10 @@ public class korisnik {
 
     private String verifikacijaToken;
 
-    public korisnik() {
+    public Korisnik() {
     }
 
-    public korisnik(registrationDTO dto) {
+    public Korisnik(registrationDTO dto) {
         this.korisnickoIme = dto.getKorisnickoIme();
         this.lozinka = dto.getLozinka();
         this.email = dto.getEmail();

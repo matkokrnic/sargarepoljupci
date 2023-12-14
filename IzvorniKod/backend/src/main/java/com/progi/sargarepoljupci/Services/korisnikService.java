@@ -2,9 +2,9 @@ package com.progi.sargarepoljupci.Services;
 
 import com.progi.sargarepoljupci.Exceptions.UserNotFoundException;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
-import com.progi.sargarepoljupci.Models.korisnik;
+import com.progi.sargarepoljupci.Models.Korisnik;
 import com.progi.sargarepoljupci.Models.uloga;
-import com.progi.sargarepoljupci.Utilities.verificationTokenGenerator;
+import com.progi.sargarepoljupci.Utilities.VerificationTokenGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -44,7 +44,7 @@ public class korisnikService implements korisnikServiceInterface {
 
 
     //trebao bih pretvoriti URL slike u bytearray
-    public void createKorisnik(korisnik korisnik) {
+    public void createKorisnik(Korisnik korisnik) {
 
         if(korisnikRepository.existsByEmail(korisnik.getEmail())){
             throw new RequestDeniedException("Korisnik s tim emailom vec postoji u bazi podataka");
@@ -60,7 +60,7 @@ public class korisnikService implements korisnikServiceInterface {
         String encodedPassword = passwordEncoder.encode(korisnik.getLozinka());
         korisnik.setLozinka(encodedPassword);
         // trebam postaviti verificationToken za mail
-        String verificationToken = verificationTokenGenerator.generateUniqueVerificationToken();
+        String verificationToken = VerificationTokenGenerator.generateUniqueVerificationToken();
         korisnik.setVerifikacijaToken(verificationToken);
 
 
@@ -69,7 +69,7 @@ public class korisnikService implements korisnikServiceInterface {
         korisnikRepository.save(korisnik);
     }
     @Override
-    public korisnik updateKorisnik(korisnik korisnik)  {
+    public Korisnik updateKorisnik(Korisnik korisnik)  {
 
         validate(korisnik);
 
@@ -84,7 +84,7 @@ public class korisnikService implements korisnikServiceInterface {
      */
 
     //trebao bih jos dodati provjeru je li URL dobar za sliku...
-    private void validate(korisnik korisnik) {
+    private void validate(Korisnik korisnik) {
 
         if(korisnik == null){
             throw new RequestDeniedException("Korisnik ne smije biti null");
@@ -96,7 +96,7 @@ public class korisnikService implements korisnikServiceInterface {
             throw new UserNotFoundException("Korisnik ne postoji u bazi podataka");
 
         }
-        Optional<korisnik> tempKorisnik = korisnikRepository.findById(id);
+        Optional<Korisnik> tempKorisnik = korisnikRepository.findById(id);
         // postoji sansa da postoji vec neki drugi user sa tim mailom
         // id razlicit, email isti --> error
         if(!korisnikRepository.existsByEmailAndIdNot(korisnik.getEmail(), id)){
@@ -111,18 +111,18 @@ public class korisnikService implements korisnikServiceInterface {
     }
 
     @Override
-    public Optional<korisnik> findByVerifikacijaToken(String verifikacijaToken) {
+    public Optional<Korisnik> findByVerifikacijaToken(String verifikacijaToken) {
         return korisnikRepository.findByVerifikacijaToken(verifikacijaToken);
     }
 
 
     @Override
-    public List<korisnik> findByVoditeljNotApproved() {
+    public List<Korisnik> findByVoditeljNotApproved() {
         return korisnikRepository.findByUlogaIsAndPotvrdenNullOrPotvrdenIsFalseAndVerificiranIsTrue(uloga.VODITELJ);
     }
 
     @Override
-    public Optional<korisnik> findById(Long aLong) {
+    public Optional<Korisnik> findById(Long aLong) {
         return korisnikRepository.findById(aLong);
     }
 

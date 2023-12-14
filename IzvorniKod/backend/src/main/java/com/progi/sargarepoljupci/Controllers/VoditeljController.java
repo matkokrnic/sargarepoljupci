@@ -10,15 +10,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/voditelj")
 public class VoditeljController {
 
+    /*
     // ucrtaj dostupno parkirno mjesto
     @PostMapping
     public void makeParkingAvailable(){
 
     }
+
+
+    // Voditelj parkinga ima mogućnost unijeti informacije o svom parkiralištu (naziv, opis,
+    // fotografija, cjenik)
+
     @PutMapping
     public void enterParkingInformation(){
+    }
+    // osvjezavanje zauzetosti
 
+
+    @PostMapping
+    public void markParkingSpaces(){
 
     }
+
+     */
 
 }

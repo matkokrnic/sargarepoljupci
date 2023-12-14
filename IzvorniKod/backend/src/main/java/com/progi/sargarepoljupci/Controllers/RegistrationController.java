@@ -1,9 +1,9 @@
 package com.progi.sargarepoljupci.Controllers;
 
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
-import com.progi.sargarepoljupci.Models.ResponseObject;
-import com.progi.sargarepoljupci.Models.korisnik;
-import com.progi.sargarepoljupci.Models.registrationDTO;
+import com.progi.sargarepoljupci.DTO.Response.ResponseObject;
+import com.progi.sargarepoljupci.Models.Korisnik;
+import com.progi.sargarepoljupci.DTO.registrationDTO;
 import com.progi.sargarepoljupci.Repository.korisnikRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -50,7 +50,7 @@ public class RegistrationController {
         } else {
 
             log.info(String.valueOf(registerDTO));
-            var user = new korisnik(registerDTO);
+            var user = new Korisnik(registerDTO);
             korisnikService.createKorisnik(user);
             String url = getSiteURL(httpServletRequest);
             System.out.println(url);
@@ -71,7 +71,7 @@ public class RegistrationController {
 
 
     private boolean verify(String verificationCode) {
-        Optional<korisnik> korisnik = repo.findByVerifikacijaToken(verificationCode);
+        Optional<Korisnik> korisnik = repo.findByVerifikacijaToken(verificationCode);
         if(korisnik.isEmpty()) {
             return false;
         } else {
@@ -98,7 +98,7 @@ public class RegistrationController {
 
 
 
-    public void sendHtmlEmail(korisnik korisnik, String siteURL) throws MessagingException {
+    public void sendHtmlEmail(Korisnik korisnik, String siteURL) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
 
         message.setFrom(new InternetAddress("sargarepoljupci@gmail.com"));

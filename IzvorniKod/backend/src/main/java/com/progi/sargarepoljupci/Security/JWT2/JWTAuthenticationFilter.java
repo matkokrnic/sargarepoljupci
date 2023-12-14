@@ -31,7 +31,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             token = authHeader.substring(7);
             userName = jwtService.extractUsernameFromToken(token);
         }
-        // if there's a username and the user hasn't been autenticated check the user from the database so the user can be authenticated
+        // if there's a username and the user hasn't been authenticated check the user from the database so the user can be authenticated
         if (userName != null & SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = korisnikDetailsService.loadUserByUsername(userName);
             if(jwtService.validateToken(token, userDetails)) {

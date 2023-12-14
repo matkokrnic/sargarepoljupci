@@ -2,8 +2,8 @@ package com.progi.sargarepoljupci.Controllers;
 
 
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
-import com.progi.sargarepoljupci.Models.korisnik;
-import com.progi.sargarepoljupci.Models.loginDTO;
+import com.progi.sargarepoljupci.Models.Korisnik;
+import com.progi.sargarepoljupci.DTO.loginDTO;
 import com.progi.sargarepoljupci.Models.uloga;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,7 @@ public class LoginController {
         if (loginDTO.getKorisnickoIme().equals("admin") && encoder.matches("123", loginDTO.getLozinka())){
             return ResponseEntity.status(HttpStatus.valueOf(201)).body("Admin Ulogiran");
         }
-        Optional<korisnik> existingUser = korisnikRepository.findByKorisnickoIme(loginDTO.getKorisnickoIme());
+        Optional<Korisnik> existingUser = korisnikRepository.findByKorisnickoIme(loginDTO.getKorisnickoIme());
         // ako je username isti
         if(existingUser.isPresent()){
             if (existingUser.get().getVerificiran() == null){

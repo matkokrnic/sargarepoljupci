@@ -6,7 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-public class uRLcheck {
+public class URLcheck {
 
     public static boolean isPNGImage(String imageUrl) {
         String contentType;

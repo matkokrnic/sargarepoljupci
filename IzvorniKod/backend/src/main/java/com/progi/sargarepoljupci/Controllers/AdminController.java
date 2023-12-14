@@ -2,7 +2,7 @@ package com.progi.sargarepoljupci.Controllers;
 
 import com.progi.sargarepoljupci.Exceptions.UserNotFoundException;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
-import com.progi.sargarepoljupci.Models.korisnik;
+import com.progi.sargarepoljupci.Models.Korisnik;
 import com.progi.sargarepoljupci.Models.uloga;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -30,7 +30,7 @@ public class AdminController {
 
 
     @GetMapping("/korisnici")
-    public List<korisnik> getAllUsers() {
+    public List<Korisnik> getAllUsers() {
         return korisnikRepository.findAll();
     }
     /*
@@ -42,7 +42,7 @@ public class AdminController {
 
 
     @GetMapping("/neprihvaceni")
-    public List<korisnik> listNeprihvaceniVoditelji(){
+    public List<Korisnik> listNeprihvaceniVoditelji(){
         return korisnikService.findByVoditeljNotApproved();
     }
 
@@ -53,9 +53,9 @@ public class AdminController {
     // ovdje bi trebao napraviti DTO
     @PutMapping("/update/{id}")
     // ovdje bi trebao napraviti DTO
-    public korisnik updateKorisnik(@PathVariable("id") Long id, @RequestBody korisnik requestKorisnik) {
+    public Korisnik updateKorisnik(@PathVariable("id") Long id, @RequestBody Korisnik requestKorisnik) {
 
-        korisnik korisnikInBaza = korisnikRepository.findById(id).orElse(null);
+        Korisnik korisnikInBaza = korisnikRepository.findById(id).orElse(null);
         if (korisnikInBaza != null) {
             Long requestKorisnikId = requestKorisnik.getId();
 
@@ -89,13 +89,13 @@ public class AdminController {
 
 
     @PutMapping("/approve/{id}")
-    public korisnik approveUser(@PathVariable("id") Long id) {
+    public Korisnik approveUser(@PathVariable("id") Long id) {
         System.out.println("Sad smo u approve");
 
-        Optional<korisnik> optionalVoditelj = korisnikRepository.findById(id);
+        Optional<Korisnik> optionalVoditelj = korisnikRepository.findById(id);
 
         if(optionalVoditelj.isPresent()) {
-            korisnik korisnik = optionalVoditelj.get();
+            Korisnik korisnik = optionalVoditelj.get();
             if(korisnik.getUloga() != uloga.VODITELJ){
                 throw new RequestDeniedException("Taj korisnik nije voditelj pa ga ne mozete potvrditi");
             }
@@ -115,12 +115,12 @@ public class AdminController {
     }
 
     @PutMapping("/decline/{id}")
-    public korisnik declineUser(@PathVariable("id") Long id) {
+    public Korisnik declineUser(@PathVariable("id") Long id) {
 
-        Optional<korisnik> optionalVoditelj = korisnikRepository.findById(id);
+        Optional<Korisnik> optionalVoditelj = korisnikRepository.findById(id);
 
         if(optionalVoditelj.isPresent()) {
-            korisnik korisnik = optionalVoditelj.get();
+            Korisnik korisnik = optionalVoditelj.get();
             if(korisnik.getUloga() != uloga.VODITELJ){
                 throw new RequestDeniedException("Taj korisnik nije voditelj pa ga ne mozete odbiti");
             }
