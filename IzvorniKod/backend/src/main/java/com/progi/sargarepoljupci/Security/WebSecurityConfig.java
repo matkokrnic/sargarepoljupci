@@ -50,7 +50,7 @@ public class WebSecurityConfig {
     private static final String[] UN_SECURED_URLs = {
             "/api/login/**",
             "/api/registration/**",
-            "/authenticate/**"
+            "/api/authenticate/**"
     };
 
     @Bean
