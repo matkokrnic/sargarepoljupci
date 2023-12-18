@@ -4,6 +4,7 @@ import com.progi.sargarepoljupci.Exceptions.UserNotFoundException;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.Korisnik;
 import com.progi.sargarepoljupci.Models.uloga;
+import com.progi.sargarepoljupci.Repository.korisnikRepository;
 import com.progi.sargarepoljupci.Utilities.VerificationTokenGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,37 +20,34 @@ import java.util.Optional;
 @Slf4j
 public class korisnikService implements korisnikServiceInterface {
 
-
-
-    private final com.progi.sargarepoljupci.Repository.korisnikRepository korisnikRepository;
+    private final korisnikRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
 
 
-
     @Autowired
-    public korisnikService(com.progi.sargarepoljupci.Repository.korisnikRepository korisnikRepository, PasswordEncoder passwordEncoder) {
-        this.korisnikRepository = korisnikRepository;
+    public korisnikService(com.progi.sargarepoljupci.Repository.korisnikRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     public boolean doesKorisnikExistByEmail(String email){
-        return korisnikRepository.existsByEmail(email);
+        return userRepository.existsByEmail(email);
     }
 
     @Override
     public boolean doesKorisnikExistByUsername(String korisnickoIme) {
-        return korisnikRepository.existsByKorisnickoIme(korisnickoIme);
+        return userRepository.existsByKorisnickoIme(korisnickoIme);
     }
 
 
     //trebao bih pretvoriti URL slike u bytearray
     public void createKorisnik(Korisnik korisnik) {
 
-        if(korisnikRepository.existsByEmail(korisnik.getEmail())){
+        if(userRepository.existsByEmail(korisnik.getEmail())){
             throw new RequestDeniedException("Korisnik s tim emailom vec postoji u bazi podataka");
         }
-        if(korisnikRepository.existsByKorisnickoIme(korisnik.getKorisnickoIme())){
+        if(userRepository.existsByKorisnickoIme(korisnik.getKorisnickoIme())){
             throw new RequestDeniedException("Korisnik s tim usernameom vec postoji u bazi podataka");
         }
 
@@ -66,14 +64,14 @@ public class korisnikService implements korisnikServiceInterface {
 
 
 
-        korisnikRepository.save(korisnik);
+        userRepository.save(korisnik);
     }
     @Override
     public Korisnik updateKorisnik(Korisnik korisnik)  {
 
         validate(korisnik);
 
-        return korisnikRepository.save(korisnik);
+        return userRepository.save(korisnik);
     }
 
 
@@ -92,19 +90,19 @@ public class korisnikService implements korisnikServiceInterface {
         String email = korisnik.getEmail();
 
         Long id = korisnik.getId();
-        if(!korisnikRepository.existsById(id)){
+        if(!userRepository.existsById(id)){
             throw new UserNotFoundException("Korisnik ne postoji u bazi podataka");
 
         }
-        Optional<Korisnik> tempKorisnik = korisnikRepository.findById(id);
+        Optional<Korisnik> tempKorisnik = userRepository.findById(id);
         // postoji sansa da postoji vec neki drugi user sa tim mailom
         // id razlicit, email isti --> error
-        if(!korisnikRepository.existsByEmailAndIdNot(korisnik.getEmail(), id)){
+        if(!userRepository.existsByEmailAndIdNot(korisnik.getEmail(), id)){
             throw new RequestDeniedException("Email u koji zelite promijeniti vec postoji u bazi podataka " + korisnik.getEmail());
         }
         // postoji sansa da postoji vec neki drugi user sa tim usernameom
         // analogno za ovaj slucaj id razlicit, username isti --> error
-        if(!korisnikRepository.existsByEmailAndIdNot(korisnik.getKorisnickoIme(), id)){
+        if(!userRepository.existsByEmailAndIdNot(korisnik.getKorisnickoIme(), id)){
             throw new RequestDeniedException("Korisnicko ime u koje zelite promijeniti vec postoji u bazi podataka " + korisnik.getKorisnickoIme());
         }
 
@@ -112,18 +110,18 @@ public class korisnikService implements korisnikServiceInterface {
 
     @Override
     public Optional<Korisnik> findByVerifikacijaToken(String verifikacijaToken) {
-        return korisnikRepository.findByVerifikacijaToken(verifikacijaToken);
+        return userRepository.findByVerifikacijaToken(verifikacijaToken);
     }
 
 
     @Override
     public List<Korisnik> findByVoditeljNotApproved() {
-        return korisnikRepository.findByUlogaIsAndPotvrdenNullOrPotvrdenIsFalseAndVerificiranIsTrue(uloga.VODITELJ);
+        return userRepository.findByUlogaIsAndPotvrdenNullOrPotvrdenIsFalseAndVerificiranIsTrue(uloga.VODITELJ);
     }
 
     @Override
     public Optional<Korisnik> findById(Long aLong) {
-        return korisnikRepository.findById(aLong);
+        return userRepository.findById(aLong);
     }
 
 

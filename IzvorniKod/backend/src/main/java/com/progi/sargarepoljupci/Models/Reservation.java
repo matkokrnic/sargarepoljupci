@@ -32,6 +32,4 @@ public class Reservation {
     @JoinColumn(name = "parking_spot_id")
     private ParkingSpot parkingSpot;
 
-
-
 }

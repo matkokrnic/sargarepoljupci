@@ -35,4 +35,6 @@ public interface korisnikRepository extends JpaRepository<Korisnik, Long> {
     Optional<Korisnik> findById(@Nonnull Long aLong);
 
     boolean existsByKorisnickoImeAndIdIsNot(String korisnickoIme, Long id);
+
+
 }

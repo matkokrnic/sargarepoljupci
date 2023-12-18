@@ -45,6 +45,8 @@ public class Korisnik {
 
     private String verifikacijaToken;
 
+    private double WalletBalance;
+
     public Korisnik() {
     }
 
@@ -60,6 +62,7 @@ public class Korisnik {
         this.potvrden = false; // Default value for potvrden
         this.verificiran = false; // Default value for verificiran
         this.verifikacijaToken = null; // Default value for verifikacijaToken
+        this.WalletBalance = 0.;
     }
 
 

@@ -3,9 +3,15 @@ package com.progi.sargarepoljupci.Controllers;
 import com.progi.sargarepoljupci.Exceptions.UserNotFoundException;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.Korisnik;
+import com.progi.sargarepoljupci.Models.Voditelj;
 import com.progi.sargarepoljupci.Models.uloga;
+import com.progi.sargarepoljupci.Repository.VoditeljRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,11 +27,13 @@ public class AdminController {
     private final com.progi.sargarepoljupci.Repository.korisnikRepository korisnikRepository;
     private final PasswordEncoder passwordEncoder;
     private final com.progi.sargarepoljupci.Services.korisnikService korisnikService;
+    private final VoditeljRepository voditeljRepository;
     @Autowired
-    public AdminController(com.progi.sargarepoljupci.Repository.korisnikRepository korisnikRepository, PasswordEncoder passwordEncoder, com.progi.sargarepoljupci.Services.korisnikService korisnikService) {
+    public AdminController(com.progi.sargarepoljupci.Repository.korisnikRepository korisnikRepository, PasswordEncoder passwordEncoder, com.progi.sargarepoljupci.Services.korisnikService korisnikService, VoditeljRepository voditeljRepository) {
         this.korisnikRepository = korisnikRepository;
         this.passwordEncoder = passwordEncoder;
         this.korisnikService = korisnikService;
+        this.voditeljRepository = voditeljRepository;
     }
 
 
@@ -33,6 +41,8 @@ public class AdminController {
     public List<Korisnik> getAllUsers() {
         return korisnikRepository.findAll();
     }
+
+
     /*
     @GetMapping("/voditelji")
     public List<Korisnik> getAllUsers() {
@@ -102,6 +112,9 @@ public class AdminController {
             // ako nije potvrden potvrdi ga
             else if(korisnik.getPotvrden() == null || !korisnik.getPotvrden() ) {
                 korisnik.setPotvrden(true);
+                Voditelj voditelj = new Voditelj();
+                voditelj.setKorisnik(korisnik);
+                voditeljRepository.save(voditelj);
                 return korisnikRepository.save(korisnik);
             }
             else throw new RequestDeniedException("Voditelj je vec potvrden");
@@ -137,6 +150,18 @@ public class AdminController {
 
         }
 
+    }
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable("userId") Long id){
+        try{
+            //korisnikRepository.deleteById(id);
+            voditeljRepository.deleteById(id);
+            return ResponseEntity.ok("User deleted successfully");
+        }catch (UsernameNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting user: " + e.getMessage());
+        }
     }
 
 
