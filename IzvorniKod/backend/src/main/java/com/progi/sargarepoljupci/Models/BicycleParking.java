@@ -8,10 +8,11 @@ import java.time.LocalDate;
 
 @Data
 @Entity
+@Table(name = "bicycle_parking")
 public class BicycleParking {
     @Id
     @GeneratedValue
-    private  Long id;
+    private  String bicycle_id;
 
     @Column(name = "number_of_spots")
     private int numAvailableSpots;

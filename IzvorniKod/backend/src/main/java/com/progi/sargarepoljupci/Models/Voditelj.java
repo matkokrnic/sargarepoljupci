@@ -8,14 +8,23 @@ import lombok.Data;
 @Entity
 public class Voditelj {
 
-
+// povezati ovo s korisnikom
     @Id
-    @Column(name = "voditelj_id")
-    private String voditeljId;
+    private Long voditeljId;
 
-    @OneToOne
-    @JoinColumn(name = "parking_id")
+/*
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "autoparking_id", referencedColumnName = "parking_id")
     private ParkingAuto parking;
+
+
+ */
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @MapsId
+    @JoinColumn(name = "voditelj_id")
+    private Korisnik korisnik;
+
+
 
 
 }
