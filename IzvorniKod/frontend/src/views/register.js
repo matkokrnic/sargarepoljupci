@@ -74,31 +74,33 @@ function Register() {
       password == confirmPassword &&
       /\S+@\S+\.\S+/.test(email) &&
       /^[A-Z]{2}/.test(iban) &&
-      role != 0
+      role.trim().length > 0
     );
   }
 
   // Funkcija za obradu forme pri submitu
   function onSubmit(e) {
     e.preventDefault();
-    setIsDisabled(true);
-    axios
-      .post("/api/registration", {
-        korisnickoIme: form.username,
-        lozinka: form.password,
-        email: form.email,
-        iban: form.iban,
-        ime: form.firstName,
-        prezime: form.lastName,
-        slikaOsobne: form.slikaOsobne,
-        Uloga: form.role,
-      })
-      .then(async (response) => {
+    var bodyFormData = new FormData();
+        bodyFormData.append("korisnickoIme", form.username);
+        bodyFormData.append("lozinka", form.password);
+        bodyFormData.append("email", form.email);
+        bodyFormData.append("iban", form.iban);
+        bodyFormData.append("ime", form.firstName);
+        bodyFormData.append("prezime", form.lastName);
+        bodyFormData.append("slikaOsobne", form.slikaOsobne);
+        bodyFormData.append("Uloga", form.role);
+    setIsDisabled(false);
+    axios({
+      method: "post",
+      url: "http://localhost:8080/api/registration",
+      data: bodyFormData,
+      headers: { "Content-Type": "application/json" },
+      }).then(async (response) => {
         console.log(response);
         window.location.href = '/';
         setIsDisabled(false);
-      })
-      .catch((err) => {
+      }).catch((err) => {
         console.log(err);
         alert(err.response.data.message);
       });
@@ -208,9 +210,9 @@ function Register() {
                   value={form.role}
                 >
 
-                    <option value={0}>Odabir uloge</option>
-                    <option value={"KLIJENT"}>Klijent</option>
-                    <option value={"VODITELJ"}>Voditelj parkinga</option>
+                    <option value={""}>Odabir uloge</option>
+                    <option value={"0"}>Klijent</option>
+                    <option value={"1"}>Voditelj parkinga</option>
                   </NativeSelect>
                 </Grid>
 
