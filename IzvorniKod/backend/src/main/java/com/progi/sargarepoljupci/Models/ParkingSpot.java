@@ -1,10 +1,7 @@
 package com.progi.sargarepoljupci.Models;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.sql.Timestamp;
 
 
 @Entity
@@ -20,6 +17,7 @@ public class ParkingSpot {
     private String label;
     private double longitude;
     private double latitude;
+    private String polygon;
     private Boolean accessible;
     private Boolean free;
 

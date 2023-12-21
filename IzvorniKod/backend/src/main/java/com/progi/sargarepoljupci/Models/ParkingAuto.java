@@ -11,9 +11,9 @@ import lombok.Data;
 public class ParkingAuto {
 
     @Id
-    private Long parkingVoditelj;
-
     private String parkingId;
+    @Column(columnDefinition = "TEXT")
+    private String polygon;
     private String picture;
     private String parkingName;
     private String parkingDescription;
