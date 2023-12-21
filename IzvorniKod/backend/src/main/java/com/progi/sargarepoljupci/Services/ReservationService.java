@@ -70,6 +70,33 @@ public class ReservationService {
                 endTime, startTime);
     }
 
+    public List<ParkingSpot> findAvailableParkingSpotsForTimeSlots(List<TimeSlotRequest> timeSlots) {
+        List<ParkingSpot> reservedParkingSpots = new ArrayList<>();
+
+        for (TimeSlotRequest timeSlot : timeSlots) {
+            List<Reservation> reservations = findOverlappingReservations(timeSlot.getStartTime(), timeSlot.getEndTime());
+            reservedParkingSpots.addAll(reservations.stream()
+                    .map(Reservation::getParkingSpot)
+                    .distinct()
+                    .toList());
+
+        }
+        List<ParkingSpot> availableParkingSpots = parkingSpotRepository.findParkingSpotsByAccessibleIsTrue();
+
+        availableParkingSpots.removeAll(reservedParkingSpots);
+
+        return availableParkingSpots;
+
+    }
+
+
+
+
+
+
+
+
+
 
 
 
