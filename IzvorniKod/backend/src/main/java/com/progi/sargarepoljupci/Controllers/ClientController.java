@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 
 @RestController
@@ -45,7 +46,7 @@ public class ClientController {
     public ResponseEntity<?> findNearestParkingSpot(
             @RequestParam("destination") String destination,
             @RequestParam("vehicleType") String vehicleType,
-            //@RequestParam("currentTime") Timestamp currentTime,
+            //@RequestParam("currentTime") LocalDateTime currentTime,
             @RequestParam("parkingDuration") int parkingDurationInMinutes) {
        return ResponseEntity.ok(parkingService.findNearestAvailableParking(destination, vehicleType, parkingDurationInMinutes));
 
