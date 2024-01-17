@@ -2,7 +2,7 @@ package com.progi.sargarepoljupci.Models;
 
 
 import com.progi.sargarepoljupci.DTO.Request.ParkingInformationRequest;
-import com.progi.sargarepoljupci.DTO.registrationDTO;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,17 +11,19 @@ import lombok.Data;
 public class ParkingAuto {
 
     @Id
-    private Long parkingVoditelj;
-
+    private String parkingId;
+    @Column(columnDefinition = "TEXT")
+    private String polygon;
     private String picture;
     private String parkingName;
     private String parkingDescription;
-    private double costPerHour;
+    private Double costPerHour;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
+    @Nullable
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "voditelj_id")
     private Voditelj voditelj;
+
 
  /*
     @OneToOne

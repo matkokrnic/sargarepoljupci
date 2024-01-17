@@ -23,6 +23,8 @@ public class BicycleParking {
     @Column(name = "latitude")
     private double latitude;
 
+    private String polygon;
+
 
 }
 

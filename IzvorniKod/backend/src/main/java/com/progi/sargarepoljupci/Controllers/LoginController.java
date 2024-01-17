@@ -1,15 +1,23 @@
 package com.progi.sargarepoljupci.Controllers;
 
 
-import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
-import com.progi.sargarepoljupci.Models.Korisnik;
 import com.progi.sargarepoljupci.DTO.loginDTO;
+import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
+import com.progi.sargarepoljupci.Exceptions.UserNotFoundException;
+import com.progi.sargarepoljupci.Models.Korisnik;
 import com.progi.sargarepoljupci.Models.uloga;
+import com.progi.sargarepoljupci.Security.JWT2.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
@@ -17,19 +25,23 @@ import java.util.Optional;
 @RequestMapping("/api/login")
 public class LoginController {
 
-    private final com.progi.sargarepoljupci.Services.korisnikService korisnikService;
+
 
     private final com.progi.sargarepoljupci.Repository.korisnikRepository korisnikRepository;
     private final PasswordEncoder encoder;
+    private final AuthenticationManager authenticationManager;
+    private final JWTService jwtService;
     @Autowired
-    public LoginController(com.progi.sargarepoljupci.Services.korisnikService korisnikService, com.progi.sargarepoljupci.Repository.korisnikRepository korisnikRepository, PasswordEncoder encoder) {
-        this.korisnikService = korisnikService;
+    public LoginController(com.progi.sargarepoljupci.Repository.korisnikRepository korisnikRepository, PasswordEncoder encoder, AuthenticationManager authenticationManager, JWTService jwtService) {
+
         this.korisnikRepository = korisnikRepository;
         this.encoder = encoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @PostMapping
-    public ResponseEntity<String> loginKorisnik(@RequestBody loginDTO loginDTO){
+    public ResponseEntity<?> loginKorisnik(@RequestBody loginDTO loginDTO){
 
         System.out.println("usli smo ovdje");
         if (loginDTO.getKorisnickoIme().equals("admin") && encoder.matches("123", loginDTO.getLozinka())){
@@ -38,7 +50,7 @@ public class LoginController {
         Optional<Korisnik> existingUser = korisnikRepository.findByKorisnickoIme(loginDTO.getKorisnickoIme());
         // ako je username isti
         if(existingUser.isPresent()){
-            if (existingUser.get().getVerificiran() == null){
+            if (existingUser.get().getVerificiran() == null && existingUser.get().getUloga()!=uloga.ADMIN){
                 throw new RequestDeniedException("Korisnik se nije verificirao mailom");
             }
             if (existingUser.get().getUloga() == uloga.VODITELJ && (existingUser.get().getPotvrden()==null ||!existingUser.get().getPotvrden())){
@@ -46,7 +58,15 @@ public class LoginController {
             }
             // ako je lozinka ista
             if(encoder.matches(loginDTO.getLozinka(), existingUser.get().getLozinka())){
-               return ResponseEntity.status(HttpStatus.valueOf(201)).body("Ulogiran");
+                Authentication authentication = authenticationManager
+                        .authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getKorisnickoIme(), loginDTO.getLozinka()));
+                if (authentication.isAuthenticated()){
+                    return ResponseEntity.ok(jwtService.generateToken(loginDTO.getKorisnickoIme()));
+                }
+                else {
+                    throw new UserNotFoundException("Invalid user credentials");
+                }
+
             }
 
             else{
