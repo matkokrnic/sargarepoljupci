@@ -78,9 +78,9 @@ public class ParkingService {
     }
 
     public Pair<Double, Double> findNearestBicycleSpot(String destination) {
-        List<BicycleParking> bicycleParkings = bicycleRepository.findAll();
+        List<BicycleParking> bicycleParkings = bicycleRepository.findByParkingLotIsNotNull();
         List<Pair<Double, Double>> coordinates = bicycleParkings.stream()
-                .map(parkingSpot -> Pair.of(parkingSpot.getLatitude(), parkingSpot.getLongitude()))
+                .map(parkingSpot -> Pair.of(parkingSpot.getLongitude(),parkingSpot.getLatitude()))
                 .toList();
 
         RestTemplate restTemplate = new RestTemplate();
