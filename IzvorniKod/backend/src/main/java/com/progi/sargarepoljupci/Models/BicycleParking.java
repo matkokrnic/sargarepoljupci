@@ -4,8 +4,6 @@ package com.progi.sargarepoljupci.Models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
-
 @Data
 @Entity
 @Table(name = "bicycle_parking")
@@ -24,6 +22,10 @@ public class BicycleParking {
     private double latitude;
 
     private String polygon;
+
+    @ManyToOne
+    @JoinColumn(name = "parking_id")
+    private ParkingAuto parkingLot;
 
 
 }
