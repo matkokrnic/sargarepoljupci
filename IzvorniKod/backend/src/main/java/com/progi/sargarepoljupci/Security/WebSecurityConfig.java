@@ -50,7 +50,7 @@ public class WebSecurityConfig {
             "/api/registration/**",
             "/api/authenticate/**",
             "/api/voditelj/**",
-            "/findNearest/**",
+            "/api/client/**",
             "/api/reservation/**"
     };
 
