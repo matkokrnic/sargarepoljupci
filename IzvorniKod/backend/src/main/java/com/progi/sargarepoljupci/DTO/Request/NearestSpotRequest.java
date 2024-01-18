@@ -9,4 +9,5 @@ public class NearestSpotRequest {
     private String vehicleType;
     //private LocalDateTime currentTime;
     private long parkingDurationInMinutes;
+    private long userId;
 }

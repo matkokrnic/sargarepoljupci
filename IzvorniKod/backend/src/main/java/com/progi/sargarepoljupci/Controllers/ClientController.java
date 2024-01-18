@@ -2,6 +2,7 @@ package com.progi.sargarepoljupci.Controllers;
 
 import com.progi.sargarepoljupci.DTO.Request.DepositRequest;
 import com.progi.sargarepoljupci.DTO.Request.NearestSpotRequest;
+import com.progi.sargarepoljupci.DTO.Request.TimeSlot;
 import com.progi.sargarepoljupci.DTO.Response.NearestSpotResponse;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Repository.BicycleRepository;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @RestController
@@ -67,21 +69,30 @@ public class ClientController {
             var bicycleParking = bicycleRepository.findByLongitudeAndLatitude(nearest.getFirst(), nearest.getSecond());
             if(bicycleParking==null)
                 throw new RequestDeniedException("There's no available bicycle parking");
-            return ResponseEntity.ok(new NearestSpotResponse(nearest.getFirst(), nearest.getSecond(), false, bicycleParking.getBicycle_id()));
+            return ResponseEntity.ok(new NearestSpotResponse(nearest.getFirst(), nearest.getSecond(), false, bicycleParking.getBicycle_id(), null));
         }
         currentTime = reservationService.roundToClosest30Minutes(currentTime);
        Pair<Double, Double> nearestCoordinates = parkingService.findNearestAvailableParking(destination, currentTime);
         // provjeriti je li rezervirano mjesto, prvo nadjemo mjesto
        var parkingSpot = parkingSpotRepository.findByLongitudeAndLatitude(nearestCoordinates.getFirst(), nearestCoordinates.getSecond());
         LocalDateTime reservationEnd = currentTime.plusMinutes(parkingDurationInMinutes);
+        boolean reservable;
+        reservable = reservationService.canParkingSpotBeReserved(parkingSpot.getId(), currentTime,  reservationEnd) && parkingSpot.getReservable();
+        if(reservable){
+            var timeslot = new TimeSlot(currentTime, currentTime.plusMinutes(parkingDurationInMinutes));
+            try {
+                reservationService.makeMultipleReservations(nearestSpotRequest.getUserId(), parkingSpot.getId(), List.of(timeslot));
+
+                    return ResponseEntity.ok(new NearestSpotResponse(parkingSpot.getLatitude(), parkingSpot.getLongitude(), true, parkingSpot.getId(), false));
+
+            }catch (RequestDeniedException e) {
+                return ResponseEntity.ok(new NearestSpotResponse(nearestCoordinates.getFirst(), nearestCoordinates.getSecond(), true, parkingSpot.getId(), true));
+            }
+
+        }else
+           return ResponseEntity.ok(new NearestSpotResponse(nearestCoordinates.getFirst(), nearestCoordinates.getSecond(), false, parkingSpot.getId(), null));
 
 
-
-        var reservable = reservationService.canParkingSpotBeReserved(parkingSpot.getId(), currentTime,  reservationEnd) && parkingSpot.getReservable();
-        //if(reservable){
-        //    reservationService.makeMultipleReservations(List.of(new TimeSlotRequest(currentTime, currentTime.plusMinutes(parkingDurationInMinutes))), )
-        //}
-        return ResponseEntity.ok(new NearestSpotResponse(nearestCoordinates.getFirst(), nearestCoordinates.getSecond(), reservable, parkingSpot.getId()));
 
     }
 

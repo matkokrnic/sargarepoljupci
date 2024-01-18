@@ -19,12 +19,15 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ParkingSpotRepository parkingSpotRepository;
     private final korisnikService korisnikService;
+    private final WalletService walletService;
+
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository, ParkingSpotRepository parkingSpotRepository, com.progi.sargarepoljupci.Services.korisnikService korisnikService) {
+    public ReservationService(ReservationRepository reservationRepository, ParkingSpotRepository parkingSpotRepository, com.progi.sargarepoljupci.Services.korisnikService korisnikService, WalletService walletService) {
         this.reservationRepository = reservationRepository;
         this.parkingSpotRepository = parkingSpotRepository;
         this.korisnikService = korisnikService;
+        this.walletService = walletService;
     }
 /*
     public boolean isTimeSlotAvailable(LocalDateTime start, LocalDateTime end) {
@@ -125,12 +128,15 @@ public class ReservationService {
 
     // If all timeslots are reservable it will return a Pair of null, and the totalTime;
     // If some timeslots are not reservable it will return a Pair that includes a list of unaccepted TimeSlots and duration=0
-    public Map.Entry<List<TimeSlot>, Long> makeMultipleReservations(Long userId, String parkingSpotId, List<TimeSlot> timeSlots) {
+    public List<TimeSlot> makeMultipleReservations(Long userId, String parkingSpotId, List<TimeSlot> timeSlots) {
 
         ParkingSpot parkingSpot = parkingSpotRepository.findById(parkingSpotId)
                 .orElseThrow(() -> new RuntimeException("Parking spot not found"));
-        long totalDurationInMin = 0;
-
+        long totalDurationInMin = 0L;
+        Optional<Korisnik> user = korisnikService.findById(userId);
+        if(user.isEmpty()){
+            throw new RequestDeniedException("User with that ID doesn't exist");
+        }
         List<TimeSlot> unavailableTimeSlots = new ArrayList<>();
         List<Reservation> reservations = new ArrayList<>();
         for (TimeSlot timeSlot : timeSlots) {
@@ -142,10 +148,7 @@ public class ReservationService {
 
             if (isReservable) {
 
-                Optional<Korisnik> user = korisnikService.findById(userId);
-                if(user.isEmpty()){
-                    throw new RequestDeniedException("User with that ID doesn't exist");
-                }
+
                 totalDurationInMin += calculateDurationInMinutes(timeSlot.getStartTime(), timeSlot.getEndTime());
                 Reservation reservation = new Reservation();
                 reservation.setKorisnik(user.get());
@@ -164,10 +167,14 @@ public class ReservationService {
         }
         // if every timeslot was available we just return null and the total duration
         if(unavailableTimeSlots.isEmpty()){
+
+            var costPerHour = parkingSpot.getParking().getCostPerHour();
+            double totalPrice = costPerHour*((double) totalDurationInMin /60.);
+            walletService.withdrawFunds(userId, totalPrice);
             reservationRepository.saveAll(reservations);
-            return new AbstractMap.SimpleEntry<>(null, totalDurationInMin);
+            return null;
         }
-        return new AbstractMap.SimpleEntry<>(unavailableTimeSlots, 0L);
+        return unavailableTimeSlots;
 
 
 

@@ -3,6 +3,7 @@ package com.progi.sargarepoljupci.Controllers;
 
 import com.progi.sargarepoljupci.DTO.Request.ReservationRequest;
 import com.progi.sargarepoljupci.DTO.Request.TimeSlot;
+import com.progi.sargarepoljupci.DTO.Response.ParkingSpotResponse;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.ParkingSpot;
 import com.progi.sargarepoljupci.Models.Reservation;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,8 +67,14 @@ public class ReservationController {
     }
 
     @PostMapping("/findReservableParkingSpots")
-    public List<ParkingSpot> findAvailableParkingSpots(@RequestBody List<TimeSlot> timeSlots) {
-        return reservationService.findReservableParkingSpotsForTimeSlots(timeSlots);
+    public List<ParkingSpotResponse> findAvailableParkingSpots(@RequestBody List<TimeSlot> timeSlots) {
+        var parkingSpots = reservationService.findReservableParkingSpotsForTimeSlots(timeSlots);
+        List<ParkingSpotResponse> parkingSpotRequests = new ArrayList<>();
+
+        for (ParkingSpot parkingSpot : parkingSpots) {
+            parkingSpotRequests.add(new ParkingSpotResponse(parkingSpot));
+        }
+        return parkingSpotRequests;
     }
 
     @PostMapping("/unavailableTimeslots")
@@ -90,7 +98,7 @@ public class ReservationController {
 
 
     // return:
-    // 1. If all timeslots are available, HTTP.ok i koliko treba platiti u bodyu
+    // 1. If all timeslots are available, HTTP.ok
     // 2. If some timeslots aren't available: Bad Request with the List of unavailable Timeslots
     @PostMapping("/create-reservations")
     public ResponseEntity<?> makeMultipleReservations(
@@ -109,28 +117,25 @@ public class ReservationController {
             throw new RequestDeniedException("Parking spot doesn't belong to any parking lot");
         }
         // ako mjesto nije postavljeno kao reservable i ako user nije na lokaciji
-        if(!parkingSpot.get().getReservable() && !(request.getOnLocation())){
+        //ako je false ili null i ako user nije na lokaciji
+        var temp = parkingSpot.get().getReservable();
+        var onLocation = request.getOnLocation();
+        if((temp ==null || !temp) && (onLocation==null || !onLocation)){
             throw new RequestDeniedException("Parking spot hasn't been set as reservable");
         }
 
 
 
 
-        // ima listu nedostupnih timeslotova kao key i totalDuration kao value
-        // koristim u ovom slucaju mapu samo kao Pair
+
         var unavailableTimeSlots = reservationService.makeMultipleReservations(userID, parkingSpotId, timeSlots);
 
-        // U slucaju kad su svi timeslotovi dostupni, trebam izracunat koliko treba platiti
-        if(unavailableTimeSlots.getKey()==null){
-            var totalDuration = unavailableTimeSlots.getValue();
 
-            var costPerHour = parkingSpot.get().getParking().getCostPerHour();
-            double totalPrice = costPerHour*(totalDuration.doubleValue()/60.);
+        if(unavailableTimeSlots==null){
+           return ResponseEntity.ok("Successfully reserved");
 
-
-            return ResponseEntity.ok(totalPrice);
         }else
-            return ResponseEntity.badRequest().body(unavailableTimeSlots.getKey());
+            return ResponseEntity.badRequest().body(unavailableTimeSlots);
 
 
 

@@ -24,6 +24,7 @@ public class WalletService {
 
         if (user != null) {
             user.setWalletBalance(user.getWalletBalance()+amount);
+            userRepository.save(user);
             return true;
         }
         return false;
