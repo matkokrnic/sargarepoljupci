@@ -15,13 +15,13 @@ export  function RegisterPage() {
           {({ open }) => (
             <>
               <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div className="flex items-center justify-center h-16">
+                <div className="flex justify-center h-16 items-left">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
                         <a href="/">
                       <img
-                        className="w-8 h-8"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                        className="w-auto h-12 mx-1"
+                        src="../images/slova_pokraj.svg"
                         alt="SpotPicker"
                       />
                       </a>

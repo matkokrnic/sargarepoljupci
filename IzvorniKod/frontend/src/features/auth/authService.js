@@ -1,9 +1,10 @@
+// eslint-disable-next-line no-unused-vars
 import { isAsyncThunkAction } from '@reduxjs/toolkit';
 import axios from 'axios'
 
 
 const register = async (data) => {
-    const response = await axios.post('/api/listunreguser', data);
+    const response = await axios.post('/api/registration', data);
     
     console.log(response);
     return response.data;
@@ -11,14 +12,9 @@ const register = async (data) => {
 
 
 const login = async (data) => {
+    console.log(data.toString());
 
-    /*const params = new URLSearchParams();
-    params.append('username', data.username);
-    params.append('pass', data.pass);*/
-
-    //console.log(params.toString());
-
-    const response = await fetch('/api/login', data) //axios.post('/login', params);
+    const response = await fetch('/api/login', data);
 
     const headerUser = new Map(response.headers).get('user');
     
