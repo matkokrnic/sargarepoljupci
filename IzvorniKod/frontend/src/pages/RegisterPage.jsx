@@ -1,9 +1,8 @@
 // RegistrationPage.jsx
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { RegisterForm } from '../components/RegisterForm';
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Disclosure} from '@headlessui/react'
 
 export  function RegisterPage() {
   return (
@@ -12,7 +11,6 @@ export  function RegisterPage() {
       <div className="h-full">
       <div className="min-h-full">
         <Disclosure as="nav" className="bg-gray-800">
-          {({ open }) => (
             <>
               <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div className="flex justify-center h-16 items-left">
@@ -31,7 +29,6 @@ export  function RegisterPage() {
                   
                 </div>
             </>
-          )}
         </Disclosure>
 
         <header className="bg-white shadow">

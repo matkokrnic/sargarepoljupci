@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import { PhotoIcon, UserCircleIcon, CheckIcon, XCircleIcon, CheckCircleIcon } from '@heroicons/react/24/solid'
-import {Link, useNavigate} from 'react-router-dom';
+import { PhotoIcon, UserCircleIcon, CheckCircleIcon } from '@heroicons/react/24/solid'
+import {useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {register, reset} from '../features/auth/authSlice';
 
@@ -43,7 +43,7 @@ export function RegisterForm() {
     const [password, setPassword] = useState('');
     const [passwordAgain, setPasswordAgain] = useState('');
     const [samePassword, setSamePassword] = useState(false);
-    const [photo, setPhoto] = useState(null);
+    //const [photo, setPhoto] = useState(null);
 
     function checkSamePassword() {
         console.log(form);
@@ -59,9 +59,9 @@ export function RegisterForm() {
         checkSamePassword();
     }, [password, passwordAgain]);
 
-    const handlePhotoChange = (event) => {
+    /*const handlePhotoChange = (event) => {
         setPhoto(event.target.files[0]);
-    }
+    }*/
 
     function onSubmit(event) {
         event.preventDefault();
