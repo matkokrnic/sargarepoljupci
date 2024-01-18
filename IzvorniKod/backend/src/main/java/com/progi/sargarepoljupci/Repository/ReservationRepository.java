@@ -18,22 +18,25 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
      */
 
-    //
 
     List<Reservation> findByReservationStartIsLessThanAndReservationEndGreaterThan(LocalDateTime reservationEnd, LocalDateTime reservationStart);
     List<Reservation> findByParkingSpotIdInAndReservationEndGreaterThanEqualAndReservationStartLessThanEqual(
             Collection<String> parkingSpot_id, LocalDateTime reservationEnd, LocalDateTime reservationStart);
-    List<Reservation> findByParkingSpotIdInAndReservationEndAfterAndReservationStartBefore(
-            Collection<String> parkingSpot_id, LocalDateTime reservationEnd, LocalDateTime reservationStart);
-    List<Reservation> findReservationsByParkingSpotId(String id);
 
     List<Reservation> findByParkingSpotIdIn(Collection<String> parkingSpotId);
 
-    List<Reservation> findByParkingSpotIdAndReservationStartBetweenAndReservationEndBetween(
-            String parkingSpotID,
-            LocalDateTime start1, LocalDateTime end1,
-            LocalDateTime start2, LocalDateTime end2
-    );
+
+    //List<Reservation> findByParkingSpotIdInAndReservationEndAfterAndReservationStartBefore(
+    //        Collection<String> parkingSpot_id, LocalDateTime reservationEnd, LocalDateTime reservationStart);
+    //List<Reservation> findReservationsByParkingSpotId(String id);
+
+
+
+    //List<Reservation> findByParkingSpotIdAndReservationStartBetweenAndReservationEndBetween(
+    //        String parkingSpotID,
+    //        LocalDateTime start1, LocalDateTime end1,
+    //        LocalDateTime start2, LocalDateTime end2
+    //);
 
 
 

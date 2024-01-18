@@ -19,11 +19,11 @@ public class ParkingSpot {
     private double latitude;
     private String polygon;
     private Boolean reservable;
-    private Boolean free;
+    //private Boolean free;
 
     @ManyToOne
     @JoinColumn(name = "parking_id")
-    private ParkingAuto parking;
+    private Parking parking;
 
 
 }

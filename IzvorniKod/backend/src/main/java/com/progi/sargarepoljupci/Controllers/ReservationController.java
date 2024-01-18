@@ -6,12 +6,9 @@ import com.progi.sargarepoljupci.DTO.Request.TimeSlot;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.ParkingSpot;
 import com.progi.sargarepoljupci.Models.Reservation;
-import com.progi.sargarepoljupci.Repository.ParkingAutoRepository;
 import com.progi.sargarepoljupci.Repository.ParkingSpotRepository;
 import com.progi.sargarepoljupci.Repository.ReservationRepository;
-import com.progi.sargarepoljupci.Services.ParkingSpotService;
 import com.progi.sargarepoljupci.Services.ReservationService;
-import com.progi.sargarepoljupci.Services.korisnikService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -24,21 +21,18 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/reservation")
 @RestController
 public class ReservationController {
-    private final ParkingSpotService parkingSpotService;
+
     private final ReservationService reservationService;
     private final ReservationRepository reservationRepository;
     private final ParkingSpotRepository parkingSpotRepository;
-    private final ParkingAutoRepository parkingAutoRepository;
-    private final korisnikService korisnikService;
 
     @Autowired
-    public ReservationController(ParkingSpotService parkingSpotService, ReservationService reservationService, ReservationRepository reservationRepository, ParkingSpotRepository parkingSpotRepository, ParkingAutoRepository parkingAutoRepository, com.progi.sargarepoljupci.Services.korisnikService korisnikService) {
-        this.parkingSpotService = parkingSpotService;
+    public ReservationController(ReservationService reservationService, ReservationRepository reservationRepository, ParkingSpotRepository parkingSpotRepository) {
+
         this.reservationService = reservationService;
         this.reservationRepository = reservationRepository;
         this.parkingSpotRepository = parkingSpotRepository;
-        this.parkingAutoRepository = parkingAutoRepository;
-        this.korisnikService = korisnikService;
+
     }
     /*
         @PostMapping("/mapSelection")
@@ -92,10 +86,7 @@ public class ReservationController {
      */
 
 
-    //@GetMapping("/parkingLots")
-    //public List<ParkingAuto> retrieveParkingLots() {
-    //    return parkingAutoRepository.findAll();
-    //}
+
 
 
     // return:
@@ -113,6 +104,9 @@ public class ReservationController {
         var parkingSpot =parkingSpotRepository.findById(parkingSpotId);
         if(parkingSpot.isEmpty()){
             throw new RequestDeniedException("Parking spot doesn't exist");
+        }
+        if(parkingSpot.get().getParking()==null){
+            throw new RequestDeniedException("Parking spot doesn't belong to any parking lot");
         }
         // ako mjesto nije postavljeno kao reservable i ako user nije na lokaciji
         if(!parkingSpot.get().getReservable() && !(request.getOnLocation())){

@@ -25,7 +25,7 @@ public class BicycleParking {
 
     @ManyToOne
     @JoinColumn(name = "parking_id")
-    private ParkingAuto parkingLot;
+    private Parking parkingLot;
 
 
 }

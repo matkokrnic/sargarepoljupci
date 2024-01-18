@@ -2,8 +2,10 @@ package com.progi.sargarepoljupci.Controllers;
 
 
 import com.progi.sargarepoljupci.Models.BicycleParking;
+import com.progi.sargarepoljupci.Models.Parking;
 import com.progi.sargarepoljupci.Models.ParkingSpot;
 import com.progi.sargarepoljupci.Repository.BicycleRepository;
+import com.progi.sargarepoljupci.Repository.ParkingRepository;
 import com.progi.sargarepoljupci.Repository.ParkingSpotRepository;
 import com.progi.sargarepoljupci.Services.ParkingService;
 import com.progi.sargarepoljupci.Services.ParkingSpotService;
@@ -25,13 +27,15 @@ public class ParkingController {
     private final ReservationService reservationService;
     private final BicycleRepository bicycleRepository;
     private final ParkingService parkingService;
+    private final ParkingRepository parkingRepository;
     @Autowired
-    public ParkingController(ParkingSpotService parkingSpotService, ParkingSpotRepository parkingSpotRepository, ReservationService reservationService, BicycleRepository bicycleRepository, ParkingService parkingService) {
+    public ParkingController(ParkingSpotService parkingSpotService, ParkingSpotRepository parkingSpotRepository, ReservationService reservationService, BicycleRepository bicycleRepository, ParkingService parkingService, ParkingRepository parkingRepository) {
         this.parkingSpotService = parkingSpotService;
         this.parkingSpotRepository = parkingSpotRepository;
         this.reservationService = reservationService;
         this.bicycleRepository = bicycleRepository;
         this.parkingService = parkingService;
+        this.parkingRepository = parkingRepository;
     }
 
 
@@ -89,13 +93,18 @@ public class ParkingController {
 
     @GetMapping("/parking-spots/by-parking/{parkingId}")
     public ResponseEntity<List<ParkingSpot>> getAllParkingSpotsForParking(@PathVariable Long parkingId) {
-        List<ParkingSpot> parkingSpots = parkingService.getAllParkingSpotsForParkingAuto(parkingId);
+        List<ParkingSpot> parkingSpots = parkingService.getAllParkingSpotsForParking(parkingId);
         return ResponseEntity.ok(parkingSpots);
     }
     @GetMapping("/bicycle-spots/for-parking/{parkingId}")
     public ResponseEntity<List<?>> getAllBicycleSpotsForParking(@PathVariable Long parkingId) {
         List<BicycleParking> bicycleSpots = parkingService.getAllBicycleSpotsForParking(parkingId);
         return ResponseEntity.ok(bicycleSpots);
+    }
+
+    @GetMapping("/parkingLots")
+    public List<Parking> retrieveParkingLots() {
+        return parkingRepository.findAll();
     }
 
 

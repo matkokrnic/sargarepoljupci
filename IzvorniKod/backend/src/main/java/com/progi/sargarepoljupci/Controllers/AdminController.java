@@ -1,7 +1,8 @@
 package com.progi.sargarepoljupci.Controllers;
 
-import com.progi.sargarepoljupci.Exceptions.UserNotFoundException;
+import com.progi.sargarepoljupci.DTO.PersonalInformation;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
+import com.progi.sargarepoljupci.Exceptions.UserNotFoundException;
 import com.progi.sargarepoljupci.Models.Korisnik;
 import com.progi.sargarepoljupci.Models.Voditelj;
 import com.progi.sargarepoljupci.Models.uloga;
@@ -10,13 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -63,37 +62,14 @@ public class AdminController {
     // ovdje bi trebao napraviti DTO
     @PutMapping("/update/{id}")
     // ovdje bi trebao napraviti DTO
-    public Korisnik updateKorisnik(@PathVariable("id") Long id, @RequestBody Korisnik requestKorisnik) {
+    public ResponseEntity<?> updateKorisnik(@PathVariable("id") Long id, @RequestBody PersonalInformation userRequest) {
 
-        Korisnik korisnikInBaza = korisnikRepository.findById(id).orElse(null);
-        if (korisnikInBaza != null) {
-            Long requestKorisnikId = requestKorisnik.getId();
-
-            // provjera je li id isti kao i id usera koji smo poslali u bodyu
-            if(!Objects.equals(requestKorisnikId, id)){
-                throw new RequestDeniedException("Nepravilan id");
-            }
-
-            // ovo da ako je lozinka == null stavljam u onu koja je bila
-            // ne trebam tako tretirati, ali o tome nekom drugom prilikom
-            if(requestKorisnik.getLozinka() == null) {
-                requestKorisnik.setLozinka(korisnikInBaza.getLozinka());
-            } else {
-                requestKorisnik.setLozinka(passwordEncoder.encode(requestKorisnik.getLozinka()));
-            }
-
-            // gledamo postoji li neki drugi user koji ima taj mail ali drukciji id
-            if(korisnikRepository.existsByEmailAndIdIsNot(requestKorisnik.getEmail(), id)){
-                throw new RequestDeniedException("Neki drugi korisnik vec ima taj email");
-            }
-            // gledamo postoji li neki drugi user koji ima to korisnickoIme ali drukciji id
-            if(korisnikRepository.existsByKorisnickoImeAndIdIsNot(requestKorisnik.getEmail(), id)){
-                throw new RequestDeniedException("Neki drugi korisnik vec ima to korisnickoIme");
-            }
-            return korisnikRepository.save(requestKorisnik);
-
-        }else
-            throw new RequestDeniedException("Taj korisnik ne postoji u bazi (nema id-a)");
+        try {
+            korisnikService.updateKorisnik(id, userRequest);
+            return ResponseEntity.ok("User updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update user");
+        }
     }
 
 
@@ -165,9 +141,51 @@ public class AdminController {
     }
 
 
+/*
+    @PutMapping("/update/{id}")
+    // ovdje bi trebao napraviti DTO
+    public Korisnik updateKorisnik(@PathVariable("id") Long id, @RequestBody PersonalInformation requestKorisnik) {
+
+        Korisnik korisnikInBaza = korisnikRepository.findById(id).orElse(null);
+        if (korisnikInBaza != null) {
+            Long requestKorisnikId = requestKorisnik.getId();
+
+            // provjera je li id isti kao i id usera koji smo poslali u bodyu
+            if(!Objects.equals(requestKorisnikId, id)){
+                throw new RequestDeniedException("Nepravilan id");
+            }
+
+            // ovo da ako je lozinka == null stavljam u onu koja je bila
+            // ne trebam tako tretirati, ali o tome nekom drugom prilikom
+            if(requestKorisnik.getLozinka() == null) {
+                requestKorisnik.setLozinka(korisnikInBaza.getLozinka());
+            } else {
+                requestKorisnik.setLozinka(passwordEncoder.encode(requestKorisnik.getLozinka()));
+            }
+
+            // gledamo postoji li neki drugi user koji ima taj mail ali drukciji id
+            if(korisnikRepository.existsByEmailAndIdIsNot(requestKorisnik.getEmail(), id)){
+                throw new RequestDeniedException("Neki drugi korisnik vec ima taj email");
+            }
+            // gledamo postoji li neki drugi user koji ima to korisnickoIme ali drukciji id
+            if(korisnikRepository.existsByKorisnickoImeAndIdIsNot(requestKorisnik.getEmail(), id)){
+                throw new RequestDeniedException("Neki drugi korisnik vec ima to korisnickoIme");
+            }
+            if(requestKorisnik.getUloga()==uloga.VODITELJ){
+                var voditelj = new Voditelj();
+                voditelj.setKorisnik(requestKorisnik);
+                voditeljRepository.save(voditelj);
+                return voditelj.getKorisnik();
+            }else{
+                return korisnikRepository.save(requestKorisnik);
+            }
 
 
+        }else
+            throw new RequestDeniedException("Taj korisnik ne postoji u bazi (nema id-a)");
+    }
 
+ */
 
 
 

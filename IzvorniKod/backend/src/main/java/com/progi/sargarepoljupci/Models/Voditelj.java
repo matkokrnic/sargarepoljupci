@@ -13,13 +13,7 @@ public class Voditelj {
     @Id
     private Long voditeljId;
 
-    /*
-        @OneToOne(cascade = CascadeType.ALL)
-        @JoinColumn(name = "autoparking_id", referencedColumnName = "parking_id")
-        private ParkingAuto parking;
 
-
-     */
     @OneToOne(cascade = CascadeType.ALL)
     @MapsId
     @JoinColumn(name = "voditelj_id")

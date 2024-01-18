@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class ParkingAuto {
+public class Parking {
 
     //@Id
     //private String parkingId;
@@ -20,12 +20,14 @@ public class ParkingAuto {
     private Long parkingId;
 
     private String picture;
+
+    @Column(unique = true)
     private String parkingName;
     private String parkingDescription;
     private Double costPerHour;
 
     @Nullable
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "voditelj_id")
     private Voditelj voditelj;
 
@@ -37,11 +39,11 @@ public class ParkingAuto {
 
  */
 
-    public ParkingAuto() {
+    public Parking() {
     }
 
 
-    public ParkingAuto(ParkingInformationRequest request) {
+    public Parking(ParkingInformationRequest request) {
         this.parkingName= request.getName();
         this.parkingDescription = request.getDescription();
         this.costPerHour = request.getCostPerHour();

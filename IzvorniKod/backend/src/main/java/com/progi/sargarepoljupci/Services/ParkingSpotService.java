@@ -4,9 +4,7 @@ import com.progi.sargarepoljupci.DTO.Request.ReservableUpdateRequest;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.ParkingSpot;
 import com.progi.sargarepoljupci.Repository.ParkingSpotRepository;
-import com.progi.sargarepoljupci.Repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,12 +14,10 @@ import java.util.List;
 @Service
 public class ParkingSpotService {
     private final ParkingSpotRepository parkingSpotRepository;
-    private final ReservationRepository reservationRepository;
     private final ReservationService reservationService;
     @Autowired
-    public ParkingSpotService(ParkingSpotRepository parkingSpotRepository, ReservationRepository reservationRepository, ReservationService reservationService) {
+    public ParkingSpotService(ParkingSpotRepository parkingSpotRepository, ReservationService reservationService) {
         this.parkingSpotRepository = parkingSpotRepository;
-        this.reservationRepository = reservationRepository;
         this.reservationService = reservationService;
     }
 
@@ -39,11 +35,6 @@ public class ParkingSpotService {
         return reservationService.canParkingSpotBeReserved(parkingSpotId, LocalDateTime.now(), LocalDateTime.now());
 
     }
-
-    public List<Pair<Double, Double>> getCoordinatesOfFreeParkingSpots() {
-        return parkingSpotRepository.findCoordinatesOfFreeParkingSpots();
-    }
-
 
 
     public void updateReservableStatus(String parkingSpotId, Boolean reservable) {

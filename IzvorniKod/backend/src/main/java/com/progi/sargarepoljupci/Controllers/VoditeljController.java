@@ -4,8 +4,6 @@ package com.progi.sargarepoljupci.Controllers;
 import com.progi.sargarepoljupci.DTO.Request.ParkingInformationRequest;
 import com.progi.sargarepoljupci.DTO.Request.ReservableUpdateRequest;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
-import com.progi.sargarepoljupci.Repository.ParkingAutoRepository;
-import com.progi.sargarepoljupci.Repository.ParkingSpotRepository;
 import com.progi.sargarepoljupci.Services.ParkingService;
 import com.progi.sargarepoljupci.Services.ParkingSpotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +21,11 @@ import java.util.List;
 public class VoditeljController {
     private final ParkingService parkingService;
     private final ParkingSpotService parkingSpotService;
-    private final ParkingAutoRepository autoRepository;
-    private final ParkingSpotRepository parkingSpotRepository;
+
     @Autowired
-    public VoditeljController(ParkingService parkingService, ParkingSpotService parkingSpotService, ParkingAutoRepository autoRepository, ParkingSpotRepository parkingSpotRepository) {
+    public VoditeljController(ParkingService parkingService, ParkingSpotService parkingSpotService) {
         this.parkingService = parkingService;
         this.parkingSpotService = parkingSpotService;
-        this.autoRepository = autoRepository;
-        this.parkingSpotRepository = parkingSpotRepository;
     }
 
     /*

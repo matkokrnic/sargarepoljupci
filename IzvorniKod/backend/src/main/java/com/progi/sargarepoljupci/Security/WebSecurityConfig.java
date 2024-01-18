@@ -43,24 +43,44 @@ public class WebSecurityConfig {
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
-    private static final String[] SECURED_URLs = {"/api/admin/**"};
+    private static final String[] ADMIN_SECURED_URLs = {"/api/admin/**"};
 
     private static final String[] UN_SECURED_URLs = {
             "/api/login/**",
             "/api/registration/**",
             "/api/authenticate/**",
-            "/api/voditelj/**",
+            "/parkingLots",
+            "/bicycle-spots/for-parking/{parkingId}",
+            "/parking-spots/by-parking/{parkingId}",
+            "/bicycle-spots",
+            "/parking-spots",
+            "/unoccupied",
+            "/occupied",
+            "/reservableParkingSpots",
+            "/accessibleParkingSpots",
+            "/{parkingSpotId}/availability",
+
+    };
+
+    private static final String[] CLIENT_SECURED_URLs = {
             "/api/client/**",
             "/api/reservation/**"
     };
+    private static final String[] MANAGER_SECURED_URLs = {
+            "/api/voditelj/**"
+    };
+
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers(UN_SECURED_URLs).permitAll().and()
-                .authorizeHttpRequests().requestMatchers(SECURED_URLs)
-                .hasAuthority("ADMIN").anyRequest().authenticated()
+                .requestMatchers(UN_SECURED_URLs).permitAll()
+                .requestMatchers(ADMIN_SECURED_URLs).hasAuthority("ADMIN")
+                .requestMatchers(CLIENT_SECURED_URLs).hasAuthority("KLIJENT")
+                .requestMatchers(MANAGER_SECURED_URLs).hasAuthority("VODITELJ")
+                .anyRequest().authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

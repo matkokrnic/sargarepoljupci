@@ -6,10 +6,10 @@ import com.progi.sargarepoljupci.DTO.Request.ParkingInformationRequest;
 import com.progi.sargarepoljupci.DTO.Response.TableResponse;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.BicycleParking;
-import com.progi.sargarepoljupci.Models.ParkingAuto;
+import com.progi.sargarepoljupci.Models.Parking;
 import com.progi.sargarepoljupci.Models.ParkingSpot;
 import com.progi.sargarepoljupci.Repository.BicycleRepository;
-import com.progi.sargarepoljupci.Repository.ParkingAutoRepository;
+import com.progi.sargarepoljupci.Repository.ParkingRepository;
 import com.progi.sargarepoljupci.Repository.ParkingSpotRepository;
 import com.progi.sargarepoljupci.Repository.VoditeljRepository;
 import com.progi.sargarepoljupci.Utilities.ParkingSpotReservable;
@@ -35,17 +35,17 @@ public class ParkingService {
 
     private final ReservationService reservationService;
     private final BicycleRepository bicycleRepository;
-    private final ParkingAutoRepository parkingAutoRepository;
+    private final ParkingRepository parkingRepository;
     private final VoditeljRepository voditeljRepository;
     @Autowired
-    public ParkingService(ParkingSpotRepository parkingSpotRepository, ParkingSpotService parkingSpotService, ReservationService reservationService, BicycleRepository bicycleRepository, ParkingAutoRepository parkingAutoRepository, VoditeljRepository voditeljRepository) {
+    public ParkingService(ParkingSpotRepository parkingSpotRepository, ReservationService reservationService, BicycleRepository bicycleRepository, ParkingRepository parkingRepository, VoditeljRepository voditeljRepository) {
 
         this.parkingSpotRepository = parkingSpotRepository;
 
         this.reservationService = reservationService;
         this.bicycleRepository = bicycleRepository;
 
-        this.parkingAutoRepository = parkingAutoRepository;
+        this.parkingRepository = parkingRepository;
         this.voditeljRepository = voditeljRepository;
     }
 
@@ -171,16 +171,16 @@ public class ParkingService {
     }
 
 
-    public ParkingAuto createNewParking(ParkingInformationRequest request) {
-        var parkingAuto = new ParkingAuto(request);
+    public Parking createNewParking(ParkingInformationRequest request) {
+        var parking = new Parking(request);
         var voditelj = voditeljRepository.findById(request.getVoditeljID());
         if(voditelj.isEmpty())
             throw new RequestDeniedException("Voditelj doesn't exist");
-        parkingAuto.setVoditelj(voditelj.get());
-        return parkingAutoRepository.save(parkingAuto);
+        parking.setVoditelj(voditelj.get());
+        return parkingRepository.save(parking);
     }
 
-    public void markSpots(ParkingInformationRequest request, ParkingAuto parkingAuto) {
+    public void markSpots(ParkingInformationRequest request, Parking parking) {
         var parkingSpotList = request.getParkingSpotList();
         for (ParkingSpotReservable spot : parkingSpotList) {
             if(spot.getReservable()!=null) {
@@ -189,14 +189,14 @@ public class ParkingService {
                 throw new RequestDeniedException("Spot " + spot.getSpotId() +  " belongs to another Parking Lot");
             }
 
-                parkingSpot.setParking(parkingAuto);
+                parkingSpot.setParking(parking);
                 parkingSpot.setReservable(spot.getReservable());
                 parkingSpotRepository.save(parkingSpot);
             }else{
                 var bicycleSpot = bicycleRepository.findById(spot.getSpotId());
                 if(bicycleSpot.isEmpty())
                     throw new RequestDeniedException("BicycleSpot with that id doesn't exist");
-                //bicycleSpot.get().setParking(parkingAuto);
+                bicycleSpot.get().setParkingLot(parking);
                 bicycleRepository.save(bicycleSpot.get());
 
             }
@@ -204,18 +204,18 @@ public class ParkingService {
 
     }
 
-    public List<ParkingSpot> getAllParkingSpotsForParkingAuto(Long parkingId) {
-        ParkingAuto parkingAuto = parkingAutoRepository.findById(parkingId).orElseThrow(()->
+    public List<ParkingSpot> getAllParkingSpotsForParking(Long parkingId) {
+        Parking parking = parkingRepository.findById(parkingId).orElseThrow(()->
                 new RequestDeniedException("Parking Lot with that ID doesn't exist"));
 
-        return parkingSpotRepository.findByParking(parkingAuto);
+        return parkingSpotRepository.findByParking(parking);
     }
 
     public List<BicycleParking> getAllBicycleSpotsForParking(Long parkingId) {
-        ParkingAuto parkingAuto = parkingAutoRepository.findById(parkingId).orElseThrow(()->
+        Parking parking = parkingRepository.findById(parkingId).orElseThrow(()->
                 new RequestDeniedException("Parking Lot with that ID doesn't exist"));
 
-        return bicycleRepository.findByParkingLot(parkingAuto);
+        return bicycleRepository.findByParkingLot(parking);
     }
 
 

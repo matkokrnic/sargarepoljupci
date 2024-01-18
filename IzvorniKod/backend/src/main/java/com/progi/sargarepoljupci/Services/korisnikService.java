@@ -1,15 +1,15 @@
 package com.progi.sargarepoljupci.Services;
 
-import com.progi.sargarepoljupci.Exceptions.UserNotFoundException;
+import com.progi.sargarepoljupci.DTO.PersonalInformation;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.Korisnik;
+import com.progi.sargarepoljupci.Models.Voditelj;
 import com.progi.sargarepoljupci.Models.uloga;
+import com.progi.sargarepoljupci.Repository.VoditeljRepository;
 import com.progi.sargarepoljupci.Repository.korisnikRepository;
 import com.progi.sargarepoljupci.Utilities.VerificationTokenGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,23 +22,27 @@ public class korisnikService implements korisnikServiceInterface {
 
     private final korisnikRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final VoditeljRepository voditeljRepository;
 
 
     @Autowired
-    public korisnikService(com.progi.sargarepoljupci.Repository.korisnikRepository userRepository, PasswordEncoder passwordEncoder) {
+    public korisnikService(korisnikRepository userRepository, PasswordEncoder passwordEncoder, VoditeljRepository voditeljRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.voditeljRepository = voditeljRepository;
     }
 
     public boolean doesKorisnikExistByEmail(String email){
         return userRepository.existsByEmail(email);
     }
 
+    /*
     @Override
     public boolean doesKorisnikExistByUsername(String korisnickoIme) {
         return userRepository.existsByKorisnickoIme(korisnickoIme);
     }
+
+     */
 
 
     //trebao bih pretvoriti URL slike u bytearray
@@ -66,13 +70,61 @@ public class korisnikService implements korisnikServiceInterface {
 
         userRepository.save(korisnik);
     }
+
+
     @Override
-    public Korisnik updateKorisnik(Korisnik korisnik)  {
+    public void  updateKorisnik(Long userId, PersonalInformation userRequest)  {
 
-        validate(korisnik);
+        Korisnik existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RequestDeniedException("User not found"));
 
-        return userRepository.save(korisnik);
+        updateNonNullFields(existingUser, userRequest);
+
+
+
+
+        // Check if the password is provided and needs to be updated
+        if (userRequest.getPassword() != null && !userRequest.getPassword().isEmpty()) {
+            String encryptedPassword = passwordEncoder.encode(userRequest.getPassword());
+            existingUser.setLozinka(encryptedPassword);
+        }
+        if (existingUser.getUloga() == uloga.VODITELJ) {
+            var voditelj = new Voditelj();
+            voditelj.setKorisnik(existingUser);
+            voditeljRepository.save(voditelj);
+
+        }else {
+
+            userRepository.save(existingUser);
+        }
     }
+
+    private void updateNonNullFields(Korisnik existingUser, PersonalInformation userRequest) {
+        // Update fields only if they are not null in the request
+        if (userRequest.getUsername() != null) {
+            existingUser.setKorisnickoIme(userRequest.getUsername());
+        }
+        if (userRequest.getFirstName() != null) {
+            existingUser.setIme(userRequest.getFirstName());
+        }
+        if (userRequest.getLastName() != null) {
+            existingUser.setPrezime(userRequest.getLastName());
+        }
+        if (userRequest.getPassword() != null && !userRequest.getPassword().isEmpty()) {
+            String encryptedPassword = passwordEncoder.encode(userRequest.getPassword());
+            existingUser.setLozinka(encryptedPassword);
+        }
+        if (userRequest.getPhoto() != null) {
+            existingUser.setSlikaOsobne(userRequest.getPhoto());
+        }
+        if (userRequest.getIban() != null) {
+            existingUser.setIban(userRequest.getIban());
+        }
+        if (userRequest.getEmailAddress() != null) {
+            existingUser.setEmail(userRequest.getEmailAddress());
+        }
+    }
+
 
 
 
@@ -82,7 +134,7 @@ public class korisnikService implements korisnikServiceInterface {
      */
 
     //trebao bih jos dodati provjeru je li URL dobar za sliku...
-    private void validate(Korisnik korisnik) {
+    /*private void validate(Korisnik korisnik) {
 
         if(korisnik == null){
             throw new RequestDeniedException("Korisnik ne smije biti null");
@@ -108,10 +160,15 @@ public class korisnikService implements korisnikServiceInterface {
 
     }
 
+     */
+
+    /*
     @Override
     public Optional<Korisnik> findByVerifikacijaToken(String verifikacijaToken) {
         return userRepository.findByVerifikacijaToken(verifikacijaToken);
     }
+
+     */
 
 
     @Override

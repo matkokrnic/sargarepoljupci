@@ -26,11 +26,13 @@ public class ReservationService {
         this.parkingSpotRepository = parkingSpotRepository;
         this.korisnikService = korisnikService;
     }
-
+/*
     public boolean isTimeSlotAvailable(LocalDateTime start, LocalDateTime end) {
         List<Reservation> overlappingReservations = findOverlappingReservations(start, end);
         return overlappingReservations.isEmpty();
     }
+
+ */
 
 /*
     public boolean isParkingSpotAvailableForReservation(String parkingSpotId, LocalDateTime timeStart, LocalDateTime timeEnd) {
@@ -41,11 +43,27 @@ public class ReservationService {
     }
  */
 
-
+/*
     public List<Reservation> findReservationsForParkingSpots(List<String> parkingSpotIds) {
         return reservationRepository.findByParkingSpotIdIn(parkingSpotIds);
     }
 
+ */
+
+    /*
+    public List<ParkingSpot> findReservableParkingSpotsForTimeSlot(LocalDateTime startTime, LocalDateTime endTime) {
+
+        List<ParkingSpot> reservedParkingSpots = findReservedParkingSpotsForTimeSlot(startTime, endTime);
+
+
+        // prvo trazimo sva koja se mogu rezervirati, onda micemo ova koja nisu slobodna u tom terminu
+        List<ParkingSpot> availableParkingSpots = parkingSpotRepository.findParkingSpotsByReservableIsTrue();
+
+        availableParkingSpots.removeAll(reservedParkingSpots);
+        return availableParkingSpots;
+    }
+
+     */
     public List<ParkingSpot> findReservedParkingSpotsForTimeSlot(LocalDateTime startTime, LocalDateTime endTime) {
         List<Reservation> reservations = findOverlappingReservations(startTime, endTime);
 
@@ -67,17 +85,7 @@ public class ReservationService {
         return availableParkingSpots;
     }
 
-    public List<ParkingSpot> findReservableParkingSpotsForTimeSlot(LocalDateTime startTime, LocalDateTime endTime) {
 
-        List<ParkingSpot> reservedParkingSpots = findReservedParkingSpotsForTimeSlot(startTime, endTime);
-
-
-        // prvo trazimo sva koja se mogu rezervirati, onda micemo ova koja nisu slobodna u tom terminu
-        List<ParkingSpot> availableParkingSpots = parkingSpotRepository.findParkingSpotsByReservableIsTrue();
-
-        availableParkingSpots.removeAll(reservedParkingSpots);
-        return availableParkingSpots;
-    }
 
     public List<Reservation> findOverlappingReservations(
             LocalDateTime startTime, LocalDateTime endTime) {
