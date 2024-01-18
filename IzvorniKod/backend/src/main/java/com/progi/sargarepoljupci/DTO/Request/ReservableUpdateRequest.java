@@ -3,7 +3,7 @@ package com.progi.sargarepoljupci.DTO.Request;
 import lombok.Data;
 
 @Data
-public class AccessibleUpdateRequest {
+public class ReservableUpdateRequest {
     private String parkingSpotId;
-    private Boolean accessible;
+    private Boolean reservable;
 }

@@ -10,17 +10,22 @@ import lombok.Data;
 @Entity
 public class ParkingAuto {
 
+    //@Id
+    //private String parkingId;
+    //@Column(columnDefinition = "TEXT")
+    //private String polygon;
+
     @Id
-    private String parkingId;
-    @Column(columnDefinition = "TEXT")
-    private String polygon;
+    @GeneratedValue
+    private Long parkingId;
+
     private String picture;
     private String parkingName;
     private String parkingDescription;
     private Double costPerHour;
 
     @Nullable
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "voditelj_id")
     private Voditelj voditelj;
 
@@ -40,7 +45,6 @@ public class ParkingAuto {
         this.parkingName= request.getName();
         this.parkingDescription = request.getDescription();
         this.costPerHour = request.getCostPerHour();
-
         this.picture = request.getPhoto();
 
     }

@@ -20,7 +20,7 @@ public class Voditelj {
 
 
      */
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @MapsId
     @JoinColumn(name = "voditelj_id")
     private Korisnik korisnik;

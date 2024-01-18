@@ -18,7 +18,7 @@ public class ParkingSpot {
     private double longitude;
     private double latitude;
     private String polygon;
-    private Boolean accessible;
+    private Boolean reservable;
     private Boolean free;
 
     @ManyToOne

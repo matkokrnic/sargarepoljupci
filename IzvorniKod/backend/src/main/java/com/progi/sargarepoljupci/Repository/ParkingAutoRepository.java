@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ParkingAutoRepository extends JpaRepository<ParkingAuto, String> {
+public interface ParkingAutoRepository extends JpaRepository<ParkingAuto, Long> {
     @Override
     @Nonnull
     List<ParkingAuto> findAll();

@@ -1,10 +1,10 @@
 package com.progi.sargarepoljupci.DTO.Request;
 
 
-import jakarta.persistence.Lob;
+import com.progi.sargarepoljupci.Utilities.ParkingSpotReservable;
 import lombok.Data;
 
-import java.sql.Blob;
+import java.util.List;
 
 @Data
 public class ParkingInformationRequest {
@@ -14,4 +14,6 @@ public class ParkingInformationRequest {
     //private Blob photo;
     private String photo;
     private double costPerHour;
+    private long voditeljID;
+    List<ParkingSpotReservable> parkingSpotList;
 }

@@ -11,8 +11,7 @@ import lombok.Data;
 @Entity
 public class Korisnik {
 
-    // ako imamo mogucnost promjene korisnickogImena nema smisla da je
-    // PK, mislim da je lakse staviti samo generiran id
+
     @Id
     @GeneratedValue
     private Long id;
