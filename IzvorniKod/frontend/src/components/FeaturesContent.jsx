@@ -1,29 +1,29 @@
-import { ArrowPathIcon, CloudArrowUpIcon, FingerPrintIcon, LockClosedIcon } from '@heroicons/react/24/outline'
+import { ArrowTrendingUpIcon, BanknotesIcon, CalendarDaysIcon, WalletIcon } from '@heroicons/react/24/outline'
 
 const features = [
   {
-    name: 'Push to deploy',
+    name: 'Besplatno za koristiti',
     description:
-      'Morbi viverra dui mi arcu sed. Tellus semper adipiscing suspendisse semper morbi. Odio urna massa nunc massa.',
-    icon: CloudArrowUpIcon,
+      "Naša aplikacija nije samo za bogate - svatko je može koristiti, registracija ne potrebna! Bili vi posvećen korisnik ili prolaznik na našoj aplikaciji, svatko ima koristi od nje!",
+    icon: BanknotesIcon,
   },
   {
-    name: 'SSL certificates',
+    name: 'Planirajte unaprijed',
     description:
-      'Sit quis amet rutrum tellus ullamcorper ultricies libero dolor eget. Sem sodales gravida quam turpis enim lacus amet.',
-    icon: LockClosedIcon,
+      'S mogućnosti rezerviranja mjesta unaprijed također s opcijom ponavljajuće rezervacije, ne morate se više brinuti gdje se parkirati za Mariju Bistricu ili igdje drugdje!',
+    icon: CalendarDaysIcon,
   },
   {
-    name: 'Simple queues',
+    name: 'Podržite svoj biznis',
     description:
-      'Quisque est vel vulputate cursus. Risus proin diam nunc commodo. Lobortis auctor congue commodo diam neque.',
-    icon: ArrowPathIcon,
+      'Osim korisnika koji traže smještaj za auto, na ovoj aplikaciji dobrodošli su i voditelji vlastitih parkirališta! Prijavite vlastito parkiralište, i uživajte u većoj vidljivosti vašeg aranžmana.',
+    icon: ArrowTrendingUpIcon,
   },
   {
-    name: 'Advanced security',
+    name: 'Online bankarstvo',
     description:
-      'Arcu egestas dolor vel iaculis in ipsum mauris. Tincidunt mattis aliquet hac quis. Id hac maecenas ac donec pharetra eget.',
-    icon: FingerPrintIcon,
+      'Ako se ne volite petljati novčanicama i kovanicama, dobra vijest - ni mi! A s našom aplikacijom, niti se morate! Putem našeg e-novčanika, možete lako, brzo i sigurno platiti parkiralište, bez problema!',
+    icon: WalletIcon,
   },
 ]
 
@@ -32,13 +32,13 @@ export function FeaturesContent() {
     <div className="py-24 bg-white sm:py-32">
       <div className="px-6 mx-auto max-w-7xl lg:px-8">
         <div className="max-w-2xl mx-auto lg:text-center">
-          <h2 className="text-base font-semibold leading-7 text-indigo-600">Deploy faster</h2>
+          <h2 className="text-base font-semibold leading-7 text-indigo-600">Your go-to stop to find a stop.</h2>
           <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Everything you need to deploy your app
+          Nađi mjesto za parkirati - sad!
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Quis tellus eget adipiscing convallis sit sit eget aliquet quis. Suspendisse eget egestas a elementum
-            pulvinar et feugiat blandit at. In mi viverra elit nunc.
+           Naša moćna aplikacija će vam naći mjesto za parkirati u sekundama! Uživajte u munjevito brzim algoritmima za pretragu,
+           širokom nizu parkirališnih mjesta neovisno o vašoj lokaciji, mogućnosti plaćanja online, i još puno toga!
           </p>
         </div>
         <div className="max-w-2xl mx-auto mt-16 sm:mt-20 lg:mt-24 lg:max-w-4xl">
