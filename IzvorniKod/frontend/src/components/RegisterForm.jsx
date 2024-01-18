@@ -49,8 +49,6 @@ export function RegisterForm() {
         console.log(form);
         if(password.length < 6 || password.length < 6)
             return;
-        console.log('1' + password);
-        console.log('2' + passwordAgain);
         if(password == passwordAgain)
             setSamePassword(true);
         else if(password !== passwordAgain)

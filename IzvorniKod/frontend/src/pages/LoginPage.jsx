@@ -69,8 +69,7 @@ export function LoginPage() {
     return (
       <>
       <div className="h-full bg-white">
-        <div className="h-full">
-            <NavBar />         
+        <div className="h-full">    
                 <div className="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <a href='/'>
