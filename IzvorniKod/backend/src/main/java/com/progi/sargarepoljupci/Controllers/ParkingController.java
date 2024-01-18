@@ -1,35 +1,50 @@
 package com.progi.sargarepoljupci.Controllers;
 
 
-import com.progi.sargarepoljupci.DTO.Request.ClientRequest;
-import com.progi.sargarepoljupci.DTO.Response.LocationResponse;
-import com.progi.sargarepoljupci.Services.OsrmService;
+import com.progi.sargarepoljupci.Models.BicycleParking;
+import com.progi.sargarepoljupci.Models.ParkingSpot;
+import com.progi.sargarepoljupci.Repository.BicycleRepository;
+import com.progi.sargarepoljupci.Repository.ParkingSpotRepository;
+import com.progi.sargarepoljupci.Services.ParkingService;
 import com.progi.sargarepoljupci.Services.ParkingSpotService;
+import com.progi.sargarepoljupci.Services.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 public class ParkingController {
 
-    private OsrmService osrmService;
     private final ParkingSpotService parkingSpotService;
+    private final ParkingSpotRepository parkingSpotRepository;
+    private final ReservationService reservationService;
+    private final BicycleRepository bicycleRepository;
+    private final ParkingService parkingService;
     @Autowired
-    public ParkingController(ParkingSpotService parkingSpotService) {
+    public ParkingController(ParkingSpotService parkingSpotService, ParkingSpotRepository parkingSpotRepository, ReservationService reservationService, BicycleRepository bicycleRepository, ParkingService parkingService) {
         this.parkingSpotService = parkingSpotService;
+        this.parkingSpotRepository = parkingSpotRepository;
+        this.reservationService = reservationService;
+        this.bicycleRepository = bicycleRepository;
+        this.parkingService = parkingService;
     }
 
-    @PostMapping("/{parkingSpotId}/updateAvailability")
-    public ResponseEntity<String> updateParkingSpotAvailability(@PathVariable String parkingSpotId, @RequestBody boolean setFree) {
-        var updateSuccessful = parkingSpotService.updateParkingSpotAvailability(parkingSpotId, setFree);
 
-        if (updateSuccessful) {
-            return ResponseEntity.ok("Parking spot availability updated successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update parking spot availability");
-        }
-    }
+   // @PostMapping("/{parkingSpotId}/updateAvailability")
+   // public ResponseEntity<String> updateParkingSpotAvailability(@PathVariable String parkingSpotId, @RequestBody boolean setFree) {
+   //     var updateSuccessful = parkingSpotService.updateParkingSpotAvailability(parkingSpotId, setFree);
+//
+   //     if (updateSuccessful) {
+   //         return ResponseEntity.ok("Parking spot availability updated successfully");
+   //     } else {
+   //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update parking spot availability");
+   //     }
+   // }
 
     @GetMapping("/{parkingSpotId}/availability")
     public ResponseEntity<Boolean> getParkingSpotAvailability(@PathVariable String parkingSpotId) {
@@ -37,50 +52,51 @@ public class ParkingController {
         return ResponseEntity.ok(availability);
     }
 
-
-
-
-    /*
-    Pregledavanjem karte, klijent može odabrati lokaciju svog odredišta, tip vozila i
-    procjenu trajanja parkinga, a aplikacija mu na karti iscrta rutu do najbližeg slobodnog
-    parkirališnog mjesta i rezervira ga ako je slobodno za rezervaciju. Za dohvat rute do
-    parkirališnog mjesta potrebno je koristiti OSRM.
-
-    ovo nema bas smisla
-     */
-
-    // parametri: lokacija odredista, tip vozila (auto/bicikl), procjena trajanja parkinga
-    // return: lokacija slobodnog mjesta i informacija jesam li ga rezervirao ili ne
-    @PostMapping("/api/calculateRoute")
-    public LocationResponse minDistanceToAvailableSpace(@RequestBody ClientRequest request){
-
-        // prvo trebamo filtirati sva slobodna mjesta
-        // findByAvailable()
-
-
-
-        return osrmService.minDistanceToParkingSpot(request);
-
+    @GetMapping("/accessibleParkingSpots")
+    public List<ParkingSpot> findAccessibleParkingSpots() {
+        return parkingSpotRepository.findParkingSpotsByParkingIsNotNull();
     }
-/*
-    @GetMapping
-    public void getFreeParkingSpots(){
+
+    @GetMapping("/reservableParkingSpots")
+    public List<ParkingSpot> findReservableParkingSpots() {
+        return parkingSpotRepository.findParkingSpotsByReservableIsTrue();
+    }
+
+    @GetMapping("/occupied")
+    public List<ParkingSpot> getOccupiedParkingSpots() {
+        return reservationService.findReservedParkingSpotsForTimeSlot(LocalDateTime.now(), LocalDateTime.now());
 
     }
 
-    @GetMapping
-    public void getAccessibleParkingSpots(){
+    // Endpoint to get unoccupied parking spots
+    @GetMapping("/unoccupied")
+    public List<ParkingSpot> getUnoccupiedParkingSpots() {
+        return reservationService.findAvailableParkingSpotsForTimeSlot(LocalDateTime.now(), LocalDateTime.now());
 
     }
 
- */
+    @GetMapping("/parking-spots")
+    public ResponseEntity<List<ParkingSpot>> getAllParkingSpots() {
+        List<ParkingSpot> allParkingSpots = parkingSpotRepository.findAll();
+        return ResponseEntity.ok(allParkingSpots);
+    }
 
-    // pregledavanje parkiralisnog mjesta koje je dostupno
+    @GetMapping("/bicycle-spots")
+    public ResponseEntity<List<?>> getAllBicycleSpots() {
+        List<BicycleParking> allBicycleSpots = bicycleRepository.findAll();
+        return ResponseEntity.ok(allBicycleSpots);
+    }
 
-
-
-
-
+    @GetMapping("/parking-spots/by-parking/{parkingId}")
+    public ResponseEntity<List<ParkingSpot>> getAllParkingSpotsForParking(@PathVariable Long parkingId) {
+        List<ParkingSpot> parkingSpots = parkingService.getAllParkingSpotsForParkingAuto(parkingId);
+        return ResponseEntity.ok(parkingSpots);
+    }
+    @GetMapping("/bicycle-spots/for-parking/{parkingId}")
+    public ResponseEntity<List<?>> getAllBicycleSpotsForParking(@PathVariable Long parkingId) {
+        List<BicycleParking> bicycleSpots = parkingService.getAllBicycleSpotsForParking(parkingId);
+        return ResponseEntity.ok(bicycleSpots);
+    }
 
 
 
