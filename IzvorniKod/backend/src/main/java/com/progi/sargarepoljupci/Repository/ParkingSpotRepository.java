@@ -20,6 +20,7 @@ public interface ParkingSpotRepository extends JpaRepository<ParkingSpot, String
     //List<ParkingSpot> findParkingSpotsByFreeIsTrueAndFreeIsNotNull();
     List<ParkingSpot> findParkingSpotsByReservableIsTrue();
     List<ParkingSpot> findParkingSpotsByParkingIsNotNull();
+    List<ParkingSpot> findParkingSpotsByParkingIsNull();
 
 
 

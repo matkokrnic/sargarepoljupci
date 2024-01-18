@@ -7,5 +7,4 @@ import lombok.Data;
 public class ParkingSpotReservable {
     private String spotId;
     private Boolean reservable;
-
 }

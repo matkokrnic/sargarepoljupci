@@ -19,4 +19,6 @@ public interface BicycleRepository extends JpaRepository<BicycleParking, String>
     List<BicycleParking> findAllById(@Nonnull Iterable<String> strings);
     BicycleParking findByLongitudeAndLatitude(double longitude, double latitude);
     List<BicycleParking> findByParkingLot(Parking parkingLot);
+    List<BicycleParking> findByParkingLotIsNull();
+    List<BicycleParking> findByParkingLotIsNotNull();
 }

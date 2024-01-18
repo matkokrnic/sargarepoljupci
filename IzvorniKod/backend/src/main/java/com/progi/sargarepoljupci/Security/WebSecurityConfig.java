@@ -52,13 +52,17 @@ public class WebSecurityConfig {
             "/parkingLots",
             "/bicycle-spots/for-parking/{parkingId}",
             "/parking-spots/by-parking/{parkingId}",
-            "/bicycle-spots",
-            "/parking-spots",
+            "/all-bicycle-spots",
+            "/all-parking-spots",
             "/unoccupied",
             "/occupied",
             "/reservableParkingSpots",
             "/accessibleParkingSpots",
             "/{parkingSpotId}/availability",
+            "/unmarkedParkingSpots",
+            "/unmarkedBicycleSpots",
+
+            "/availability"
 
     };
 
