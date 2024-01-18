@@ -3,6 +3,7 @@ package com.progi.sargarepoljupci.Controllers;
 import com.progi.sargarepoljupci.DTO.Request.DepositRequest;
 import com.progi.sargarepoljupci.DTO.Request.NearestSpotRequest;
 import com.progi.sargarepoljupci.DTO.Request.TimeSlot;
+import com.progi.sargarepoljupci.DTO.Response.NearestBicycleSpotResponse;
 import com.progi.sargarepoljupci.DTO.Response.NearestSpotResponse;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Repository.BicycleRepository;
@@ -53,7 +54,7 @@ public class ClientController {
 
     // ovo treba vratiti coordinate i boolean je li rezervirano mjesto
     @GetMapping("/findNearest")
-    public ResponseEntity<NearestSpotResponse> findNearestParkingSpot(
+    public ResponseEntity<?> findNearestParkingSpot(
             @RequestBody NearestSpotRequest nearestSpotRequest) {
         var vehicleType = nearestSpotRequest.getVehicleType();
         //var currentTime = nearestSpotRequest.getCurrentTime();
@@ -69,7 +70,7 @@ public class ClientController {
             var bicycleParking = bicycleRepository.findByLongitudeAndLatitude(nearest.getFirst(), nearest.getSecond());
             if(bicycleParking==null)
                 throw new RequestDeniedException("There's no available bicycle parking");
-            return ResponseEntity.ok(new NearestSpotResponse(nearest.getFirst(), nearest.getSecond(), false, bicycleParking.getBicycle_id(), null));
+            return ResponseEntity.ok(new NearestBicycleSpotResponse(nearest.getFirst(), nearest.getSecond(), bicycleParking.getBicycle_id(), bicycleParking.getNumAvailableSpots()));
         }
         currentTime = reservationService.roundToClosest30Minutes(currentTime);
        Pair<Double, Double> nearestCoordinates = parkingService.findNearestAvailableParking(destination, currentTime);
