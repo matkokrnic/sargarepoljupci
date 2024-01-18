@@ -1,10 +1,11 @@
 package com.progi.sargarepoljupci.Controllers;
 
 
-import com.progi.sargarepoljupci.DTO.Request.AccessibleUpdateRequest;
 import com.progi.sargarepoljupci.DTO.Request.ParkingInformationRequest;
-import com.progi.sargarepoljupci.Models.ParkingAuto;
+import com.progi.sargarepoljupci.DTO.Request.ReservableUpdateRequest;
+import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Repository.ParkingAutoRepository;
+import com.progi.sargarepoljupci.Repository.ParkingSpotRepository;
 import com.progi.sargarepoljupci.Services.ParkingService;
 import com.progi.sargarepoljupci.Services.ParkingSpotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +16,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/voditelj")
 public class VoditeljController {
     private final ParkingService parkingService;
     private final ParkingSpotService parkingSpotService;
     private final ParkingAutoRepository autoRepository;
+    private final ParkingSpotRepository parkingSpotRepository;
     @Autowired
-    public VoditeljController(ParkingService parkingService, ParkingSpotService parkingSpotService, ParkingAutoRepository autoRepository) {
+    public VoditeljController(ParkingService parkingService, ParkingSpotService parkingSpotService, ParkingAutoRepository autoRepository, ParkingSpotRepository parkingSpotRepository) {
         this.parkingService = parkingService;
         this.parkingSpotService = parkingSpotService;
         this.autoRepository = autoRepository;
+        this.parkingSpotRepository = parkingSpotRepository;
     }
 
     /*
@@ -40,24 +45,41 @@ public class VoditeljController {
 // fotografija, cjenik)
     @PutMapping("/newParking")
     public ResponseEntity<?> enterParkingInformation(@RequestBody ParkingInformationRequest request){
-        autoRepository.save(new ParkingAuto(request));
-        return ResponseEntity.ok(request);
+        var createParking = parkingService.createNewParking(request);
+        parkingService.markSpots(request, createParking);
+        return ResponseEntity.ok(createParking);
+
     }
 
 
-    @PutMapping("/update-accessible")
-    public ResponseEntity<String> updateAccessibleStatus(@RequestBody AccessibleUpdateRequest updateDTO) {
+    @PutMapping("/update-reservable")
+    public ResponseEntity<String> updateReservableStatus(@RequestBody ReservableUpdateRequest updateDTO) {
         String parkingSpotId = updateDTO.getParkingSpotId();
-        Boolean accessible = updateDTO.getAccessible();
+        Boolean reservable = updateDTO.getReservable();
 
         try {
-            parkingSpotService.updateAccessibleStatus(parkingSpotId, accessible);
-            return ResponseEntity.ok("Accessible status updated successfully for Parking Spot ID: " + parkingSpotId);
+            parkingSpotService.updateReservableStatus(parkingSpotId, reservable);
+            return ResponseEntity.ok("Reservable status updated successfully for Parking Spot ID: " + parkingSpotId);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to update accessible status for Parking Spot ID: " + parkingSpotId);
+                    .body("Failed to update Reservable status for Parking Spot ID: " + parkingSpotId);
         }
     }
+    @PutMapping("/update-reservable-multiple")
+    public ResponseEntity<String> updateReservableStatusForMultipleSpots(@RequestBody List<ReservableUpdateRequest> updateDTOList) {
+        try {
+            var list = parkingSpotService.updateReservableStatusForMultipleSpots(updateDTOList);
+            return ResponseEntity.ok("Reservable status updated successfully for multiple parking spots.");
+        }
+        catch (Exception e) {
+            throw new RequestDeniedException(e.getMessage());
+        }
+
+    }
+
+
+
+
 
 
 }

@@ -1,14 +1,11 @@
 package com.progi.sargarepoljupci.Repository;
 
-import com.progi.sargarepoljupci.Models.Korisnik;
+import com.progi.sargarepoljupci.Models.ParkingAuto;
 import com.progi.sargarepoljupci.Models.ParkingSpot;
-import com.progi.sargarepoljupci.Models.uloga;
 import jakarta.annotation.Nonnull;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.util.Pair;
-import org.springframework.lang.NonNullApi;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +18,9 @@ public interface ParkingSpotRepository extends JpaRepository<ParkingSpot, String
     @Nonnull
     Optional<ParkingSpot> findById(@Nonnull String aLong);
 
-    List<ParkingSpot> findParkingSpotsByAccessibleIsNotNull();
-    List<ParkingSpot> findParkingSpotsByAccessibleIsTrue();
+    List<ParkingSpot> findParkingSpotsByReservableIsNotNull();
+    List<ParkingSpot> findParkingSpotsByReservableIsTrue();
+    List<ParkingSpot> findParkingSpotsByParkingIsNotNull();
 
     List<ParkingSpot> findParkingSpotsByFreeIsTrueAndFreeIsNotNull();
 
@@ -30,7 +28,9 @@ public interface ParkingSpotRepository extends JpaRepository<ParkingSpot, String
             "FROM ParkingSpot aaaa WHERE aaaa.free = true")
     List<Pair<Double, Double>> findCoordinatesOfFreeParkingSpots();
 
+    ParkingSpot findByLongitudeAndLatitude(double longitude, double latitude);
 
+    List<ParkingSpot> findByParking(ParkingAuto parkingAuto);
 
 
 }
