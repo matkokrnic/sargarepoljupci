@@ -56,7 +56,7 @@ public class ClientController {
         var vehicleType = nearestSpotRequest.getVehicleType();
         //var currentTime = nearestSpotRequest.getCurrentTime();
         var parkingDurationInMinutes = nearestSpotRequest.getParkingDurationInMinutes();
-        var destination = nearestSpotRequest.getLatitude()+","+nearestSpotRequest.getLongitude();
+        var destination = nearestSpotRequest.getLongitude()+","+nearestSpotRequest.getLatitude();
         var currentTime = LocalDateTime.now();
 
 

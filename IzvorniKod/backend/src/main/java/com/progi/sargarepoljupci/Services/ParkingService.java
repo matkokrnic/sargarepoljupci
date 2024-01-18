@@ -32,7 +32,7 @@ public class ParkingService {
     private String osrmApiUrl; // OSRM API endpoint URL
 
     private final ParkingSpotRepository parkingSpotRepository;
-    private final ParkingSpotService parkingSpotService;
+
     private final ReservationService reservationService;
     private final BicycleRepository bicycleRepository;
     private final ParkingAutoRepository parkingAutoRepository;
@@ -41,7 +41,7 @@ public class ParkingService {
     public ParkingService(ParkingSpotRepository parkingSpotRepository, ParkingSpotService parkingSpotService, ReservationService reservationService, BicycleRepository bicycleRepository, ParkingAutoRepository parkingAutoRepository, VoditeljRepository voditeljRepository) {
 
         this.parkingSpotRepository = parkingSpotRepository;
-        this.parkingSpotService = parkingSpotService;
+
         this.reservationService = reservationService;
         this.bicycleRepository = bicycleRepository;
 
@@ -130,19 +130,21 @@ public class ParkingService {
         for (Pair<Double, Double> coordinate : coordinates) {
             stringBuilder.append(coordinate.getFirst()).append(",").append(coordinate.getSecond()).append(";");
         }
+        if(stringBuilder.isEmpty())
+            throw new RequestDeniedException("There are no available parking spots");
+        stringBuilder.append(destination).append("?");
 
-        if (!stringBuilder.isEmpty()) {
-            stringBuilder.setCharAt(stringBuilder.length() - 1, '?');
-        }
+
         stringBuilder.append("sources=");
         // svi osim zadnjeg indeksa ce biti source
         // format: sources=0;1;2
         var size= coordinates.size();
-        for (int i = 0; i < size-1; i++) {
+        for (int i = 0; i < size; i++) {
             stringBuilder.append(i).append(";");
         }
-        stringBuilder.setCharAt(stringBuilder.length() - 1, '&');
-        stringBuilder.append("destinations=").append(size-1).append("&annotations=distance");
+
+        stringBuilder.setCharAt(stringBuilder.length()-1, '&');
+        stringBuilder.append("destinations=").append(size).append("&annotations=distance");
 
 
 
