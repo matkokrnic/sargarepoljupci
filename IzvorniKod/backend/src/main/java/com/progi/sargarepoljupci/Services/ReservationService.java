@@ -1,7 +1,9 @@
 package com.progi.sargarepoljupci.Services;
 
 
-import com.progi.sargarepoljupci.DTO.Request.TimeSlotRequest;
+import com.progi.sargarepoljupci.DTO.Request.TimeSlot;
+import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
+import com.progi.sargarepoljupci.Models.Korisnik;
 import com.progi.sargarepoljupci.Models.ParkingSpot;
 import com.progi.sargarepoljupci.Models.Reservation;
 import com.progi.sargarepoljupci.Repository.ParkingSpotRepository;
@@ -10,18 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ParkingSpotRepository parkingSpotRepository;
+    private final korisnikService korisnikService;
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository, ParkingSpotRepository parkingSpotRepository) {
+    public ReservationService(ReservationRepository reservationRepository, ParkingSpotRepository parkingSpotRepository, com.progi.sargarepoljupci.Services.korisnikService korisnikService) {
         this.reservationRepository = reservationRepository;
         this.parkingSpotRepository = parkingSpotRepository;
+        this.korisnikService = korisnikService;
     }
 
     public boolean isTimeSlotAvailable(LocalDateTime start, LocalDateTime end) {
@@ -58,7 +61,19 @@ public class ReservationService {
 
 
         // prvo trazimo sva dostupna, onda micemo ova koja nisu slobodna u tom terminu
-        List<ParkingSpot> availableParkingSpots = parkingSpotRepository.findParkingSpotsByAccessibleIsTrue();
+        List<ParkingSpot> availableParkingSpots = parkingSpotRepository.findParkingSpotsByParkingIsNotNull();
+
+        availableParkingSpots.removeAll(reservedParkingSpots);
+        return availableParkingSpots;
+    }
+
+    public List<ParkingSpot> findReservableParkingSpotsForTimeSlot(LocalDateTime startTime, LocalDateTime endTime) {
+
+        List<ParkingSpot> reservedParkingSpots = findReservedParkingSpotsForTimeSlot(startTime, endTime);
+
+
+        // prvo trazimo sva koja se mogu rezervirati, onda micemo ova koja nisu slobodna u tom terminu
+        List<ParkingSpot> availableParkingSpots = parkingSpotRepository.findParkingSpotsByReservableIsTrue();
 
         availableParkingSpots.removeAll(reservedParkingSpots);
         return availableParkingSpots;
@@ -70,10 +85,10 @@ public class ReservationService {
                 endTime, startTime);
     }
 
-    public List<ParkingSpot> findAvailableParkingSpotsForTimeSlots(List<TimeSlotRequest> timeSlots) {
+    public List<ParkingSpot> findReservableParkingSpotsForTimeSlots(List<TimeSlot> timeSlots) {
         List<ParkingSpot> reservedParkingSpots = new ArrayList<>();
 
-        for (TimeSlotRequest timeSlot : timeSlots) {
+        for (TimeSlot timeSlot : timeSlots) {
             List<Reservation> reservations = findOverlappingReservations(timeSlot.getStartTime(), timeSlot.getEndTime());
             reservedParkingSpots.addAll(reservations.stream()
                     .map(Reservation::getParkingSpot)
@@ -81,13 +96,85 @@ public class ReservationService {
                     .toList());
 
         }
-        List<ParkingSpot> availableParkingSpots = parkingSpotRepository.findParkingSpotsByAccessibleIsTrue();
+        List<ParkingSpot> reservableParkingSpots = parkingSpotRepository.findParkingSpotsByReservableIsTrue();
 
-        availableParkingSpots.removeAll(reservedParkingSpots);
+        reservableParkingSpots.removeAll(reservedParkingSpots);
 
-        return availableParkingSpots;
+        return reservableParkingSpots;
 
     }
+
+    public boolean canParkingSpotBeReserved(String parkingSpotId, LocalDateTime start, LocalDateTime end) {
+        List<Reservation> overlappingReservations = reservationRepository.findByParkingSpotIdInAndReservationEndGreaterThanEqualAndReservationStartLessThanEqual(
+                List.of(parkingSpotId),
+                end,
+                start
+        );
+
+        return overlappingReservations.isEmpty();
+    }
+
+
+    // If all timeslots are reservable it will return a Pair of null, and the totalTime;
+    // If some timeslots are not reservable it will return a Pair that includes a list of unaccepted TimeSlots and duration=0
+    public Map.Entry<List<TimeSlot>, Long> makeMultipleReservations(Long userId, String parkingSpotId, List<TimeSlot> timeSlots) {
+
+        ParkingSpot parkingSpot = parkingSpotRepository.findById(parkingSpotId)
+                .orElseThrow(() -> new RuntimeException("Parking spot not found"));
+        long totalDurationInMin = 0;
+
+        List<TimeSlot> unavailableTimeSlots = new ArrayList<>();
+        List<Reservation> reservations = new ArrayList<>();
+        for (TimeSlot timeSlot : timeSlots) {
+            //Check if the parking spot is reservable for the current time slot
+            // ovdje trebam round downat startingTime na 30 min
+            timeSlot.setStartTime(roundToClosest30Minutes(timeSlot.getStartTime()));
+            boolean isReservable = canParkingSpotBeReserved(parkingSpotId, timeSlot.getStartTime(), timeSlot.getEndTime());
+
+
+            if (isReservable) {
+
+                Optional<Korisnik> user = korisnikService.findById(userId);
+                if(user.isEmpty()){
+                    throw new RequestDeniedException("User with that ID doesn't exist");
+                }
+                totalDurationInMin += calculateDurationInMinutes(timeSlot.getStartTime(), timeSlot.getEndTime());
+                Reservation reservation = new Reservation();
+                reservation.setKorisnik(user.get());
+                reservation.setParkingSpot(parkingSpot);
+                reservation.setReservationStart(timeSlot.getStartTime());
+                reservation.setReservationEnd(timeSlot.getEndTime());
+                reservation.setDuration(calculateDurationInMinutes(timeSlot.getStartTime(), timeSlot.getEndTime()));
+                // add the reservation then save it later if everything is ok
+                reservations.add(reservation);
+            } else {
+               // throw new RequestDeniedException("Not reservable because of Reservation:\n Start:timeSlot.getStartTime().toString()\nEnd:timeSlot.getEndTime().toString()");
+                unavailableTimeSlots.add(timeSlot);
+            }
+
+
+        }
+        // if every timeslot was available we just return null and the total duration
+        if(unavailableTimeSlots.isEmpty()){
+            reservationRepository.saveAll(reservations);
+            return new AbstractMap.SimpleEntry<>(null, totalDurationInMin);
+        }
+        return new AbstractMap.SimpleEntry<>(unavailableTimeSlots, 0L);
+
+
+
+    }
+
+    private int calculateDurationInMinutes(LocalDateTime start, LocalDateTime end) {
+        return (int) java.time.Duration.between(start, end).toMinutes();
+    }
+
+    public LocalDateTime roundToClosest30Minutes(LocalDateTime dateTime) {
+        LocalDateTime roundedDown = dateTime.withSecond(0).withNano(0);
+        return roundedDown.minusMinutes(roundedDown.getMinute() % 30);
+    }
+
+
 
 
 

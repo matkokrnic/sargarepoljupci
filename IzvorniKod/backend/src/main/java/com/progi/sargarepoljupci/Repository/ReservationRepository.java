@@ -29,6 +29,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findByParkingSpotIdIn(Collection<String> parkingSpotId);
 
+    List<Reservation> findByParkingSpotIdAndReservationStartBetweenAndReservationEndBetween(
+            String parkingSpotID,
+            LocalDateTime start1, LocalDateTime end1,
+            LocalDateTime start2, LocalDateTime end2
+    );
+
+
 
 
 
