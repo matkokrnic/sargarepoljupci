@@ -18,7 +18,7 @@ export  function RegisterPage() {
                     <div className="flex-shrink-0">
                         <a href="/">
                       <img
-                        className="w-8 h-8"
+                        className="w-auto h-12 mx-1"
                         src="../images/slova_pokraj.svg"
                         alt="SpotPicker"
                       />
