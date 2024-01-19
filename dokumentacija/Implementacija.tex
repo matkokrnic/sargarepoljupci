@@ -25,14 +25,21 @@ JavaScript je svestrani i objektno orijentirani jezik, uglavnom korišten za stv
 
 \section{Ispitivanje programskog rješenja}
 
-\textbf{\textit{dio 2. revizije}}\\
 
-\textit{U ovom poglavlju je potrebno opisati provedbu ispitivanja implementiranih funkcionalnosti na razini komponenti i na razini cijelog sustava s prikazom odabranih ispitnih slučajeva. Studenti trebaju ispitati temeljnu funkcionalnost i rubne uvjete.}
 
 
 \subsection{Ispitivanje komponenti}
 
-Ispitivanje komponenti provjerava ispravnost djelovanja pojedinih dijelova programa koji su mogući za odvojeno ispitivanje, poput pojedinačnih funkcija ili metoda unutar objekta.
+Ispitivanje komponenti provjerava ispravnost djelovanja pojedinih dijelova programa koji su mogući za odvojeno ispitivanje, poput pojedinačnih funkcija ili metoda unutar objekta. U ovom projektu koristimo JUnit i Mockito za implementaciju i izvođenje automatskih testova. JUnit je okvir za testiranje koji omogućuje definiranje, organiziranje i izvođenje testova kako bismo provjerili ispravnost funkcionalnosti naše aplikacije. Mockito je biblioteka koja nam omogućuje stvaranje lažnih objekata kako bismo simulirati njihovu funkcionalnost, omogućujući izolaciju jedinica koda i neovisno testiranje. Pomoću Mockito-a smo stvorili mock objekte za servise i repozitorije, što nam omogućuje precizno kontroliranje ponašanja tih objekata tijekom testiranja.
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/mock.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Stvaranje mock objekata}
+	\label{fig:dijagramstanja}
+\end{figure}
+
+
 
 Ispitivanje komponenti za CreateKorisnikTest fokusira se na verifikaciju funkcionalnosti klase KorisnikService prilikom stvaranja novog korisnika. Testiraju se različiti scenariji, uključujući prepoznavanje već postojećeg emaila ili korisničkog imena te obrada null vrijednosti slike.
 
@@ -67,7 +74,9 @@ Ispitivanje komponenti za UpdateKorisnikTest usmjereno je na verifikaciju funkci
 \end{figure}
 
 
-Ispitivanje komponenti za ParkingServiceTest usmjereno je na verifikaciju funkcionalnosti klase ParkingService. Fokusirano je na ispravno označavanje parkirnih mjesta kao rezervirana i ponašanje sustava u različitim scenarijima(verifikacija ispravnosti označavanja parkirnih mjesta kao rezervirana, provjera ponašanja sustava u slučaju nepostojećeg parkirališta, verifikacija ponašanja sustava kada je parkirno mjesto već označeno i testiranje ispravnosti dobivanja indeksa najmanje udaljenosti).
+Ispitivanje komponenti za ParkingServiceTest usmjereno je na verifikaciju funkcionalnosti klase ParkingService. Fokusirano je na ispravno označavanje parkirnih mjesta kao rezervirana i ponašanje sustava u različitim scenarijima(verifikacija ispravnosti označavanja parkirnih mjesta kao rezervirana, provjera ponašanja sustava u slučaju nepostojećeg parkirališta, verifikacija ponašanja sustava kada je parkirno mjesto već označeno i testiranje ispravnosti dobivanja indeksa najmanje udaljenosti). Provjeravamo metodu markSpots koja je dio ParkingServicea. 
+Ta metoda će pridružiti dana parkirališna mjesta s parkiralištem, osim u slučaju kad parkirno već pripada nekom drugom parkiralištu. U slučaju kad su sva mjesta uspješno rezervirana ta metoda vraća null vrijednost, a u suprotnom vraća listu onih mjesta koja nismo uspjeli rezervirati.
+U testu markSpotsSuccess metode želimo provjeriti hoće li metoda vratiti null vrijednost, ako smo rezervirali sva mjesta. Testiramo samo s jednim parkingSpotom koje nema označen Parking, odnosno parkingSpot.getParking() == null i zbog toga očekujemo da će povratna vrijednost poziva markSpots biti null. 
 
 \begin{figure}[H]
 	\includegraphics[width=\textwidth]{slike/markspotsuccess.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -77,8 +86,11 @@ Ispitivanje komponenti za ParkingServiceTest usmjereno je na verifikaciju funkci
 \end{figure}
 
 
+S testom markSpotsSomeFoundSomeNot testiramo slučaj kad imamo jedno ispravno i jedno neispravno mjesto. Odnosno kad imamo jedno mjesto koje već pripada nekom parkiralištu i jedno koje ne pripada. U tom slučaju bi trebali spremiti ispravno parkiralište (broj poziva parkingSpotRepository.save() bi trebao biti jedan) i vratiti neispravna mjesta.
+
+
 \begin{figure}[H]
-	\includegraphics[width=\textwidth]{slike/markspotmarked.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\includegraphics[width=\textwidth]{slike/markspotfound.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 	\centering
 	\caption{2. ispitni slučaj za ParkingServiceTest}
 	\label{fig:dijagramstanja}
@@ -95,6 +107,14 @@ Ispitivanje komponenti za ParkingServiceTest usmjereno je na verifikaciju funkci
 	\includegraphics[width=\textwidth]{slike/markspotparking.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 	\centering
 	\caption{4. ispitni slučaj za ParkingServiceTest}
+	\label{fig:dijagramstanja}
+\end{figure}
+
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/results.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Rezultati svih ispitnih slučajeva}
 	\label{fig:dijagramstanja}
 \end{figure}
 
