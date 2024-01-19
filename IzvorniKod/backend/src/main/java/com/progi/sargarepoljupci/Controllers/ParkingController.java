@@ -1,6 +1,7 @@
 package com.progi.sargarepoljupci.Controllers;
 
 
+import com.progi.sargarepoljupci.DTO.Request.MarkParkingRequest;
 import com.progi.sargarepoljupci.DTO.Response.BicycleParkingResponse;
 import com.progi.sargarepoljupci.DTO.Response.ParkingResponse;
 import com.progi.sargarepoljupci.DTO.Response.ParkingSpotResponse;
@@ -16,10 +17,7 @@ import com.progi.sargarepoljupci.Services.ParkingSpotService;
 import com.progi.sargarepoljupci.Services.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -191,7 +189,7 @@ public class ParkingController {
     }
 
     @GetMapping("/parkingLots")
-    public List<ParkingResponse> retrieveParkingLots() {
+    public ResponseEntity<List<ParkingResponse>> retrieveParkingLots() {
 
         List<Parking> parkingList = parkingRepository.findAll();
         List<ParkingResponse> responseList = new ArrayList<>();
@@ -199,7 +197,7 @@ public class ParkingController {
         for (Parking parking : parkingList) {
             responseList.add(new ParkingResponse(parking));
         }
-        return responseList;
+        return ResponseEntity.ok(responseList);
     }
     @GetMapping("/parkingLot/{parking_id}")
     public ParkingResponse retrieveParkingLot(@PathVariable Long parking_id) {
@@ -208,6 +206,15 @@ public class ParkingController {
             throw new RequestDeniedException("Parking with that id doesn't exist");
         var parking = parkingOptional.get();
         return new ParkingResponse(parking);
+
+    }
+    @PostMapping("/mark")
+    public ResponseEntity<?> markParkingSpots(@RequestBody MarkParkingRequest request) {
+        var unmarkedSpots = parkingService.markSpots(request);
+        if(unmarkedSpots == null){
+           return ResponseEntity.ok("All spots were marked");
+       }
+        return ResponseEntity.badRequest().body(unmarkedSpots);
 
     }
 

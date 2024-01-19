@@ -61,6 +61,7 @@ public class WebSecurityConfig {
             "/{parkingSpotId}/availability",
             "/unmarkedParkingSpots",
             "/unmarkedBicycleSpots",
+            "/mark",
 
             "/availability"
 

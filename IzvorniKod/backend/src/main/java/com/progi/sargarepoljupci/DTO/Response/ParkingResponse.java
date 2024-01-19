@@ -1,8 +1,10 @@
 package com.progi.sargarepoljupci.DTO.Response;
 
 import com.progi.sargarepoljupci.Models.Parking;
+import lombok.Data;
 import org.apache.tomcat.util.codec.binary.Base64;
 
+@Data
 public class ParkingResponse {
     private Long parkingId;
     private String picture;

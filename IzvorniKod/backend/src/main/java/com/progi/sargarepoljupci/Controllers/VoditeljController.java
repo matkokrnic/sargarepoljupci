@@ -1,8 +1,10 @@
 package com.progi.sargarepoljupci.Controllers;
 
 
+import com.progi.sargarepoljupci.DTO.Request.MarkParkingRequest;
 import com.progi.sargarepoljupci.DTO.Request.ParkingInformationRequest;
 import com.progi.sargarepoljupci.DTO.Request.ReservableUpdateRequest;
+import com.progi.sargarepoljupci.DTO.Response.ParkingResponse;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Repository.ParkingRepository;
 import com.progi.sargarepoljupci.Services.ParkingService;
@@ -44,10 +46,26 @@ public class VoditeljController {
 // Voditelj parkinga ima mogućnost unijeti informacije o svom parkiralištu (naziv, opis,
 // fotografija, cjenik)
     @PutMapping("/newParking")
-    public ResponseEntity<?> enterParkingInformation(@RequestBody ParkingInformationRequest request) throws SQLException, IOException {
-        var createParking = parkingService.createNewParking(request);
-        parkingService.markSpots(request, createParking);
-        return ResponseEntity.ok(createParking);
+    public ResponseEntity<ParkingResponse> enterParkingInformation(@RequestParam("photo") MultipartFile photo,
+                                                                   @RequestParam("name") String name,
+                                                                   @RequestParam("description") String description,
+                                                                   @RequestParam("costPerHour") double costPerHour,
+                                                                   @RequestParam("voditeljID") long voditeljID
+    ) throws SQLException, IOException {
+        var request = new ParkingInformationRequest(name, description, costPerHour, voditeljID);
+        var createParking = parkingService.createNewParking(request, photo);
+        //parkingService.markSpots(request, createParking);
+        var parkingResponse = new ParkingResponse(createParking);
+        return ResponseEntity.ok(parkingResponse);
+
+    }
+    @PostMapping("/markParkingSpots")
+    public ResponseEntity<?> markParkingSpots(@RequestBody MarkParkingRequest request) {
+      var unmarkedSpots = parkingService.markSpots(request);
+      if(unmarkedSpots==null){
+          return ResponseEntity.ok("All spots were marked");
+      }
+      return ResponseEntity.badRequest().body(unmarkedSpots);
 
     }
 

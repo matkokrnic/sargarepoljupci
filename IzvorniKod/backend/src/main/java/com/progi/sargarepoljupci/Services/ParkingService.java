@@ -2,6 +2,7 @@ package com.progi.sargarepoljupci.Services;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.progi.sargarepoljupci.DTO.Request.MarkParkingRequest;
 import com.progi.sargarepoljupci.DTO.Request.ParkingInformationRequest;
 import com.progi.sargarepoljupci.DTO.Response.TableResponse;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
@@ -19,10 +20,12 @@ import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -173,20 +176,18 @@ public class ParkingService {
     }
 
 
-    public Parking createNewParking(ParkingInformationRequest request) throws SQLException, IOException {
-        //var photo = request.getPhoto();
-        //if (!photo.isEmpty()){
-        //    byte[] photoBytes = photo.getBytes();
-
-            //var parking = new Parking(request, photoBytes);
-             var parking = new Parking(request);
+    public Parking createNewParking(ParkingInformationRequest request, MultipartFile photo) throws SQLException, IOException {
+        if (!photo.isEmpty()) {
+            byte[] photoBytes = photo.getBytes();
+            var parking = new Parking(request, photoBytes);
             var voditelj = voditeljRepository.findById(request.getVoditeljID());
-            if(voditelj.isEmpty())
+            if (voditelj.isEmpty())
                 throw new RequestDeniedException("Voditelj doesn't exist");
             parking.setVoditelj(voditelj.get());
             return parkingRepository.save(parking);
-        //else
-        //    throw new  RequestDeniedException("Photo can't be empty");
+        }
+        else
+            throw new  RequestDeniedException("Photo can't be empty");
     }
 
 
@@ -197,13 +198,22 @@ public class ParkingService {
 
 
 
-    public void markSpots(ParkingInformationRequest request, Parking parking) {
-        var parkingSpotList = request.getParkingSpotList();
+    public List<ParkingSpotReservable> markSpots(MarkParkingRequest request) {
+        List<ParkingSpotReservable> unmarkableParkingSpots = new ArrayList<>();
+        var parkingId = request.getParkingId();
+        var parkingSpotList = request.getParkingSpotReservableList();
+        var parkingOptional = parkingRepository.findById(parkingId);
+        if(parkingOptional.isEmpty()){
+            throw new RequestDeniedException("Parking with that that id doesn't exist");
+        }
+        var parking = parkingOptional.get();
         for (ParkingSpotReservable spot : parkingSpotList) {
             if(spot.getReservable()!=null) {
                 var parkingSpot = parkingSpotRepository.findById(spot.getSpotId()).orElseThrow(()->new RequestDeniedException("Parking Spot id doesn't exist"));
             if(parkingSpot.getParking()!=null){
-                throw new RequestDeniedException("Spot " + spot.getSpotId() +  " belongs to another Parking Lot");
+                //throw new RequestDeniedException("Spot " + spot.getSpotId() +  " belongs to another Parking Lot");
+                unmarkableParkingSpots.add(spot);
+                continue;
             }
 
                 parkingSpot.setParking(parking);
@@ -211,13 +221,20 @@ public class ParkingService {
                 parkingSpotRepository.save(parkingSpot);
             }else{
                 var bicycleSpot = bicycleRepository.findById(spot.getSpotId());
-                if(bicycleSpot.isEmpty())
-                    throw new RequestDeniedException("BicycleSpot with that id doesn't exist");
+                if(bicycleSpot.isEmpty()) {
+                    //throw new RequestDeniedException("BicycleSpot with that id doesn't exist");
+                    unmarkableParkingSpots.add(spot);
+                    continue;
+                }
                 bicycleSpot.get().setParkingLot(parking);
                 bicycleRepository.save(bicycleSpot.get());
 
             }
         }
+        if(unmarkableParkingSpots.isEmpty()){
+            return null;
+        }
+        else return unmarkableParkingSpots;
 
     }
 
