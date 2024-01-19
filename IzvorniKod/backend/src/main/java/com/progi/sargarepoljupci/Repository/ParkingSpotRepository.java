@@ -16,7 +16,7 @@ public interface ParkingSpotRepository extends JpaRepository<ParkingSpot, String
     @Nonnull
     Optional<ParkingSpot> findById(@Nonnull String aLong);
 
-    List<ParkingSpot> findParkingSpotsByReservableIsNotNull();
+    //List<ParkingSpot> findParkingSpotsByReservableIsNotNull();
     //List<ParkingSpot> findParkingSpotsByFreeIsTrueAndFreeIsNotNull();
     List<ParkingSpot> findParkingSpotsByReservableIsTrue();
     List<ParkingSpot> findParkingSpotsByParkingIsNotNull();

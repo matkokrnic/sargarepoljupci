@@ -9,9 +9,7 @@ import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.BicycleParking;
 import com.progi.sargarepoljupci.Models.Parking;
 import com.progi.sargarepoljupci.Models.ParkingSpot;
-import com.progi.sargarepoljupci.Repository.BicycleRepository;
-import com.progi.sargarepoljupci.Repository.ParkingRepository;
-import com.progi.sargarepoljupci.Repository.ParkingSpotRepository;
+import com.progi.sargarepoljupci.Services.BicycleService;
 import com.progi.sargarepoljupci.Services.ParkingService;
 import com.progi.sargarepoljupci.Services.ParkingSpotService;
 import com.progi.sargarepoljupci.Services.ReservationService;
@@ -27,19 +25,17 @@ import java.util.List;
 public class ParkingController {
 
     private final ParkingSpotService parkingSpotService;
-    private final ParkingSpotRepository parkingSpotRepository;
+
     private final ReservationService reservationService;
-    private final BicycleRepository bicycleRepository;
+    private final BicycleService bicycleService;
     private final ParkingService parkingService;
-    private final ParkingRepository parkingRepository;
     @Autowired
-    public ParkingController(ParkingSpotService parkingSpotService, ParkingSpotRepository parkingSpotRepository, ReservationService reservationService, BicycleRepository bicycleRepository, ParkingService parkingService, ParkingRepository parkingRepository) {
+    public ParkingController(ParkingSpotService parkingSpotService, ReservationService reservationService, BicycleService bicycleService, ParkingService parkingService) {
+
         this.parkingSpotService = parkingSpotService;
-        this.parkingSpotRepository = parkingSpotRepository;
         this.reservationService = reservationService;
-        this.bicycleRepository = bicycleRepository;
+        this.bicycleService = bicycleService;
         this.parkingService = parkingService;
-        this.parkingRepository = parkingRepository;
     }
 
 
@@ -62,7 +58,7 @@ public class ParkingController {
 
     @GetMapping("/accessibleParkingSpots")
     public List<ParkingSpotResponse> findAccessibleParkingSpots() {
-        List<ParkingSpot> parkingSpots = parkingSpotRepository.findParkingSpotsByParkingIsNotNull();
+        List<ParkingSpot> parkingSpots = parkingSpotService.findParkingSpotsByParkingIsNotNull();
         List<ParkingSpotResponse> parkingSpotRequests = new ArrayList<>();
 
         for (ParkingSpot parkingSpot : parkingSpots) {
@@ -72,7 +68,7 @@ public class ParkingController {
     }
     @GetMapping("/accessibleBicycleSpots")
     public List<BicycleParkingResponse> findAccessibleBicycleSpots() {
-        List<BicycleParking> parkingSpots = bicycleRepository.findByParkingLotIsNotNull();
+        List<BicycleParking> parkingSpots = bicycleService.findByParkingLotIsNotNull();
         List<BicycleParkingResponse> parkingSpotRequests = new ArrayList<>();
 
         for (BicycleParking parkingSpot : parkingSpots) {
@@ -83,7 +79,7 @@ public class ParkingController {
 
     @GetMapping("/unmarkedParkingSpots")
     public List<ParkingSpotResponse> findUnmarkedParkingSpots() {
-        List<ParkingSpot> parkingSpots = parkingSpotRepository.findParkingSpotsByParkingIsNull();
+        List<ParkingSpot> parkingSpots = parkingSpotService.findParkingSpotsByParkingIsNull();
         List<ParkingSpotResponse> parkingSpotRequests = new ArrayList<>();
 
         for (ParkingSpot parkingSpot : parkingSpots) {
@@ -94,7 +90,7 @@ public class ParkingController {
 
     @GetMapping("/unmarkedBicycleSpots")
     public List<BicycleParkingResponse> findUnmarkedBicycleSpots() {
-        List<BicycleParking> parkingSpots = bicycleRepository.findByParkingLotIsNull();
+        List<BicycleParking> parkingSpots = bicycleService.findByParkingLotIsNull();
         List<BicycleParkingResponse> parkingSpotRequests = new ArrayList<>();
 
         for (BicycleParking parkingSpot : parkingSpots) {
@@ -105,7 +101,7 @@ public class ParkingController {
 
     @GetMapping("/reservableParkingSpots")
     public List<ParkingSpotResponse> findReservableParkingSpots() {
-        List<ParkingSpot> parkingSpots = parkingSpotRepository.findParkingSpotsByReservableIsTrue();
+        List<ParkingSpot> parkingSpots = parkingSpotService.findParkingSpotsByReservableIsTrue();
         List<ParkingSpotResponse> parkingSpotRequests = new ArrayList<>();
 
         for (ParkingSpot parkingSpot : parkingSpots) {
@@ -141,7 +137,7 @@ public class ParkingController {
 
     @GetMapping("/all-parking-spots")
     public ResponseEntity<List<ParkingSpotResponse>> getAllParkingSpots() {
-        List<ParkingSpot> parkingSpots = parkingSpotRepository.findAll();
+        List<ParkingSpot> parkingSpots = parkingSpotService.findAll();
         List<ParkingSpotResponse> parkingSpotRequests = new ArrayList<>();
 
         for (ParkingSpot parkingSpot : parkingSpots) {
@@ -153,7 +149,7 @@ public class ParkingController {
 
     @GetMapping("/all-bicycle-spots")
     public ResponseEntity<List<?>> getAllBicycleSpots() {
-        List<BicycleParking> bicycleParkingList = bicycleRepository.findAll();
+        List<BicycleParking> bicycleParkingList = bicycleService.findAll();
         List<BicycleParkingResponse> bicycleParkingRequests = new ArrayList<>();
 
         for (BicycleParking bicycleParking : bicycleParkingList) {
@@ -163,7 +159,7 @@ public class ParkingController {
         return ResponseEntity.ok(bicycleParkingRequests);
     }
 
-    @GetMapping("/parking-spots/by-parking/{parkingId}")
+    @GetMapping("/parking-spots/for-parking/{parkingId}")
     public ResponseEntity<List<ParkingSpotResponse>> getAllParkingSpotsForParking(@PathVariable Long parkingId) {
         List<ParkingSpot> parkingSpots = parkingService.getAllParkingSpotsForParking(parkingId);
         List<ParkingSpotResponse> parkingSpotResponses = new ArrayList<>();
@@ -191,7 +187,7 @@ public class ParkingController {
     @GetMapping("/parkingLots")
     public ResponseEntity<List<ParkingResponse>> retrieveParkingLots() {
 
-        List<Parking> parkingList = parkingRepository.findAll();
+        List<Parking> parkingList = parkingService.findAll();
         List<ParkingResponse> responseList = new ArrayList<>();
 
         for (Parking parking : parkingList) {
@@ -201,7 +197,7 @@ public class ParkingController {
     }
     @GetMapping("/parkingLot/{parking_id}")
     public ParkingResponse retrieveParkingLot(@PathVariable Long parking_id) {
-        var parkingOptional = parkingRepository.findById(parking_id);
+        var parkingOptional = parkingService.findById(parking_id);
         if(parkingOptional.isEmpty())
             throw new RequestDeniedException("Parking with that id doesn't exist");
         var parking = parkingOptional.get();

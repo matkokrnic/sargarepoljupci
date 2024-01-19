@@ -3,8 +3,7 @@ package com.progi.sargarepoljupci.Controllers;
 import com.progi.sargarepoljupci.DTO.RegistrationDTO;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.Korisnik;
-import com.progi.sargarepoljupci.Models.Uloga;
-import com.progi.sargarepoljupci.Repository.KorisnikRepository;
+import com.progi.sargarepoljupci.DTO.Uloga;
 import com.progi.sargarepoljupci.Services.KorisnikService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -29,12 +28,12 @@ import java.util.Optional;
 public class RegistrationController {
 
     private final KorisnikService korisnikService;
-    private final KorisnikRepository repo;
+    private final KorisnikService repo;
 
 
     private final JavaMailSender mailSender;
     @Autowired
-    public RegistrationController(KorisnikService korisnikService, KorisnikRepository repo, JavaMailSender mailSender) {
+    public RegistrationController(KorisnikService korisnikService, KorisnikService repo, JavaMailSender mailSender) {
         this.korisnikService = korisnikService;
 
         this.repo = repo;

@@ -1,7 +1,7 @@
 package com.progi.sargarepoljupci.Security;
 
 import com.progi.sargarepoljupci.Security.JWT2.JWTAuthenticationFilter;
-import com.progi.sargarepoljupci.Services.korisnikDetailsService;
+import com.progi.sargarepoljupci.Services.KorisnikDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,9 +24,9 @@ public class WebSecurityConfig {
 
     private final JWTAuthenticationFilter authenticationFilter;
 
-    private final korisnikDetailsService userDetailsService;
+    private final KorisnikDetailsService userDetailsService;
     @Autowired
-    public WebSecurityConfig(JWTAuthenticationFilter authenticationFilter, korisnikDetailsService userDetailsService) {
+    public WebSecurityConfig(JWTAuthenticationFilter authenticationFilter, KorisnikDetailsService userDetailsService) {
         this.authenticationFilter = authenticationFilter;
         this.userDetailsService = userDetailsService;
     }
@@ -51,7 +51,7 @@ public class WebSecurityConfig {
             "/api/authenticate/**",
             "/parkingLots",
             "/bicycle-spots/for-parking/{parkingId}",
-            "/parking-spots/by-parking/{parkingId}",
+            "/parking-spots/for-parking/{parkingId}",
             "/all-bicycle-spots",
             "/all-parking-spots",
             "/unoccupied",

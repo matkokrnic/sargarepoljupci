@@ -6,8 +6,8 @@ import com.progi.sargarepoljupci.DTO.Request.TimeSlot;
 import com.progi.sargarepoljupci.DTO.Response.NearestBicycleSpotResponse;
 import com.progi.sargarepoljupci.DTO.Response.NearestSpotResponse;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
-import com.progi.sargarepoljupci.Repository.BicycleRepository;
-import com.progi.sargarepoljupci.Repository.ParkingSpotRepository;
+import com.progi.sargarepoljupci.Services.BicycleService;
+import com.progi.sargarepoljupci.Services.ParkingSpotService;
 import com.progi.sargarepoljupci.Services.ParkingService;
 import com.progi.sargarepoljupci.Services.ReservationService;
 import com.progi.sargarepoljupci.Services.WalletService;
@@ -26,16 +26,16 @@ import java.util.List;
 public class ClientController {
     private final WalletService walletService;
     private final ParkingService parkingService;
-    private final ParkingSpotRepository parkingSpotRepository;
+    private final ParkingSpotService parkingSpotService;
     private final ReservationService reservationService;
-    private final BicycleRepository bicycleRepository;
+    private final BicycleService bicycleService;
     @Autowired
-    public ClientController(WalletService walletService, ParkingService parkingService, ParkingSpotRepository parkingSpotRepository, ReservationService reservationService, BicycleRepository bicycleRepository) {
+    public ClientController(WalletService walletService, ParkingService parkingService, ParkingSpotService parkingSpotService, ReservationService reservationService, BicycleService bicycleService) {
         this.walletService = walletService;
         this.parkingService = parkingService;
-        this.parkingSpotRepository = parkingSpotRepository;
+        this.parkingSpotService = parkingSpotService;
         this.reservationService = reservationService;
-        this.bicycleRepository = bicycleRepository;
+        this.bicycleService = bicycleService;
     }
 
 
@@ -67,7 +67,7 @@ public class ClientController {
         // ako su bicikli onda samo vratimo koordinate najblizeg, ne trebamo radit nista sto se tice rezervacije
         if(vehicleType.equalsIgnoreCase("bicycle")){
             var nearest= parkingService.findNearestBicycleSpot(destination);
-            var bicycleParking = bicycleRepository.findByLongitudeAndLatitude(nearest.getFirst(), nearest.getSecond());
+            var bicycleParking = bicycleService.findByLongitudeAndLatitude(nearest.getFirst(), nearest.getSecond());
             if(bicycleParking==null)
                 throw new RequestDeniedException("There's no available bicycle parking");
             return ResponseEntity.ok(new NearestBicycleSpotResponse(nearest.getFirst(), nearest.getSecond(), bicycleParking.getBicycle_id(), bicycleParking.getNumAvailableSpots()));
@@ -75,7 +75,7 @@ public class ClientController {
         currentTime = reservationService.roundToClosest30Minutes(currentTime);
        Pair<Double, Double> nearestCoordinates = parkingService.findNearestAvailableParking(destination, currentTime);
         // provjeriti je li rezervirano mjesto, prvo nadjemo mjesto
-       var parkingSpot = parkingSpotRepository.findByLongitudeAndLatitude(nearestCoordinates.getFirst(), nearestCoordinates.getSecond());
+       var parkingSpot = parkingSpotService.findByLongitudeAndLatitude(nearestCoordinates.getFirst(), nearestCoordinates.getSecond());
         LocalDateTime reservationEnd = currentTime.plusMinutes(parkingDurationInMinutes);
         boolean reservable;
         reservable = reservationService.canParkingSpotBeReserved(parkingSpot.getId(), currentTime,  reservationEnd) && parkingSpot.getReservable();

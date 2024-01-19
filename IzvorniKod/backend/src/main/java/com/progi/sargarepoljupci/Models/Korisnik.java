@@ -2,6 +2,7 @@ package com.progi.sargarepoljupci.Models;
 
 
 import com.progi.sargarepoljupci.DTO.RegistrationDTO;
+import com.progi.sargarepoljupci.DTO.Uloga;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;

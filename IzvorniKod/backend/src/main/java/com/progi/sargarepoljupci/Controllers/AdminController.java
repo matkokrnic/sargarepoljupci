@@ -2,19 +2,17 @@ package com.progi.sargarepoljupci.Controllers;
 
 import com.progi.sargarepoljupci.DTO.Request.PersonalInformationRequest;
 import com.progi.sargarepoljupci.DTO.Response.PersonalInformationResponse;
+import com.progi.sargarepoljupci.DTO.Uloga;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Exceptions.UserNotFoundException;
 import com.progi.sargarepoljupci.Models.Korisnik;
 import com.progi.sargarepoljupci.Models.Voditelj;
-import com.progi.sargarepoljupci.Models.Uloga;
-import com.progi.sargarepoljupci.Repository.KorisnikRepository;
-import com.progi.sargarepoljupci.Repository.VoditeljRepository;
 import com.progi.sargarepoljupci.Services.KorisnikService;
+import com.progi.sargarepoljupci.Services.VoditeljService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,15 +24,13 @@ import java.util.Optional;
 @Secured("ROLE_ADMIN")
 @RequestMapping("/api/admin")
 public class AdminController {
-
-    private final KorisnikRepository korisnikRepository;
+    
     private final KorisnikService korisnikService;
-    private final VoditeljRepository voditeljRepository;
+    private final VoditeljService voditeljService;
     @Autowired
-    public AdminController(KorisnikRepository korisnikRepository, KorisnikService korisnikService, VoditeljRepository voditeljRepository) {
-        this.korisnikRepository = korisnikRepository;
+    public AdminController(KorisnikService korisnikService, VoditeljService voditeljRepository) {
         this.korisnikService = korisnikService;
-        this.voditeljRepository = voditeljRepository;
+        this.voditeljService = voditeljRepository;
     }
 
 
@@ -42,7 +38,7 @@ public class AdminController {
     public List<PersonalInformationResponse> getAllUsers() {
 
         List<PersonalInformationResponse> responses = new ArrayList<>();
-        List<Korisnik> korisnici = korisnikRepository.findByVerificiranIsTrue();
+        List<Korisnik> korisnici = korisnikService.findByVerificiranIsTrue();
         for (Korisnik korisnik : korisnici) {
             PersonalInformationResponse response = new PersonalInformationResponse(korisnik);
             responses.add(response);
@@ -119,7 +115,7 @@ public class AdminController {
     public Korisnik approveUser(@PathVariable("id") Long id) {
         System.out.println("Sad smo u approve");
 
-        Optional<Korisnik> optionalVoditelj = korisnikRepository.findById(id);
+        Optional<Korisnik> optionalVoditelj = korisnikService.findById(id);
 
         if(optionalVoditelj.isPresent()) {
             Korisnik korisnik = optionalVoditelj.get();
@@ -131,8 +127,8 @@ public class AdminController {
                 korisnik.setPotvrden(true);
                 Voditelj voditelj = new Voditelj();
                 voditelj.setKorisnik(korisnik);
-                voditeljRepository.save(voditelj);
-                return korisnikRepository.save(korisnik);
+                voditeljService.save(voditelj);
+                return korisnikService.save(korisnik);
             }
             else throw new RequestDeniedException("Voditelj je vec potvrden");
 
@@ -147,7 +143,7 @@ public class AdminController {
     @PutMapping("/decline/{id}")
     public Korisnik declineUser(@PathVariable("id") Long id) {
 
-        Optional<Korisnik> optionalVoditelj = korisnikRepository.findById(id);
+        Optional<Korisnik> optionalVoditelj = korisnikService.findById(id);
 
         if(optionalVoditelj.isPresent()) {
             Korisnik korisnik = optionalVoditelj.get();
@@ -157,7 +153,7 @@ public class AdminController {
             else if(korisnik.getPotvrden() == null || korisnik.getPotvrden()) {
                 korisnik.setPotvrden(false);
                 System.out.println("Korisnik je odbijen");
-                return korisnikRepository.save(korisnik);
+                return korisnikService.save(korisnik);
             }
             else throw new RequestDeniedException("Voditelj je vec odbijen");
 
@@ -168,18 +164,18 @@ public class AdminController {
         }
 
     }
-    @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable("userId") Long id){
-        try{
-            //korisnikRepository.deleteById(id);
-            voditeljRepository.deleteById(id);
-            return ResponseEntity.ok("User deleted successfully");
-        }catch (UsernameNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting user: " + e.getMessage());
-        }
-    }
+    //@DeleteMapping("/delete/{userId}")
+    //public ResponseEntity<String> deleteUser(@PathVariable("userId") Long id){
+    //    try{
+    //        //korisnikRepository.deleteById(id);
+    //        voditeljService.deleteById(id);
+    //        return ResponseEntity.ok("User deleted successfully");
+    //    }catch (UsernameNotFoundException e){
+    //        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    //    }catch (Exception e){
+    //        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting user: " + e.getMessage());
+    //    }
+    //}
 
 
 /*

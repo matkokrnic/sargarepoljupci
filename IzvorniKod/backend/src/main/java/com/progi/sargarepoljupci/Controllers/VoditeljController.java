@@ -6,7 +6,6 @@ import com.progi.sargarepoljupci.DTO.Request.ParkingInformationRequest;
 import com.progi.sargarepoljupci.DTO.Request.ReservableUpdateRequest;
 import com.progi.sargarepoljupci.DTO.Response.ParkingResponse;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
-import com.progi.sargarepoljupci.Repository.ParkingRepository;
 import com.progi.sargarepoljupci.Services.ParkingService;
 import com.progi.sargarepoljupci.Services.ParkingSpotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +23,12 @@ import java.util.List;
 public class VoditeljController {
     private final ParkingService parkingService;
     private final ParkingSpotService parkingSpotService;
-    private final ParkingRepository parkingRepository;
 
 
     @Autowired
-    public VoditeljController(ParkingService parkingService, ParkingSpotService parkingSpotService, ParkingRepository parkingRepository) {
-        this.parkingService = parkingService;
+    public VoditeljController(ParkingService parkingService, ParkingSpotService parkingSpotService) {
         this.parkingSpotService = parkingSpotService;
-        this.parkingRepository = parkingRepository;
+        this.parkingService = parkingService;
 
     }
 
@@ -71,7 +68,7 @@ public class VoditeljController {
 
     @PutMapping("/updateImage/{id}")
     public ResponseEntity<String> updateImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
-       var parkingOpt = parkingRepository.findById(id);
+       var parkingOpt = parkingService.findById(id);
        if(parkingOpt.isEmpty()){
            throw new RequestDeniedException("Parking with that id doesn't exist");
        }

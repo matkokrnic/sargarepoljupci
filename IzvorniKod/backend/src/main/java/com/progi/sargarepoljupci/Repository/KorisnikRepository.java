@@ -1,7 +1,7 @@
 package com.progi.sargarepoljupci.Repository;
 
 import com.progi.sargarepoljupci.Models.Korisnik;
-import com.progi.sargarepoljupci.Models.Uloga;
+import com.progi.sargarepoljupci.DTO.Uloga;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.Email;
 import org.springframework.data.jpa.repository.JpaRepository;

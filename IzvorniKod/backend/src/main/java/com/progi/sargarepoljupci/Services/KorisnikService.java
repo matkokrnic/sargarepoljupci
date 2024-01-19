@@ -2,13 +2,14 @@ package com.progi.sargarepoljupci.Services;
 
 import com.progi.sargarepoljupci.DTO.RegistrationDTO;
 import com.progi.sargarepoljupci.DTO.Request.PersonalInformationRequest;
+import com.progi.sargarepoljupci.DTO.Uloga;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.Korisnik;
-import com.progi.sargarepoljupci.Models.Uloga;
 import com.progi.sargarepoljupci.Models.Voditelj;
 import com.progi.sargarepoljupci.Repository.KorisnikRepository;
 import com.progi.sargarepoljupci.Repository.VoditeljRepository;
 import com.progi.sargarepoljupci.Utilities.VerificationTokenGenerator;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -86,13 +87,6 @@ public class KorisnikService implements KorisnikServiceInterface {
         updateNonNullFields(existingUser, userRequest);
 
 
-
-
-        // Check if the password is provided and needs to be updated
-        if (userRequest.getPassword() != null && !userRequest.getPassword().isEmpty()) {
-            String encryptedPassword = passwordEncoder.encode(userRequest.getPassword());
-            existingUser.setLozinka(encryptedPassword);
-        }
         if (existingUser.getUloga() == Uloga.VODITELJ) {
             var voditelj = new Voditelj();
             voditelj.setKorisnik(existingUser);
@@ -186,6 +180,58 @@ public class KorisnikService implements KorisnikServiceInterface {
     @Override
     public Optional<Korisnik> findById(Long aLong) {
         return userRepository.findById(aLong);
+    }
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public boolean existsByEmailAndIdNot(String email, Long id) {
+        return userRepository.existsByEmailAndIdNot(email, id);
+    }
+
+    public boolean existsByKorisnickoImeAndIdNot(String korisnickoIme, Long id) {
+        return userRepository.existsByKorisnickoImeAndIdNot(korisnickoIme, id);
+    }
+
+    public boolean existsById(@Nonnull Long id) {
+        return userRepository.existsById(id);
+    }
+
+    public boolean existsByKorisnickoIme(String korisnickoIme) {
+        return userRepository.existsByKorisnickoIme(korisnickoIme);
+    }
+
+    public Optional<Korisnik> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public Optional<Korisnik> findByKorisnickoIme(String korisnickoIme) {
+        return userRepository.findByKorisnickoIme(korisnickoIme);
+    }
+
+    public Optional<Korisnik> findByVerifikacijaToken(String verificationCode) {
+        return userRepository.findByVerifikacijaToken(verificationCode);
+    }
+
+    public List<Korisnik> findByVerificiranIsTrue() {
+        return userRepository.findByVerificiranIsTrue();
+    }
+
+    public List<Korisnik> findByUlogaIsAndPotvrdenNullOrPotvrdenIsFalseAndVerificiranIsTrue(Uloga uloga) {
+        return userRepository.findByUlogaIsAndPotvrdenNullOrPotvrdenIsFalseAndVerificiranIsTrue(uloga);
+    }
+
+    public boolean existsByEmailAndIdIsNot(String email, Long id) {
+        return userRepository.existsByEmailAndIdIsNot(email, id);
+    }
+
+    public boolean existsByKorisnickoImeAndIdIsNot(String korisnickoIme, Long id) {
+        return userRepository.existsByKorisnickoImeAndIdIsNot(korisnickoIme, id);
+    }
+    public Korisnik save(@Nonnull Korisnik korisnik) {
+        // You can add validation or business logic here before saving
+        return userRepository.save(korisnik);
     }
 
 

@@ -1,7 +1,7 @@
 package com.progi.sargarepoljupci.Utilities;
 
 import com.progi.sargarepoljupci.Models.Korisnik;
-import com.progi.sargarepoljupci.Models.Uloga;
+import com.progi.sargarepoljupci.DTO.Uloga;
 import com.progi.sargarepoljupci.Repository.KorisnikRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

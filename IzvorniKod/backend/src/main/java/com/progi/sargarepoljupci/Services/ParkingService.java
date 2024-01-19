@@ -14,6 +14,7 @@ import com.progi.sargarepoljupci.Repository.ParkingRepository;
 import com.progi.sargarepoljupci.Repository.ParkingSpotRepository;
 import com.progi.sargarepoljupci.Repository.VoditeljRepository;
 import com.progi.sargarepoljupci.Utilities.ParkingSpotReservable;
+import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
@@ -27,6 +28,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ParkingService {
@@ -204,7 +206,7 @@ public class ParkingService {
         var parkingSpotList = request.getParkingSpotReservableList();
         var parkingOptional = parkingRepository.findById(parkingId);
         if(parkingOptional.isEmpty()){
-            throw new RequestDeniedException("Parking with that that id doesn't exist");
+            throw new RequestDeniedException("Parking with that id doesn't exist");
         }
         var parking = parkingOptional.get();
         for (ParkingSpotReservable spot : parkingSpotList) {
@@ -251,6 +253,18 @@ public class ParkingService {
 
         return bicycleRepository.findByParkingLot(parking);
     }
+
+    @Nonnull
+    public List<Parking> findAll() {
+        return parkingRepository.findAll();
+    }
+
+    @Nonnull
+    public Optional<Parking> findById(@Nonnull Long id) {
+        return parkingRepository.findById(id);
+    }
+
+
 
 
 

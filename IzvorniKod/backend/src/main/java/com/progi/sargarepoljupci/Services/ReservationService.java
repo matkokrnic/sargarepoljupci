@@ -147,8 +147,6 @@ public class ReservationService {
 
 
             if (isReservable) {
-
-
                 totalDurationInMin += calculateDurationInMinutes(timeSlot.getStartTime(), timeSlot.getEndTime());
                 Reservation reservation = new Reservation();
                 reservation.setKorisnik(user.get());
@@ -175,9 +173,6 @@ public class ReservationService {
             return null;
         }
         return unavailableTimeSlots;
-
-
-
     }
 
     private int calculateDurationInMinutes(LocalDateTime start, LocalDateTime end) {
@@ -187,6 +182,10 @@ public class ReservationService {
     public LocalDateTime roundToClosest30Minutes(LocalDateTime dateTime) {
         LocalDateTime roundedDown = dateTime.withSecond(0).withNano(0);
         return roundedDown.minusMinutes(roundedDown.getMinute() % 30);
+    }
+
+    public List<Reservation> findByParkingSpotIdIn(Collection<String> parkingSpotIds) {
+        return reservationRepository.findByParkingSpotIdIn(parkingSpotIds);
     }
 
 

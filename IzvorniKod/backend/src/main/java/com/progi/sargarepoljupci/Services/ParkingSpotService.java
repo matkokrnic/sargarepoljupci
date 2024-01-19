@@ -2,14 +2,17 @@ package com.progi.sargarepoljupci.Services;
 
 import com.progi.sargarepoljupci.DTO.Request.ReservableUpdateRequest;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
+import com.progi.sargarepoljupci.Models.Parking;
 import com.progi.sargarepoljupci.Models.ParkingSpot;
 import com.progi.sargarepoljupci.Repository.ParkingSpotRepository;
+import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ParkingSpotService {
@@ -61,9 +64,37 @@ public class ParkingSpotService {
         return notFoundSpotIds;
     }
 
+    @Nonnull
+    public Optional<ParkingSpot> findById(@Nonnull String id) {
+        return parkingSpotRepository.findById(id);
+    }
+
+    public List<ParkingSpot> findParkingSpotsByReservableIsTrue() {
+        return parkingSpotRepository.findParkingSpotsByReservableIsTrue();
+    }
+
+    public List<ParkingSpot> findParkingSpotsByParkingIsNotNull() {
+        return parkingSpotRepository.findParkingSpotsByParkingIsNotNull();
+    }
+
+    public List<ParkingSpot> findParkingSpotsByParkingIsNull() {
+        return parkingSpotRepository.findParkingSpotsByParkingIsNull();
+    }
+
+    public ParkingSpot findByLongitudeAndLatitude(double longitude, double latitude) {
+        return parkingSpotRepository.findByLongitudeAndLatitude(longitude, latitude);
+    }
+
+    public List<ParkingSpot> findByParking(Parking parking) {
+        return parkingSpotRepository.findByParking(parking);
+    }
 
 
 
+    @Nonnull
+    public List<ParkingSpot> findAll() {
+        return parkingSpotRepository.findAll();
+    }
 
 
 

@@ -1,6 +1,6 @@
 package com.progi.sargarepoljupci.Security.JWT2;
 
-import com.progi.sargarepoljupci.Services.korisnikDetailsService;
+import com.progi.sargarepoljupci.Services.KorisnikDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private final JWTService jwtService;
-    private final korisnikDetailsService korisnikDetailsService;
+    private final KorisnikDetailsService korisnikDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,

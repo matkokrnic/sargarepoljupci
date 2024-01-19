@@ -5,8 +5,8 @@ import com.progi.sargarepoljupci.DTO.LoginDTO;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Exceptions.UserNotFoundException;
 import com.progi.sargarepoljupci.Models.Korisnik;
-import com.progi.sargarepoljupci.Models.Uloga;
-import com.progi.sargarepoljupci.Repository.KorisnikRepository;
+import com.progi.sargarepoljupci.DTO.Uloga;
+import com.progi.sargarepoljupci.Services.KorisnikService;
 import com.progi.sargarepoljupci.Security.JWT2.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,14 +28,14 @@ public class LoginController {
 
 
 
-    private final KorisnikRepository korisnikRepository;
+    private final KorisnikService korisnikService;
     private final PasswordEncoder encoder;
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
     @Autowired
-    public LoginController(KorisnikRepository korisnikRepository, PasswordEncoder encoder, AuthenticationManager authenticationManager, JWTService jwtService) {
+    public LoginController(KorisnikService korisnikService, PasswordEncoder encoder, AuthenticationManager authenticationManager, JWTService jwtService) {
 
-        this.korisnikRepository = korisnikRepository;
+        this.korisnikService = korisnikService;
         this.encoder = encoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
@@ -48,7 +48,7 @@ public class LoginController {
         if (loginDTO.getKorisnickoIme().equals("admin") && encoder.matches("123", loginDTO.getLozinka())){
             return ResponseEntity.status(HttpStatus.valueOf(201)).body("Admin Ulogiran");
         }
-        Optional<Korisnik> existingUser = korisnikRepository.findByKorisnickoIme(loginDTO.getKorisnickoIme());
+        Optional<Korisnik> existingUser = korisnikService.findByKorisnickoIme(loginDTO.getKorisnickoIme());
         // ako je username isti
         if(existingUser.isPresent()){
             if (existingUser.get().getVerificiran() == null && existingUser.get().getUloga()!= Uloga.ADMIN){

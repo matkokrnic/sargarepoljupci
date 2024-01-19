@@ -8,7 +8,6 @@ import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.ParkingSpot;
 import com.progi.sargarepoljupci.Models.Reservation;
 import com.progi.sargarepoljupci.Repository.ParkingSpotRepository;
-import com.progi.sargarepoljupci.Repository.ReservationRepository;
 import com.progi.sargarepoljupci.Services.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,14 +24,13 @@ import java.util.stream.Collectors;
 public class ReservationController {
 
     private final ReservationService reservationService;
-    private final ReservationRepository reservationRepository;
+
     private final ParkingSpotRepository parkingSpotRepository;
 
     @Autowired
-    public ReservationController(ReservationService reservationService, ReservationRepository reservationRepository, ParkingSpotRepository parkingSpotRepository) {
+    public ReservationController(ReservationService reservationService, ParkingSpotRepository parkingSpotRepository) {
 
         this.reservationService = reservationService;
-        this.reservationRepository = reservationRepository;
         this.parkingSpotRepository = parkingSpotRepository;
 
     }
@@ -79,7 +77,7 @@ public class ReservationController {
 
     @PostMapping("/unavailableTimeslots")
     public List<TimeSlot> findReservationsForParkingSpots(@RequestBody List<String> parkingSpotIds) {
-        var temp =  reservationRepository.findByParkingSpotIdIn(parkingSpotIds);
+        var temp =  reservationService.findByParkingSpotIdIn(parkingSpotIds);
         return temp.stream()
                 .map(TimeSlot::new)
                 .collect(Collectors.toList());
