@@ -71,18 +71,18 @@ Za modeliranje sustava je korištena relacijska baza podataka, a nju smo impleme
 Baza podataka sastoji se od sljedećih entiteta:
 
 \begin{itemize}
-	\item \textbf{Korisnik} \hspace{0.15cm}\textit{Korisnicko\_ime}, \textit{Lozinka}, \textit{Ime}, \textit{Prezime}, \textit{Slika\_osobne}, \textit{IBAN}, \textit{email}, \textit{Uloga}, \textit{stanjeNaRacunu}, \textit{potvrdenVoditelj}, \textit{verificiranKorisnik})
+	\item \textbf{User} \hspace{0.15cm} (\textit{id}, \textit{email} \textit{username}, \textit{password}, \textit{name}, \textit{lastName}, \textit{IBAN}, \textit{photo}, \textit{role}, \textit{walletBalance}, \textit{approved}, \textit{verified}, \textit{verificationToken})
 	
 	
-	\item \textbf{ParkiralisteAutomobili} (\textit{fotografija}, \textit{Naziv}, \textit{Opis}, \textit{CijenaPoSatu}, \textit{ParkiralisteId}) 
+	\item \textbf{Parking} (\textit{picture}, \textit{parkingName}, \textit{parkingDescription}, \textit{costPerHour}, \textit{parkingId}, \textit{voditeljId}) 
 	
-	\item \textbf{Parking\_mjesto} (\textit{identifikacija}, \textit{Oznaka}, \textit{Slobodno}, \textit{Dostupno}, \textit{ParkiralisteId})
+	\item \textbf{ParkingSpot} (\textit{parkingSpotId}, \textit{latitude}, \textit{longitude}, \textit{polygon}, \textit{label}, \textit{reserveable}, \textit{parkingId})
 	
-	\item \textbf{Voditelj} (\textit{korisnickoIme}, \textit{ParkiralisteId})
+	\item \textbf{Voditelj} (\textit{voditeljId})
 	
-	\item \textbf{Rezervacija} (\textit{RezervacijaID}, \textit{cijena}, \textit{pocetakRezervacije}, \textit{krajRezervacije}, \textit{RRule}, \textit{KorisnickoIme}, \textit{Identifikacija})
+	\item \textbf{Reservation} (\textit{reservationId}, \textit{duration}, \textit{reservationStart}, \textit{reservationEnd}, \textit{korisnikId}, \textit{parkingSpotId})
 	
-	\item \textbf{BicikliMjesto} (\textit{identifikacija}, \textit{BrojMjesta}, \textit{duljina}, \textit{sirina})
+	\item \textbf{BicycleParking} (\textit{bicycleId}, \textit{latitude}, \textit{longitude}, \textit{numberOfSpots}, \textit{polygon}, \textit{parkingId})
 \end{itemize}
 
 
@@ -93,7 +93,10 @@ Baza podataka sastoji se od sljedećih entiteta:
 
 
 
-\textbf{Korisnik:} sadržava sve bitne informacije o registriranim korisnicima u sustavu. Sadrži atribute: ID korisnika, korisničko ime, lozinka, ime, prezime, slika osobne iskaznice, IBAN, email, uloga (enum za 'klijent', 'voditelj', 'administrator') i stanje na računu. Također sadrži dodatne atribute putem kojih pratimo je li korisnik verificirao e-mail (verificiranKorisnik) te, u slučaju uloge=voditelj, je li potvrđen od strane administratora (potvrdenVoditelj). Ovaj entitet je preko korisnickogImena u vezi One-to-Many s entitetom Rezervacija i u One-to-One vezi s entitetom Voditelj.
+\textbf{User:} sadržava sve bitne informacije o registriranim korisnicima u sustavu. Sadrži atribute: id, email, username, password, name, lastName, IBAN, photo, role, walletBalance, approved, verified, verificationToken. Također sadrži dodatne atribute putem kojih pratimo je li korisnik verificirao e-mail (verified) te, u slučaju
+role=voditelj, je li potvrđen od strane administratora (approved).
+Ovaj entitet je preko korisničkog identifikatora u One-to-Many vezi s entitetom Rezervacija i u One-to-One vezi s entitetom Voditelj.
+
 \begin{longtblr}[
 	label=none,
 	entry=none,
@@ -102,24 +105,46 @@ Baza podataka sastoji se od sljedećih entiteta:
 		colspec={|X[9,l]|X[5,l]|X[20, l]|},
 		rowhead = 1,
 	}
-	\hline \SetCell[c=3]{c}{\textbf{Korisnik}} \\ \hline[3pt]	
-	\SetCell{LightGreen} KorisničkoIme & VARCHAR & Jedinstveno korisničko ime \\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{User}} \\ \hline[3pt]	
+	\SetCell{LightGreen} id & INT & Jedinstveno korisničko ime \\ \hline
 	email & VARCHAR & Email korisnika\\ \hline
-	lozinka & VARCHAR & Hash lozinke dobiven s Bcrypt encoderom\\ \hline
-	Ime & VARCHAR & Ime korisnika\\ \hline
-	Prezime & VARCHAR & Prezime korisnika\\ \hline
+	username & VARCHAR & Korisničko ime\\ \hline
+	password & VARCHAR & Hash lozinke dobiven s Bcrypt encoderom\\ \hline
+	name & VARCHAR & Ime korisnika\\ \hline
+	lastName & VARCHAR & Prezime korisnika\\ \hline
 	IBAN & VARCHAR &  IBAN korisnika\\ \hline
-	slikaOsobne & BYTEA & Byte array slike osobne iskaznice\\ \hline
-	Uloga & INT & Enum koji označava ulogu korisnika ('klijent', 'voditelj', 'administrator')\\ \hline
-	stanjeNaRacunu & NUMERIC & Decimalni broj koji označava koliko novaca se nalazi u novčaniku \\ \hline
-	potvrdenVoditelj & BOOLEAN & Označava je li voditelj potvrđen od strane admina. \\ \hline
-	verificiranKorisnik & BOOLEAN & Je li korisnik verificiran preko emaila? \\ \hline
+	photo & BYTEA & Byte array slike osobne iskaznice\\ \hline
+	role & INT & Enum koji označava ulogu korisnika ('klijent', 'voditelj', 'administrator')\\ \hline
+	walletBalance & NUMERIC & Decimalni broj koji označava koliko novaca se nalazi u novčaniku \\ \hline
+	approved & BOOLEAN & Označava je li voditelj potvrđen od strane admina. \\ \hline
+	verified & BOOLEAN & Je li korisnik verificiran preko emaila? \\ \hline
+	verificationToken & BOOLEAN & Token verifikacije \\ \hline
 	
 \end{longtblr}
 
 
 
-\noindent\textbf{ParkiralisteAutomobili:} sadrži ključne informacije vezane za parkirališta automobila. Sadrži atribute koje postavlja voditelj parkirališta: fotografija, naziv, opis i cijena po satu. Uz to sadrži i ID parkirališta. Ovaj entitet je u vezi One-to-One s entitetom voditelj putem ID-a parkirališta i One-to-Many vezi s ParkingMjesto preko ID-a parkirališta.
+\noindent\textbf{Parking:} Parking: sadrži ključne informacije o parkiralištima. Sadrži atribute koje postavlja voditelj parkirališta: fotografija, naziv, opis i cijena po satu. Uz to sadrži i generiran ID parkirališta. Ovaj entitet je u vezi Many-to-One s entitetom voditelj putem ID-a voditelja i u One-to-Many vezi s ParkingSpotom preko ID-a parkirališta.
+\begin{longtblr}[
+	label=none,
+	entry=none
+	]{
+		width = \textwidth,
+		colspec={|X[10,l]|X[6, l]|X[20, l]|}, 
+		rowhead = 1,
+	}
+	\hline \SetCell[c=3]{c}{\textbf{Parking}} \\ \hline[3pt]
+	\SetCell{LightGreen}parkingId & INT & Jedinstveni identifikator parkirališta\\ \hline
+	picture & BYTEA & Slika parkirališta koju voditelj može priložiti\\ \hline
+	parkingName & VARCHAR & Naziv parkirališta\\ \hline
+	parkingDescription & VARCHAR & Opis parkirališta\\ \hline
+	costPerHour & NUMERIC & Cijena po satu koju definira voditelj parkirališta\\ \hline
+	\SetCell{LightBlue} voditeljId  & INT & Jedinstveni identifikator voditelja parkirališta \\ \hline
+	
+\end{longtblr}
+
+\noindent\textbf{ParkingSpot:} ParkingSpot sadrži informacije o pojedinačnim parkirnim mjestima unutar parkirališta. U ovu tablicu ćemo unijeti početne informacije o mjestima za automobile koje smo dobili od Overpass API-ja. Ti atributi su id, centralne koordinate parkirališta (dužina, širina) i poligon. Također sadrži oznaku parkirališnog mjesta, informaciju o dostupnosti i mogućnosti rezervacije mjesta koje postavlja voditelj, te ID parkirališta kojemu pripada. U vezi je Many-to-One s entitetom "Parking" putem ID-a parkirališta i One-to-Many s entitetom Rezervacija putem identifikacije parkirališnog mjesta.
+
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -128,36 +153,19 @@ Baza podataka sastoji se od sljedećih entiteta:
 		colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
 		rowhead = 1,
 	}
-	\hline \SetCell[c=3]{c}{\textbf{ParkiralisteAutomobili}} \\ \hline[3pt]
-	\SetCell{LightGreen}ParkiralisteId & INT & Jedinstveni identifikator parkirališta\\ \hline
-	fotografija & BYTEA & Slika parkirališta koju voditelj može priložiti\\ \hline
-	Naziv & VARCHAR & Naziv parkirališta\\ \hline
-	Opis & VARCHAR & Opis parkirališta\\ \hline
-	CijenaPoSatu & NUMERIC & Cijena po satu koju definira voditelj parkirališta\\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{ParkingSpot}} \\ \hline[3pt]
+	\SetCell{LightGreen}parkingSpotId & VARCHAR & Identifikacija mjesta koje generira overpassAPI koji generira overpassAPI. \newline Npr. "node/11310562209" \\ \hline
+	label & VARCHAR & Oznaka ili broj parkirališnog mjesta\\ \hline
+	longitude & NUMERICAL & Označuje duljinu  \\ \hline
+	latitude & NUMERICAL & Označuje širinu \\ \hline
+	reserveable & BOOLEAN & Je li mjesto slobodno ili nije\\ \hline
+	polygon & VARCHAR & Poligon parkirališnog mjesta\\ \hline
+	\SetCell{LightBlue}parkingId & INT & Jedinstveni identifikator parkirališta \newline (Parking.parkingId)\\ \hline
 	
 \end{longtblr}
 
-\noindent\textbf{Parking\_mjesto:} predstavlja informacije o pojedinačnim parkirnim mjestima unutar parkirališta za automobile. U ovu tablicu ćemo unijeti početne informacije o mjestima za automobile koje smo dobili od overpass API-ja.  Sadrži atribute kao što su identifikacija i koordinate (duljina, širina) koje ćemo dobiti pozivom overpassAPI-a. (@id i "coordinates" iz GeoJSON-a dobivenog pozivom overpassAPI-a), oznaka parkirnog mjesta, informacija o dostupnosti koju postavlja voditelj i slobodnom statusu parkirnog mjesta te ID parkirališta kojem pripada. U U vezi je Many-to-One s entitetom "ParkirališteAutomobili" putem ID-a parkirališta i One-to-many s entitetom Rezervacija putem identifikacije parking mjesta.
-\begin{longtblr}[
-	label=none,
-	entry=none
-	]{
-		width = \textwidth,
-		colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
-		rowhead = 1,
-	}
-	\hline \SetCell[c=3]{c}{\textbf{Parking\_mjesto}} \\ \hline[3pt]
-	\SetCell{LightGreen}identifikacija & VARCHAR & Identifikacija mjesta koje generira overpassAPI koji generira overpassAPI. \newline Npr. "node/11310562209" \\ \hline
-	Oznaka & VARCHAR & Oznaka ili broj parkirnog mjesta\\ \hline
-	Duljina & NUMERICAL & Označuje duljinu (longitude) \\ \hline
-	Sirina & NUMERICAL & Označuje širinu (longitude)\\ \hline
-	Slobodno & BOOLEAN & Je li mjesto slobodno ili nije\\ \hline
-	Dostupno & BOOLEAN & Je li voditelj učinio mjesto dostupnim\\ \hline
-	\SetCell{LightBlue}ParkiralisteId & INT & Jedinstveni identifikator parkirališta \newline (ParkiralisteAutomobili.ParkiralisteID)\\ \hline
-	
-\end{longtblr}
-
-\noindent\textbf{Voditelj:} sadrži informacije o voditeljima parkirališta. Povezuje voditelja sa parkiralištem. Ima vezu s One-to-one s entitetima Korisnik i ParkirališteAutomobila.
+\noindent\textbf{Voditelj:} sadrži informacije o voditeljima parkirališta. Povezuje voditelja sa
+parkiralištem. Ima vezu One-to-One s entitetom Korisnik i One-to-Many s Parkingom.
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -168,11 +176,12 @@ Baza podataka sastoji se od sljedećih entiteta:
 	}
 	\hline \SetCell[c=3]{c}{\textbf{Voditelj}} \\ \hline[3pt]
 	
-	\SetCell{LightBlue}korisnickoIme & VARCHAR & Jedinstveno korisničko ime \\ \hline
-	\SetCell{LightBlue}ParkiralisteId & INT & Jedinstven ID parkinga \newline(ParkiralisteAutomobili.ParkiralisteID)\\ \hline
+	\SetCell{LightGreen}voditeljId & INT & Jedinstveni identifikator voditelja parkirališta \\ \hline
+	
 \end{longtblr}
 
-\noindent\textbf{Rezervacija:} sadrži informacije o parking rezervacijama koje su napravili korisnici. Uz cijenu i timestampe za pocetak i kraj rezervacije sadrži i string (TEXT) RRule kojim se definira učestalost ponavljanja rezervacije. Taj string se može parsirati pa generirati instance ponavljućih rezervacija. Ovaj entitet ima vezu Many-to-One s entitetom Korisnik putem jedinstvenog korisničkog imena. Također, ima vezu Many-to-One s entitetom "ParkingMjesto" putem lokacije parkirnog mjesta.
+\noindent\textbf{Reservation:} sadrži sve rezervacije koje su napravili korisnici. Ovaj entitet
+ima vezu Many-to-One s entitetom Korisnik putem korisničkog identifikatora. Također, ima vezu Many-to-One s entitetom ”ParkingSpot” putem lokacije parkirnog mjesta.
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -181,17 +190,17 @@ Baza podataka sastoji se od sljedećih entiteta:
 		colspec={|X[9,l]|X[6,l]|X[19, l]|},  % Adjust the width for the second column
 		rowhead = 1,
 	}
-	\hline \SetCell[c=3]{c}{\textbf{Rezervacija}} \\ \hline[3pt]
-	\SetCell{LightGreen}RezervacijaID & INT & Jedistven identifikator rezervacije\\ \hline
-	Cijena & NUMERIC & Ukupna cijena rezervacije\\ \hline
-	pocetakRezervacije & TIMESTAMP & Jedinstveni identifikator rezervacije \\ \hline
-	krajRezervacije & TIMESTAMP & Ukupna cijena rezervacije\\ \hline
-	RRule & TEXT & String koji će definirati učestalost ponavljanja rezervacije na osnovi formata iCalendar (RFC 5545) (ako je NULL onda je jednokratna)\\ \hline
-	\SetCell{LightBlue}korisnickoIme & INT & Jedinstveno korisničko ime\\ \hline
-	\SetCell{LightBlue}identifikacija & INT & Jedinstven identifikator parkirnog mjesta \newline \newline\\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{Reservation}} \\ \hline[3pt]
+	\SetCell{LightGreen}reservationId & INT & Jedistven identifikator rezervacije\\ \hline
+	duration & INT & Trajanje rezervacije\\ \hline
+	reservationStart & TIMESTAMP & Početak rezervacije \\ \hline
+	reservationEnd & TIMESTAMP & Kraj rezervacije\\ \hline
+	\SetCell{LightBlue}korisnikId & INT & Jedinstveno korisničko ime\\ \hline
+	\SetCell{LightBlue}parkingSpotId & INT & Jedinstven identifikator parkirališnog mjesta \newline \newline\\ \hline
 \end{longtblr}
 
-\noindent\textbf{BicikliParking:} unosimo početne informacije o biciklističkim mjestima. Pošto se parkirališta za bicikle ne mogu rezervirati niti se naplaćuju, ovaj entitet je odvojen od ostatka sustava. Sadrži atribute: koordinate (širina i duljina) te identifikaciju koje dobivamo pozivom overpassAPI-ja. Duljina je prva vrijednost, a širina druga vrijednost u coordinates arrayu. \\ Npr. "coordinates": [16.0166069 (duljina), 45.8387721 (sirina)]
+\noindent\textbf{BicycleParking:} sadrži atribute koje dobivamo pozivom overpassAPI-a: (id, koordinate, broj dostupnih mjesta) te identifikator parkirališta kojem pripada. U Many-to-One vezi je s Parkingom preko identifikatora parkirališta.
+
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -200,11 +209,13 @@ Baza podataka sastoji se od sljedećih entiteta:
 		colspec={|X[9,l]|X[6,l]|X[19, l]|},  % Adjust the width for the second column
 		rowhead = 1,
 	}
-	\hline \SetCell[c=3]{c}{\textbf{BicikliParking}} \\ \hline[3pt]
-	\SetCell{LightGreen}identifikacija & VARCHAR & Jedistven identifikator mjesta (@id iz GeoJSON-a)\\ \hline
-	brojMjesta & INT & Broj dostupnih mjesta na parkingu za bicikle\\ \hline
-	duljina & NUMERICAL & (longitude) prva vrijednost u "coordinates" nizu\\ \hline
-	sirina & NUMERICAL & (latitude) druga vrijednost u "coordinates nizu"\\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{BicycleParking}} \\ \hline[3pt]
+	\SetCell{LightGreen}bicycleId & INT & Jedistven identifikator parkirališnog mjesta za bicikle\\\hline
+	numberOfSpots & INT & Broj dostupnih mjesta na parkingu za bicikle\\ \hline
+	longitude & NUMERICAL & Označuje duljinu\\ \hline
+	latitude & NUMERICAL & Označuje širinu\\ \hline
+	polygon & VARCHAR & Poligon parkirališnog mjesta\\ \hline
+	\SetCell{LightBlue}parkingId & INT & Jedinstven identifikator parkirališta \\ \hline
 	
 	
 \end{longtblr}
@@ -231,9 +242,9 @@ Baza podataka sastoji se od sljedećih entiteta:
 
 \section{Dijagram razreda}
 
-	
 
-	
+
+
 \begin{figure}[H]
 	\includegraphics[width=\textwidth]{slike/models.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 	\centering
