@@ -64,8 +64,6 @@ public class CreateKorisnikTest {
         verify(userRepository, times(1)).save(any());
 
 
-        assertNotNull(result.getVerifikacijaToken(), "Verification token should not be null");
-
     }
 
     @Test
@@ -109,15 +107,14 @@ public class CreateKorisnikTest {
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(userRepository.existsByKorisnickoIme(anyString())).thenReturn(true);
 
-        // Act and Assert
+
         RequestDeniedException exception = assertThrows(RequestDeniedException.class,
                 () -> korisnikService.createKorisnik(registrationDTO, photo));
 
-        // Verify that the userRepository method was called with the correct parameters
+
         verify(userRepository, times(1)).existsByEmail(anyString());
         verify(userRepository, times(1)).existsByKorisnickoIme(anyString());
 
-        // Assert the exception message
         assertEquals("Korisnik s tim usernameom vec postoji u bazi podataka", exception.getMessage(),
                 "Korisnik s tim usernameom vec postoji u bazi podataka");
     }

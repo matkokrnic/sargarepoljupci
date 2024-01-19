@@ -39,7 +39,6 @@ public class UpdateKorisnikTest {
 
     @Test
     public void testUpdateKorisnik() throws SQLException, IOException {
-        // Arrange
         Long userId = 1L;
         PersonalInformationRequest userRequest = new PersonalInformationRequest();
         userRequest.setUsername("newUsername");
@@ -56,24 +55,19 @@ public class UpdateKorisnikTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
 
-        // Act
         korisnikService.updateKorisnik(userId, userRequest);
 
-        // Verify that the userRepository's save method is called with the updated existingUser
         verify(userRepository).save(argThat(updatedUser ->
                         updatedUser.getId().equals(userId) &&
                                 updatedUser.getKorisnickoIme().equals(userRequest.getUsername()) &&
                                 updatedUser.getIme().equals(userRequest.getFirstName())
         ));
 
-        // Verify that passwordEncoder.encode is called with the new password
         verify(passwordEncoder).encode(eq(userRequest.getPassword()));
 
-        // Verify that voditeljRepository.save is called if the user's role is VODITELJ
         if (existingUser.getUloga() == Uloga.VODITELJ) {
             verify(voditeljRepository).save(any(Voditelj.class));
         } else {
-            // Verify that voditeljRepository.save is not called if the user's role is not VODITELJ
             verify(voditeljRepository, never()).save(any(Voditelj.class));
         }
     }

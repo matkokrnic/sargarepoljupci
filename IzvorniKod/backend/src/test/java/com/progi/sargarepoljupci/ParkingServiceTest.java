@@ -43,16 +43,16 @@ public class ParkingServiceTest {
 
     @Test
     public void markSpotsSuccess() {
-        // Arrange
+
         Long parkingId = 1L;
         String parkingSpotId = "2";
         ParkingSpotReservable reservable = new ParkingSpotReservable();
         reservable.setReservable(true);
         reservable.setSpotId(parkingSpotId);
 
-        Parking parking = new Parking(); // Assuming you have a Parking class
+        Parking parking = new Parking();
         parking.setParkingId(parkingId);
-        ParkingSpot parkingSpot = new ParkingSpot(); // Assuming you have a ParkingSpot class
+        ParkingSpot parkingSpot = new ParkingSpot();
         parkingSpot.setId(parkingSpotId);
 
         MarkParkingRequest request = new MarkParkingRequest();
@@ -98,16 +98,16 @@ public class ParkingServiceTest {
 
     @Test
     public void markSpotAlreadyMarked() {
-        // Arrange
+
         Long parkingId = 1L;
         String parkingSpotId = "2";
         ParkingSpotReservable reservable = new ParkingSpotReservable();
         reservable.setReservable(true);
         reservable.setSpotId(parkingSpotId);
 
-        Parking parking = new Parking(); // Assuming you have a Parking class
+        Parking parking = new Parking();
         parking.setParkingId(parkingId);
-        ParkingSpot parkingSpot = new ParkingSpot(); // Assuming you have a ParkingSpot class
+        ParkingSpot parkingSpot = new ParkingSpot();
         parkingSpot.setId(parkingSpotId);
         parkingSpot.setParking(parking);
 
