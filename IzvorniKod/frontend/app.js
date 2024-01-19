@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // Uvoz potrebnih modula
 const express = require("express");
 const { createProxyMiddleware } = require("http-proxy-middleware");

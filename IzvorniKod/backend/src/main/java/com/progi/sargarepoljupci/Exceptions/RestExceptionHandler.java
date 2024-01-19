@@ -14,7 +14,7 @@ import java.util.Map;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class RestExceptionHandler {
-    @ExceptionHandler(korisnikNotApprovedException.class)
+    @ExceptionHandler(UserNotApprovedException.class)
     protected ResponseEntity<?> notApproved(Exception e, WebRequest request) {
         Map<String, String> ghhg = new HashMap<>();
         ghhg.put("message", e.getMessage());
@@ -23,7 +23,7 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(ghhg, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(korisnikNotFoundException.class)
+    @ExceptionHandler(UserNotFoundException.class)
     protected ResponseEntity<?> handleIllegalArgument(Exception e, WebRequest request) {
         Map<String, String> ghhg = new HashMap<>();
         ghhg.put("message", e.getMessage());
@@ -32,8 +32,8 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(ghhg, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(requestDeniedException.class)
-    protected ResponseEntity<?> badRequest(requestDeniedException e, WebRequest request) {
+    @ExceptionHandler(RequestDeniedException.class)
+    protected ResponseEntity<?> badRequest(RequestDeniedException e, WebRequest request) {
         Map<String, String> ghhg = new HashMap<>();
         ghhg.put("message", e.getMessage());
         ghhg.put("status", "400");
