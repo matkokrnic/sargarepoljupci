@@ -6,6 +6,7 @@ import org.apache.tomcat.util.codec.binary.Base64;
 
 @Data
 public class PersonalInformationResponse {
+    private Long id;
     private String username;
     private String firstName;
     private String lastName;
@@ -23,9 +24,11 @@ public class PersonalInformationResponse {
 
         this.iban = korisnik.getIban();
         this.emailAddress = korisnik.getEmail();
+        this.id = korisnik.getId();
     }
 
-    public PersonalInformationResponse(String username, String firstName, String lastName, String photo, String iban, String emailAddress) {
+    public PersonalInformationResponse(Long id, String username, String firstName, String lastName, String photo, String iban, String emailAddress) {
+        this.id = id;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
