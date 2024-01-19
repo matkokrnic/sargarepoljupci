@@ -120,15 +120,6 @@ S testom markSpotsSomeFoundSomeNot testiramo slučaj kad imamo jedno ispravno i 
 
 \subsection{Ispitivanje sustava}
 
-\textit{Potrebno je provesti i opisati ispitivanje sustava koristeći radni okvir Selenium\footnote{\url{https://www.seleniumhq.org/}}. Razraditi \textbf{minimalno 4 ispitna slučaja} u kojima će se ispitati redovni slučajevi, rubni uvjeti te poziv funkcionalnosti koja nije implementirana/izaziva pogrešku kako bi se vidjelo na koji način sustav reagira kada nešto nije u potpunosti ostvareno. Ispitni slučaj se treba sastojati od ulaza (npr. korisničko ime i lozinka), očekivanog izlaza ili rezultata, koraka ispitivanja i dobivenog izlaza ili rezultata.\\ }
-
-\textit{Izradu ispitnih slučajeva pomoću radnog okvira Selenium moguće je provesti pomoću jednog od sljedeća dva alata:}
-\begin{itemize}
-	\item \textit{dodatak za preglednik \textbf{Selenium IDE} - snimanje korisnikovih akcija radi automatskog ponavljanja ispita	}
-	\item \textit{\textbf{Selenium WebDriver} - podrška za pisanje ispita u jezicima Java, C\#, PHP koristeći posebno programsko sučelje.}
-\end{itemize}
-\textit{Detalji o korištenju alata Selenium bit će prikazani na posebnom predavanju tijekom semestra.}
-
 \eject 
 
 
@@ -150,12 +141,32 @@ Na poslužiteljskom računalu nalaze se Web poslužitelj i poslužitelj baze pod
 
 \section{Upute za puštanje u pogon}
 
-\textbf{\textit{dio 2. revizije}}\\
+Prvo, preuzmite glavnu granu repozitorija ove web aplikacije putem naredbe "git pull" s GitLab-a.
 
-\textit{U ovom poglavlju potrebno je dati upute za puštanje u pogon (engl. deployment) ostvarene aplikacije. Na primjer, za web aplikacije, opisati postupak kojim se od izvornog kôda dolazi do potpuno postavljene baze podataka i poslužitelja koji odgovara na upite korisnika. Za mobilnu aplikaciju, postupak kojim se aplikacija izgradi, te postavi na neku od trgovina. Za stolnu (engl. desktop) aplikaciju, postupak kojim se aplikacija instalira na računalo. Ukoliko mobilne i stolne aplikacije komuniciraju s poslužiteljem i/ili bazom podataka, opisati i postupak njihovog postavljanja. Pri izradi uputa preporučuje se \textbf{naglasiti korake instalacije uporabom natuknica} te koristiti što je više moguće \textbf{slike ekrana} (engl. screenshots) kako bi upute bile jasne i jednostavne za slijediti.}
+Za implementaciju na Renderu, preporučljivo je stvoriti račun na GitHub-u ili GitLab-u i povezati ga s Renderom. Nakon stvaranja računa, možete dodati web aplikaciju kao novi projekt na svom računu.
 
+Što se tiče baze podataka na Renderu, prijavite se, kliknite na gumb "New" u gornjem desnom kutu i odaberite opciju "PostgreSQL". Unesite identifikacijske podatke i konfiguracijske informacije, poput lako prepoznatljivog imena baze (koje će se prikazivati u Renderu), stvarnog imena baze podataka, korisničkog imena i odabira regije. Ostavite verziju PostgreSQL-a na zadanim postavkama, osim ako imate posebne zahtjeve. Odaberite plan ovisno o očekivanom prometu na stranici i pritisnite "Create Database". Potrebni podaci za povezivanje s bazom bit će dostupni na vašem "dashboardu" pod "Connections".
 
-\textit{Dovršenu aplikaciju potrebno je pokrenuti na javno dostupnom poslužitelju. Studentima se preporuča korištenje neke od sljedećih besplatnih usluga: \href{https://aws.amazon.com/}{Amazon AWS}, \href{https://azure.microsoft.com/en-us/}{Microsoft Azure} ili \href{https://www.heroku.com/}{Heroku}. Mobilne aplikacije trebaju biti objavljene na F-Droid, Google Play ili Amazon App trgovini.}
+Opcionalno punjenje baze podataka podacima može se izvršiti pomoću već pripremljenih informacija koje odgovaraju strukturi navedenoj u odjeljku "Baza podataka". Korisno je koristiti PGAdmin ili sličan alat za ovu svrhu. Slijede upute o tome kako to postići korištenjem navedenog alata. Nakon što otvorite PGAdmin, desnim klikom odaberite ikonu "Servers" s lijeve strane. Zatim odaberite opciju "Create" i popunite obrazac na sljedeći način: unesite ime baze koje ste odabrali u polje "Name" pri kreaciji baze, dok pod "Database" upišete isto ime koje ste koristili prilikom stvaranja baze.
 
+U polju "Host-name/address", unesite informacije o bazi u formatu "Hostname.Region-postgres.render.com", pri čemu "Region" prepisujete malim slovima (samo prvu riječ). Pod "Port" upišite broj iz "Connections" pod "Port", dok za "Username" koristite isti podatak koji ste koristili pri stvaranju baze. Kliknite "Save" za pohranu. Prilikom svake buduće konekcije, sustav će tražiti nasumično generiranu "Password" koju ste dobili od Rendera. Ako želite, možete postaviti automatsku vezu između vašeg PGAdmina i baze.
+
+Što se tiče ubacivanja podataka, navigirajte do spojenog servera, otvorite listu baza podataka i desnim klikom odaberite ciljanu bazu. Odaberite opciju "Restore" i ispunite obrazac kako biste učitali svoju sigurnosnu kopiju (backup) u željenom formatu.
+
+Deployanje backend aplikacije na Render:
+
+Za početak, kliknite na opciju "New" i odaberite "Web Service". Ako ste prijavljeni s GitHub ili GitLab računom, imat ćete priliku odabrati projekt koji želite deployati. Kliknite na "Connect" pored odabranog projekta. Unesite jedinstveno ime pod nazivom "PodName" za vaš web servis, koje će istovremeno poslužiti i kao dio URL-a za pristup stranici (u suprotnom, Render će automatski dodati brojeve kako bi ga učinio jedinstvenim). Odaberite "Region" gdje želite da bude server vaše web aplikacije te specificirajte "Branch" koji želite deployati.
+
+U polje "Dockerfile Path", unesite ./docker/maven/Dockerfile. U naprednim postavkama dodajte potrebne okolišne varijable, na primjer, za bazu podataka ili privatne podatke kao što su adrese e-pošte koje ćete koristiti za slanje registracijskih e-mailova novim korisnicima.
+
+Također, možete čvrsto definirati ove varijable u datoteci application.properties u resursima na backendu. Obratite pažnju da Render ponekad zahtijeva više pokušaja deployanja dok ne uskladi varijable.
+
+Osigurajte da imate potrebne podatke o bazi (isti podaci koje ste koristili za povezivanje putem PGAdmina, uključujući korisničko ime i lozinku za aplikaciju).
+
+Postupak deployanja frontenda na Render platformi zahtijeva nekoliko koraka. Počnite klikom na gumb "New" i odaberite opciju "Web Service". Ako ste povezani s GitHub ili GitLab računom, odaberite projekt koji želite deployati i pritisnite "Connect". Unesite jedinstveno ime za vaš web servis, koje će također biti dio URL-a pristupa stranici. Odaberite željenu regiju za server i granu koju želite deployati.
+
+ U odjeljku "Environment" odaberite "Node", a za "Build command" koristite "yarn build". Možete prilagoditi naredbe u "package.json" datoteci frontenda pod "scripts". "Start command" trebao bi biti "yarn start-prod".
+
+Proširite "advanced" opcije i dodajte environment varijable prema potrebi. Ponekad može biti potrebno više puta deployati frontend dok Render ne izgradi sve. Ako želite olakšati postupak, možete promijeniti "target" atribut u datoteci "setupProxy.js" na URL vašeg deployanog backenda. Isto tako, prilagodite isto u datoteci "app.js" u frontend direktoriju. Nazivi datoteka su jedinstveni, pa ih možete pronaći u Exploreru datoteka.
 
 \eject 

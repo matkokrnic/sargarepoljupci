@@ -196,7 +196,7 @@ ima vezu Many-to-One s entitetom Korisnik putem korisničkog identifikatora. Tak
 	reservationStart & TIMESTAMP & Početak rezervacije \\ \hline
 	reservationEnd & TIMESTAMP & Kraj rezervacije\\ \hline
 	\SetCell{LightBlue}korisnikId & INT & Jedinstveno korisničko ime\\ \hline
-	\SetCell{LightBlue}parkingSpotId & INT & Jedinstven identifikator parkirališnog mjesta \newline \newline\\ \hline
+	\SetCell{LightBlue}parkingSpotId & VARCHAR & Jedinstven identifikator parkirališnog mjesta \newline \newline\\ \hline
 \end{longtblr}
 
 \noindent\textbf{BicycleParking:} sadrži atribute koje dobivamo pozivom overpassAPI-a: (id, koordinate, broj dostupnih mjesta) te identifikator parkirališta kojem pripada. U Many-to-One vezi je s Parkingom preko identifikatora parkirališta.
