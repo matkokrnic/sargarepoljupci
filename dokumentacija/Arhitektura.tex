@@ -210,20 +210,14 @@ Baza podataka sastoji se od sljedećih entiteta:
 \end{longtblr}
 
 \subsection{Dijagram baze podataka}
+
+
 \begin{figure}[H]
-	\includegraphics[width=\textwidth]{slike/erldiagram.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\includegraphics[width=\textwidth]{slike/baza_podataka.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 	\centering
 	\caption{E-R dijagram baze podataka}
-	\label{fig:erldijagram}
+	%				\label{fig:dijagramrazreda1}
 \end{figure}
-
-\begin{figure}[H]
-	\includegraphics[scale=0.7]{slike/rlcdiagram.PNG} %veličina u odnosu na širinu linije
-	\caption{Relacijska shema}
-	\label{fig:relshema} %label mora biti drugaciji za svaku sliku
-\end{figure}
-
-
 
 
 
@@ -237,6 +231,9 @@ Baza podataka sastoji se od sljedećih entiteta:
 
 \section{Dijagram razreda}
 
+	
+
+	
 \begin{figure}[H]
 	\includegraphics[width=\textwidth]{slike/models.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 	\centering
@@ -258,6 +255,10 @@ Baza podataka sastoji se od sljedećih entiteta:
 
 \section{Dijagram stanja}
 
+UML-dijagram stanja (engl. state machine diagram) je ponašajni UML-dijagram kojim se prikazuje
+diskretno ponašanje objekta ili sustava putem prelazaka izmedu konačnog broja stanja.
+Ova vrsta dijagrama se koristi za modeliranje ponašanja entiteta tijekom vremena, naglašavajući
+odgovor na događaje i okidače. Na slici 4.6 prikazan je dijagram stanja za klijenta, odnosno registriranog korisnika. Nakon prijave, korisniku se prikazuje početna stranica na kojoj može vidjeti vlastite rezervacije. Klijent može pregledavati kartu u stvarnom vremenu te klikom označiti parkirališna mjesta koja ga zanimaju te zatim vidjeti prikaz dostupnih termina za ta parkirališna mjesta. Za klijenta postoji i opcija da prvo odabere termin klikom na odgovarajući termin te zatim bira željena parkirališna mjesta. U slučaju da želi pronaći najbliže parkirališno mjesto, klijent može unijeti odredište, tip vozila i procijenjeno vrijeme trajanja parkinga te će mu aplikacija na karti iscrtati rutu do najbližeg parkirališnog mjesta. Nakon uspješnog plaćanja klijent može vidjeti svoju rezervaciju te ostale rezervacije na početnoj stranici. Klijent u svakom trenutku ima mogućnost pregleda stanja novčanika klikom na "Novčanik" te može po potrebi dodavati sredstva. Klikom na "Osobni podatci" klijent može pregledavati i uređivati osobne podatke ili odabrati opciju brisanja računa.
 
 \begin{figure}[H]
 	\includegraphics[width=\textwidth]{slike/dijagram_stanja.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -271,6 +272,10 @@ Baza podataka sastoji se od sljedećih entiteta:
 
 \section{Dijagram aktivnosti}
 
+UML-dijagrami aktivnosti (engl. activity diagrams) su ponašajni UML-dijagrami koji se u programskom inženjerstvu upotrebljavaju za modeliranje i grafički prikaz dinamičkog ponašanja sustava. 
+Na njima je prikazano izvođenje aktivnosti kroz niz akcija koje čine upravljačke tokove i tokove objekata. Pokretanje neke akcije uvjetovano je završetkom jedne ili više prethodnih akcija ili dostupnošću objekata i podataka. Registrirani korisnik se prijavljuje u sustav te otvara kartu koja mu prikazuje parkirališna mjesta te informacije o njihovoj zauzetosti. Klijent odabire odredište, tip vozila i trajanje parkinga nakon čega mu aplikacija na karti iscrtava rutu do najbližeg parkirališnog mjesta. Ako je zadovoljan mjestom, klijent stvara i plaća rezervaciju čime ona postaje aktivnom.
+
+
 \begin{figure}[H]
 	\includegraphics[width=\textwidth, height=\textwidth]{slike/dijagram_aktivnosti.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 	\centering
@@ -283,6 +288,17 @@ Baza podataka sastoji se od sljedećih entiteta:
 
 
 \section{Dijagram komponenti}
+
+UML-dijagrami komponenti (engl. component diagrams) su vrsta strukturnih UML-dijagrama koji
+prikazuju organizaciju i odnose komponenti koje čine programsku potporu. Pružaju vizualni prikaz 
+arhitekture sustava, naglašavajući modularnu strukturu i interakcije između komponenti. Sustavu se pristupa preko
+dva različita sučelja. Preko sučelja za dohvat HTML, CSS i JS datoteka poslužuju se 
+datoteke koje pripadaju \textit{frontend} dijelu aplikacije. Komponenta \textit{Ruter} na
+upit s url određuje koja datoteka će se poslužiti na sučelje, odnosno prikazati korisniku. \textit{Frontend} dio se sastoji od niza JavaScript datoteka koje su raspoređene u logičke cjeline nazvane po tipovima dijelova aplikacije koje prikazuju, odnosno po aktorima koji tim dijelovima aplikacije pristupaju. Sve JavaScript datoteke ovise o React biblioteci iz
+koje dohvaćaju gotove komponente kao što su gumbi, forme, stil, obavijesti, tablice, itd. Preko sučelja za dohvat JSON podataka pristupa se Overpass API komponenti. Overpass API poslužuje 
+podatke koji pripadaju backend dijelu aplikacije. EF Jezgra zadužena je za dohvaćanje tablica iz baze podataka pomoću SQL upita. Podaci koji su pristigli iz baze se šalju dalje MVC arhitekturi u obliku DTO (Data transfer object).  Web poslužitelj komponenta preko dostupnih sučelja komunicira sa SpotPicker web aplikacijom te ovisno o korisnikovim akcijama osvježava prikaz i dohvaća nove podatke ili datoteke.
+
+\vspace{10cm}
 
 \begin{figure}[H]
 	\includegraphics[width=\textwidth]{slike/dijagram_komponenti.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
