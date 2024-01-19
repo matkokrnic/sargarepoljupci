@@ -99,10 +99,10 @@ public class AdminController {
     public ResponseEntity<?> updateKorisnik(@PathVariable("id") Long id, @RequestParam("photo") MultipartFile photo,
                                             @RequestParam("username") String username,
                                             @RequestParam("password") String password,
-                                            @RequestParam("email") String firstName,
-                                            @RequestParam("iban") String lastName,
-                                            @RequestParam("ime") String iban,
-                                            @RequestParam("prezime") String emailAddress){
+                                            @RequestParam("firstName") String firstName,
+                                            @RequestParam("lastName") String lastName,
+                                            @RequestParam("iban") String iban,
+                                            @RequestParam("email") String emailAddress){
 
         PersonalInformationRequest request = new PersonalInformationRequest(username, password, firstName, lastName, photo, iban, emailAddress);
         try {
