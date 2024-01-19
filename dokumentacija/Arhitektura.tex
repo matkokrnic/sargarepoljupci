@@ -164,7 +164,7 @@ Ovaj entitet je preko korisničkog identifikatora u One-to-Many vezi s entitetom
 	
 \end{longtblr}
 
-\noindent\textbf{Voditelj:} sadrži informacije o voditeljima parkirališta. Povezuje voditelja sa
+\noindent\textbf{Manager:} sadrži informacije o voditeljima parkirališta. Povezuje voditelja sa
 parkiralištem. Ima vezu One-to-One s entitetom Korisnik i One-to-Many s Parkingom.
 \begin{longtblr}[
 	label=none,
@@ -174,7 +174,7 @@ parkiralištem. Ima vezu One-to-One s entitetom Korisnik i One-to-Many s Parking
 		colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
 		rowhead = 1,
 	}
-	\hline \SetCell[c=3]{c}{\textbf{Voditelj}} \\ \hline[3pt]
+	\hline \SetCell[c=3]{c}{\textbf{Manager}} \\ \hline[3pt]
 	
 	\SetCell{LightGreen}voditeljId & INT & Jedinstveni identifikator voditelja parkirališta \\ \hline
 	
@@ -242,13 +242,18 @@ ima vezu Many-to-One s entitetom Korisnik putem korisničkog identifikatora. Tak
 
 \section{Dijagram razreda}
 
-
+Na slikama 4.3, 4.4, 4.5, 4.6, 4.7, i 4.8 su prikazani razredi koji pripadaju backend dijelu MVC
+arhitekture.
+Servisi obično predstavljaju logiku poslovanja (business logic) vaše aplikacije. To su komponente koje obavljaju specifične zadatke ili operacije, a ne direktno vezane za obradu HTTP zahtjeva. Na primjer, servis za korisnike može sadržavati logiku za registraciju, prijavu, promjenu lozinke i slično. Servisi se često koriste kako bi se izdvojila poslovna logika iz kontrolera i omogućila ponovna upotreba koda.
+Modeli predstavljaju podatke vaše aplikacije. Ovi podaci se često mapiraju na bazu podataka. Na primjer, ako imate entitet "Korisnik", model bi predstavljao strukturu podataka koja opisuje korisnika, uključujući atribute kao što su ime, prezime, e-mail adresa, itd.
+DTO-ovi su objekti koji se koriste za prijenos podataka između različitih slojeva aplikacije. Na primjer, kada želite prenijeti podatke iz kontrolera do servisa ili obrnuto, koristit ćete DTO-ove kako biste definirali strukturu podataka koja će se prenositi. Ovo može pomoći u smanjenju količine podataka koja se prenosi, poboljšava čitljivost koda i omogućava bolju kontrolu nad tim koji se podaci šalju.
+Kontroleri su odgovorni za obradu HTTP zahtjeva i komunikaciju s korisničkim sučeljem (frontend). Kontroleri često koriste servise kako bi dobili podatke i obavili određene akcije.
 
 
 \begin{figure}[H]
-	\includegraphics[width=\textwidth]{slike/models.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\includegraphics[width=\textwidth]{slike/controllers.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 	\centering
-	\caption{Dijagram razreda - Modeli}
+	\caption{Dijagram razreda - Controllers}
 	%				\label{fig:dijagramrazreda1}
 \end{figure}
 
@@ -258,6 +263,36 @@ ima vezu Many-to-One s entitetom Korisnik putem korisničkog identifikatora. Tak
 	\caption{Dijagram razreda - Data transfer objects}
 	\label{fig:dijagramrazreda2}
 \end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/response.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - Response}
+	\label{fig:dijagramrazreda2}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/request.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - Request}
+	\label{fig:dijagramrazreda2}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/models.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - Models}
+	\label{fig:dijagramrazreda2}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/services.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - Service}
+	\label{fig:dijagramrazreda2}
+\end{figure}
+
+
 
 
 
