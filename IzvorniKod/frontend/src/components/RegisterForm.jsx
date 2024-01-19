@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import { PhotoIcon, UserCircleIcon, CheckCircleIcon } from '@heroicons/react/24/solid'
 import {useNavigate} from 'react-router-dom';
@@ -30,7 +31,7 @@ export function RegisterForm() {
         username: '',
         email: '',
         iban: '',
-        IDphoto: '',
+        photo: null,
         role: '0',
         password: '',
       });
@@ -43,7 +44,7 @@ export function RegisterForm() {
     const [password, setPassword] = useState('');
     const [passwordAgain, setPasswordAgain] = useState('');
     const [samePassword, setSamePassword] = useState(false);
-    //const [photo, setPhoto] = useState(null);
+    const [photo, setPhoto] = useState(null);
 
     function checkSamePassword() {
         console.log(form);
@@ -59,26 +60,28 @@ export function RegisterForm() {
         checkSamePassword();
     }, [password, passwordAgain]);
 
-    /*const handlePhotoChange = (event) => {
+    const handlePhotoChange = (event) => {
         setPhoto(event.target.files[0]);
-    }*/
+        console.log(photo);
+    }
 
     function onSubmit(event) {
         event.preventDefault();
         var bodyFormData = new FormData();
-            bodyFormData.append("korisnickoIme", form.username);
-            bodyFormData.append("lozinka", form.password);
-            bodyFormData.append("email", form.email);
-            bodyFormData.append("iban", form.iban);
-            bodyFormData.append("ime", form.firstName);
-            bodyFormData.append("prezime", form.lastName);
-            bodyFormData.append("slikaOsobne", "");
-            bodyFormData.append("Uloga", form.role);
+        bodyFormData.append("korisnickoIme", form.username);
+        bodyFormData.append("lozinka", form.password);
+        bodyFormData.append("email", form.email);
+        bodyFormData.append("iban", form.iban);
+        bodyFormData.append("ime", form.firstName);
+        bodyFormData.append("prezime", form.lastName);
+        bodyFormData.append("photo", photo); //reader.result
+        bodyFormData.append("uloga", form.role);
         console.log(bodyFormData.values);
         dispatch(register(bodyFormData));
-
         
-    }
+        }
+        
+    
 
   return (
     <form onSubmit={onSubmit}>
@@ -284,7 +287,7 @@ export function RegisterForm() {
                       className="relative font-semibold text-indigo-600 bg-white rounded-md cursor-pointer focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                     >
                       <span>Prenesi datoteku</span>
-                      <input id="file-upload" required name="file-upload" type="file" className="sr-only" />
+                      <input id="file-upload" required name="file-upload" onChange={handlePhotoChange} type="file" className="sr-only" />
                     </label>
                     <p className="pl-1">ili je povucite i ispustite.</p>
                   </div>

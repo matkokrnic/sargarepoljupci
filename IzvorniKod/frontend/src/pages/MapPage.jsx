@@ -1,7 +1,6 @@
-import { LoginChecker } from "../components/Loginchecker.jsx";
 import {NavBar} from "../components/NavBar.jsx";
 
-export function HomePage() {
+export function MapPage() {
   return (
       <div className="h-full bg-gray-100">
         <div className="h-full">
@@ -9,11 +8,10 @@ export function HomePage() {
                <NavBar />
                 <header className="bg-white shadow">
                 <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">Nadzorna ploča</h1>
+                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
                 </div>
                 </header>
                 <main>
-                <LoginChecker />
                 <div className="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">{/* Your content */}</div>
                 </main>
             </div>
