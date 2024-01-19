@@ -1,9 +1,6 @@
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import {NavBar} from "../components/NavBar.jsx";
 
-export function HomePage() {
+export function WalletPage() {
   return (
       <div className="h-full bg-gray-100">
         <div className="h-full">
