@@ -37,11 +37,13 @@ export function NavBar() {
               <div className="flex items-center justify-center flex-1 sm:items-stretch sm:justify-start">
               <a>
                 <div className="flex items-center flex-shrink-0">
+                  <a href="/home">
                   <img
                     className="w-auto h-8"
                     src="../images/logo_bezteksta.svg"
                     alt="Your Company"
                   />
+                  </a>
                 </div>
                 </a>
                 <div className="hidden sm:ml-6 sm:block">
