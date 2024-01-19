@@ -60,10 +60,6 @@ export function LoginPage() {
 
         const jsonData = formDataToJSON(bodyFormData);
 
-        for (var pair of bodyFormData.entries()) {
-            console.log(pair[0] + ', ' + pair[1]);
-          }
-
         dispatch(login(jsonData));
         /*
         fetch('/login', options)

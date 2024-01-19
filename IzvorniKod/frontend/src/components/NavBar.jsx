@@ -1,4 +1,6 @@
-import { Fragment, useState } from 'react'
+/* eslint-disable no-unused-vars */
+import { Fragment} from 'react'
+// eslint-disable-next-line no-unused-vars
 import React from 'react'
 import { useLocation } from 'react-router-dom';
 import { Disclosure, Menu, Transition } from '@headlessui/react'
@@ -35,15 +37,13 @@ export function NavBar() {
                 </Disclosure.Button>
               </div>
               <div className="flex items-center justify-center flex-1 sm:items-stretch sm:justify-start">
-              <a>
+              <a href="/home">
                 <div className="flex items-center flex-shrink-0">
-                  <a href="/home">
                   <img
                     className="w-auto h-8"
                     src="../images/logo_bezteksta.svg"
                     alt="Your Company"
                   />
-                  </a>
                 </div>
                 </a>
                 <div className="hidden sm:ml-6 sm:block">
