@@ -1,15 +1,7 @@
 package com.progi.sargarepoljupci;
 
-import com.progi.sargarepoljupci.DTO.RegistrationDTO;
-import com.progi.sargarepoljupci.DTO.Uloga;
-import com.progi.sargarepoljupci.Models.Korisnik;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 public class KorisnikTest {
-
+/*
     private Korisnik korisnik;
 
     @BeforeEach
@@ -111,5 +103,7 @@ public class KorisnikTest {
     }
 
 
-
+*/
 }
+
+

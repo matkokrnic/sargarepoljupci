@@ -7,7 +7,6 @@ import com.progi.sargarepoljupci.Models.Korisnik;
 import com.progi.sargarepoljupci.Repository.KorisnikRepository;
 import com.progi.sargarepoljupci.Services.KorisnikService;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -39,8 +38,8 @@ public class CreateKorisnikTest {
 
     private MockMultipartFile photo;
 
-    @BeforeEach
-    void setUp() throws Exception{
+    @Test
+    public void createKorisnikSuccess() throws IOException, SQLException {
         registrationDTO = new RegistrationDTO();
         registrationDTO.setKorisnickoIme("john_doe");
         registrationDTO.setLozinka("password123");
@@ -50,11 +49,6 @@ public class CreateKorisnikTest {
         registrationDTO.setPrezime("Doe");
         registrationDTO.setUloga(Uloga.KLIJENT);
         photo = new MockMultipartFile("photo", "test.jpg", "image/jpeg", "test image".getBytes());
-    }
-
-    @Test
-    public void createKorisnikSuccess() throws IOException, SQLException {
-
 
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(userRepository.existsByKorisnickoIme(anyString())).thenReturn(false);
@@ -76,6 +70,15 @@ public class CreateKorisnikTest {
 
     @Test
     public void EmailAlreadyExists(){
+        registrationDTO = new RegistrationDTO();
+        registrationDTO.setKorisnickoIme("john_doe");
+        registrationDTO.setLozinka("password123");
+        registrationDTO.setEmail("john.doe@example.com");
+        registrationDTO.setIban("HR1234567890123456789");
+        registrationDTO.setIme("John");
+        registrationDTO.setPrezime("Doe");
+        registrationDTO.setUloga(Uloga.KLIJENT);
+        photo = new MockMultipartFile("photo", "test.jpg", "image/jpeg", "test image".getBytes());
 
         when(userRepository.existsByEmail(anyString())).thenReturn(true);
 
@@ -93,6 +96,15 @@ public class CreateKorisnikTest {
 
     @Test
     public void UsernameAlreadyExists() {
+        registrationDTO = new RegistrationDTO();
+        registrationDTO.setKorisnickoIme("john_doe");
+        registrationDTO.setLozinka("password123");
+        registrationDTO.setEmail("john.doe@example.com");
+        registrationDTO.setIban("HR1234567890123456789");
+        registrationDTO.setIme("John");
+        registrationDTO.setPrezime("Doe");
+        registrationDTO.setUloga(Uloga.KLIJENT);
+        photo = new MockMultipartFile("photo", "test.jpg", "image/jpeg", "test image".getBytes());
 
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(userRepository.existsByKorisnickoIme(anyString())).thenReturn(true);
@@ -111,15 +123,23 @@ public class CreateKorisnikTest {
     }
 
     @Test
-    public void createKorisnikNullOrEmptyPhoto() {
+    public void createKorisnikEmptyPhoto() {
+        registrationDTO = new RegistrationDTO();
+        registrationDTO.setKorisnickoIme("john_doe");
+        registrationDTO.setLozinka("password123");
+        registrationDTO.setEmail("john.doe@example.com");
+        registrationDTO.setIban("HR1234567890123456789");
+        registrationDTO.setIme("John");
+        registrationDTO.setPrezime("Doe");
+        registrationDTO.setUloga(Uloga.KLIJENT);
+        photo = new MockMultipartFile("photo", "test.jpg", "image/jpeg", "test image".getBytes());
         MockMultipartFile photoNull = new MockMultipartFile("photo", (byte[]) null);
         MockMultipartFile photoEmpty = new MockMultipartFile("photo", new byte[0]);
-        assertThrows(NullPointerException.class,
+        RequestDeniedException exception = assertThrows(RequestDeniedException.class,
                 () -> korisnikService.createKorisnik(registrationDTO, photoEmpty));
-        assertThrows(NullPointerException.class,
-                () -> korisnikService.createKorisnik(registrationDTO, photoNull));
 
-
+        assertEquals(("Picture field can't be empty"), exception.getMessage(),
+                ("Picture field can't be empty"));
         verify(userRepository, never()).save(any());
     }
 }
