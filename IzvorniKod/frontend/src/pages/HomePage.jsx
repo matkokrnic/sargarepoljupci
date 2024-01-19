@@ -1,6 +1,4 @@
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { LoginChecker } from "../components/Loginchecker.jsx";
 import {NavBar} from "../components/NavBar.jsx";
 
 export function HomePage() {
@@ -15,6 +13,7 @@ export function HomePage() {
                 </div>
                 </header>
                 <main>
+                <LoginChecker />
                 <div className="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">{/* Your content */}</div>
                 </main>
             </div>

@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, {useEffect, useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {login, reset} from '../features/auth/authSlice';
-import { NavBar } from '../components/NavBar';
 
 export function LoginPage() {
     const navigate = useNavigate();
@@ -44,18 +43,28 @@ export function LoginPage() {
 
         dispatch(reset());
 
-
-        const body = `email=${email}&password=${password}`;
-
-        const options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: body
+        const formDataToJSON = (formData) => {
+            const json = {};
+            formData.forEach((value, key) => {
+              json[key] = value;
+            });
+            return JSON.stringify(json);
         };
-        /*console.log(options);*/
-        dispatch(login(options));
+
+
+
+
+        var bodyFormData = new FormData();
+        bodyFormData.append("korisnickoIme", email)
+        bodyFormData.append("lozinka", password)
+
+        const jsonData = formDataToJSON(bodyFormData);
+
+        for (var pair of bodyFormData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+          }
+
+        dispatch(login(jsonData));
         /*
         fetch('/login', options)
         .then(response => {
@@ -89,7 +98,7 @@ export function LoginPage() {
                     <form className="space-y-6" action="#" method="POST">
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                        Adresa e-pošte
+                        Korisničko ime
                         </label>
                         <div className="mt-2">
                         <input

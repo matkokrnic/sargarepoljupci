@@ -11,20 +11,24 @@ const register = async (data) => {
 }
 
 
-const login = async (data) => {
-    console.log(data.toString());
+const login = async (jsonData) => {
+    console.log(jsonData);
 
-    const response = await fetch('/api/login', data);
 
-    const headerUser = new Map(response.headers).get('user');
+    const response = await fetch('http://localhost:8080/api/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: jsonData,
+        });
     
-    
-    console.log(headerUser)
-    if (headerUser) {
-        localStorage.setItem('user', JSON.stringify(headerUser))
+    if (response.ok) {
+        const user =  await response.text();
+        localStorage.setItem('user', user)
     }
     
-    return headerUser
+    return response
 }
 
 const logout = async () => {
