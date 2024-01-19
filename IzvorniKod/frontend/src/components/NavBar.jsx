@@ -15,7 +15,7 @@ export function NavBar() {
     { name: 'Statistika', href: '/stats', current: false },
     { name: 'Novčanik', href: '/wallet', current: false },
   ];
-
+  const {hash, pathname, search} = useLocation();
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -53,9 +53,10 @@ export function NavBar() {
                         key={item.name}
                         href={item.href}
                         className={classNames(
-                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                          (pathname == item.href) ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium'
                         )}
+                        //style = {(pathname == item.href)? {backgroundcolor: "blue"} : {}}
                         aria-current={item.current ? 'page' : undefined}
                       >
                         {item.name}
@@ -138,9 +139,10 @@ export function NavBar() {
                   as="a"
                   href={item.href}
                   className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                    (pathname == item.href) ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                     'block rounded-md px-3 py-2 text-base font-medium'
                   )}
+                  //style = {(pathname == item.href)? {backgroundcolor: "blue"} : {}}
                   aria-current={item.current ? 'page' : undefined}
                 >
                   {item.name}
