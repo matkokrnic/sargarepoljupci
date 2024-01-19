@@ -6,6 +6,8 @@ import { useLocation } from 'react-router-dom';
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { UserCircleIcon} from '@heroicons/react/24/solid'
+import {logout2} from '../features/auth/authService';
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -117,7 +119,8 @@ export function NavBar() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="#"
+                            href="/"
+                            onClick={logout2}
                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
                             Odjavi se

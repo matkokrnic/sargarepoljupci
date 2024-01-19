@@ -32,9 +32,14 @@ const login = async (jsonData) => {
 }
 
 const logout = async () => {
+    localStorage.removeItem('user');
+    console.log("mice");
     const response = await axios.post('/api/logout');
-    localStorage.removeItem('user')
     return response.data
+}
+
+export function logout2(){
+    localStorage.removeItem('user');
 }
 
 
