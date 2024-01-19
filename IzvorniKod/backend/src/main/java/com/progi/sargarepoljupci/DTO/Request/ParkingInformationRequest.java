@@ -10,9 +10,7 @@ import java.util.List;
 public class ParkingInformationRequest {
     String name;
     String description;
-    //@Lob
-    //private Blob photo;
-    private String photo;
+
     private double costPerHour;
     private long voditeljID;
     List<ParkingSpotReservable> parkingSpotList;

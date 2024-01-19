@@ -18,12 +18,12 @@ import java.util.*;
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ParkingSpotRepository parkingSpotRepository;
-    private final korisnikService korisnikService;
+    private final KorisnikService korisnikService;
     private final WalletService walletService;
 
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository, ParkingSpotRepository parkingSpotRepository, com.progi.sargarepoljupci.Services.korisnikService korisnikService, WalletService walletService) {
+    public ReservationService(ReservationRepository reservationRepository, ParkingSpotRepository parkingSpotRepository, KorisnikService korisnikService, WalletService walletService) {
         this.reservationRepository = reservationRepository;
         this.parkingSpotRepository = parkingSpotRepository;
         this.korisnikService = korisnikService;

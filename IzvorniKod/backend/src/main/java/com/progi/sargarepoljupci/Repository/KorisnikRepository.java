@@ -1,7 +1,7 @@
 package com.progi.sargarepoljupci.Repository;
 
 import com.progi.sargarepoljupci.Models.Korisnik;
-import com.progi.sargarepoljupci.Models.uloga;
+import com.progi.sargarepoljupci.Models.Uloga;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.Email;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface korisnikRepository extends JpaRepository<Korisnik, Long> {
+public interface KorisnikRepository extends JpaRepository<Korisnik, Long> {
 
     boolean existsByEmail(String email);
 
@@ -25,9 +25,9 @@ public interface korisnikRepository extends JpaRepository<Korisnik, Long> {
 
     Optional<Korisnik> findByVerifikacijaToken(String verificationCode);
 
-
+    List<Korisnik> findByVerificiranIsTrue();
     //List<korisnik> findByUlogaIsAndPotvrdenFalse(uloga uloga);
-    List<Korisnik> findByUlogaIsAndPotvrdenNullOrPotvrdenIsFalseAndVerificiranIsTrue(uloga uloga);
+    List<Korisnik> findByUlogaIsAndPotvrdenNullOrPotvrdenIsFalseAndVerificiranIsTrue(Uloga uloga);
     boolean existsByEmailAndIdIsNot(@Email String email, Long id);
 
     @Override
