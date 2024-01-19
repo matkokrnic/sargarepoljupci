@@ -1,11 +1,12 @@
 package com.progi.sargarepoljupci.Controllers;
 
 
-import com.progi.sargarepoljupci.DTO.loginDTO;
+import com.progi.sargarepoljupci.DTO.LoginDTO;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Exceptions.UserNotFoundException;
 import com.progi.sargarepoljupci.Models.Korisnik;
-import com.progi.sargarepoljupci.Models.uloga;
+import com.progi.sargarepoljupci.Models.Uloga;
+import com.progi.sargarepoljupci.Repository.KorisnikRepository;
 import com.progi.sargarepoljupci.Security.JWT2.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,12 +28,12 @@ public class LoginController {
 
 
 
-    private final com.progi.sargarepoljupci.Repository.korisnikRepository korisnikRepository;
+    private final KorisnikRepository korisnikRepository;
     private final PasswordEncoder encoder;
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
     @Autowired
-    public LoginController(com.progi.sargarepoljupci.Repository.korisnikRepository korisnikRepository, PasswordEncoder encoder, AuthenticationManager authenticationManager, JWTService jwtService) {
+    public LoginController(KorisnikRepository korisnikRepository, PasswordEncoder encoder, AuthenticationManager authenticationManager, JWTService jwtService) {
 
         this.korisnikRepository = korisnikRepository;
         this.encoder = encoder;
@@ -41,7 +42,7 @@ public class LoginController {
     }
 
     @PostMapping
-    public ResponseEntity<?> loginKorisnik(@RequestBody loginDTO loginDTO){
+    public ResponseEntity<?> loginKorisnik(@RequestBody LoginDTO loginDTO){
 
         System.out.println("usli smo ovdje");
         if (loginDTO.getKorisnickoIme().equals("admin") && encoder.matches("123", loginDTO.getLozinka())){
@@ -50,10 +51,10 @@ public class LoginController {
         Optional<Korisnik> existingUser = korisnikRepository.findByKorisnickoIme(loginDTO.getKorisnickoIme());
         // ako je username isti
         if(existingUser.isPresent()){
-            if (existingUser.get().getVerificiran() == null && existingUser.get().getUloga()!=uloga.ADMIN){
+            if (existingUser.get().getVerificiran() == null && existingUser.get().getUloga()!= Uloga.ADMIN){
                 throw new RequestDeniedException("Korisnik se nije verificirao mailom");
             }
-            if (existingUser.get().getUloga() == uloga.VODITELJ && (existingUser.get().getPotvrden()==null ||!existingUser.get().getPotvrden())){
+            if (existingUser.get().getUloga() == Uloga.VODITELJ && (existingUser.get().getPotvrden()==null ||!existingUser.get().getPotvrden())){
                 throw new RequestDeniedException("Voditelj nije prihvacen od strane admina");
             }
             // ako je lozinka ista

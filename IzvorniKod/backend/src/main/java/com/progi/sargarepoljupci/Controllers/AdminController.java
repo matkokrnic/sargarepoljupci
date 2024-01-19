@@ -1,20 +1,24 @@
 package com.progi.sargarepoljupci.Controllers;
 
-import com.progi.sargarepoljupci.DTO.PersonalInformation;
+import com.progi.sargarepoljupci.DTO.Request.PersonalInformationRequest;
+import com.progi.sargarepoljupci.DTO.Response.PersonalInformationResponse;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Exceptions.UserNotFoundException;
 import com.progi.sargarepoljupci.Models.Korisnik;
 import com.progi.sargarepoljupci.Models.Voditelj;
-import com.progi.sargarepoljupci.Models.uloga;
+import com.progi.sargarepoljupci.Models.Uloga;
+import com.progi.sargarepoljupci.Repository.KorisnikRepository;
 import com.progi.sargarepoljupci.Repository.VoditeljRepository;
+import com.progi.sargarepoljupci.Services.KorisnikService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,22 +27,28 @@ import java.util.Optional;
 @RequestMapping("/api/admin")
 public class AdminController {
 
-    private final com.progi.sargarepoljupci.Repository.korisnikRepository korisnikRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final com.progi.sargarepoljupci.Services.korisnikService korisnikService;
+    private final KorisnikRepository korisnikRepository;
+    private final KorisnikService korisnikService;
     private final VoditeljRepository voditeljRepository;
     @Autowired
-    public AdminController(com.progi.sargarepoljupci.Repository.korisnikRepository korisnikRepository, PasswordEncoder passwordEncoder, com.progi.sargarepoljupci.Services.korisnikService korisnikService, VoditeljRepository voditeljRepository) {
+    public AdminController(KorisnikRepository korisnikRepository, KorisnikService korisnikService, VoditeljRepository voditeljRepository) {
         this.korisnikRepository = korisnikRepository;
-        this.passwordEncoder = passwordEncoder;
         this.korisnikService = korisnikService;
         this.voditeljRepository = voditeljRepository;
     }
 
 
-    @GetMapping("/korisnici")
-    public List<Korisnik> getAllUsers() {
-        return korisnikRepository.findAll();
+    @GetMapping("/users")
+    public List<PersonalInformationResponse> getAllUsers() {
+
+        List<PersonalInformationResponse> responses = new ArrayList<>();
+        List<Korisnik> korisnici = korisnikRepository.findByVerificiranIsTrue();
+        for (Korisnik korisnik : korisnici) {
+            PersonalInformationResponse response = new PersonalInformationResponse(korisnik);
+            responses.add(response);
+        }
+
+        return responses;
     }
 
 
@@ -50,10 +60,34 @@ public class AdminController {
     */
 
 
-    @GetMapping("/neprihvaceni")
-    public List<Korisnik> listNeprihvaceniVoditelji(){
-        return korisnikService.findByVoditeljNotApproved();
+    @GetMapping("/unapprovedManagers")
+    public List<PersonalInformationResponse> listNeprihvaceniVoditelji(){
+
+        var korisnici = korisnikService.findByVoditeljNotApproved();
+        List<PersonalInformationResponse> responses = new ArrayList<>();
+        for (Korisnik korisnik : korisnici) {
+            PersonalInformationResponse response = new PersonalInformationResponse(korisnik);
+            responses.add(response);
+        }
+
+        return responses;
     }
+
+    @GetMapping("/user/{id}")
+    // ovdje bi trebao napraviti DTO
+    public ResponseEntity<?> getKorisnik(@PathVariable("id") Long id) {
+        var korisnikOptional = korisnikService.findById(id);
+        if(korisnikOptional.isEmpty())
+            return ResponseEntity.badRequest().body("User with that id doesn't exist");
+        var korisnik1= korisnikOptional.get();
+        return ResponseEntity.ok(new PersonalInformationResponse(korisnik1));
+    }
+
+
+
+
+
+
 
     //kljucno:
     // ne smije biti novo ime vec u bazi podataka
@@ -62,10 +96,17 @@ public class AdminController {
     // ovdje bi trebao napraviti DTO
     @PutMapping("/update/{id}")
     // ovdje bi trebao napraviti DTO
-    public ResponseEntity<?> updateKorisnik(@PathVariable("id") Long id, @RequestBody PersonalInformation userRequest) {
+    public ResponseEntity<?> updateKorisnik(@PathVariable("id") Long id, @RequestParam("photo") MultipartFile photo,
+                                            @RequestParam("username") String username,
+                                            @RequestParam("password") String password,
+                                            @RequestParam("email") String firstName,
+                                            @RequestParam("iban") String lastName,
+                                            @RequestParam("ime") String iban,
+                                            @RequestParam("prezime") String emailAddress){
 
+        PersonalInformationRequest request = new PersonalInformationRequest(username, password, firstName, lastName, photo, iban, emailAddress);
         try {
-            korisnikService.updateKorisnik(id, userRequest);
+            korisnikService.updateKorisnik(id, request);
             return ResponseEntity.ok("User updated successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update user");
@@ -82,7 +123,7 @@ public class AdminController {
 
         if(optionalVoditelj.isPresent()) {
             Korisnik korisnik = optionalVoditelj.get();
-            if(korisnik.getUloga() != uloga.VODITELJ){
+            if(korisnik.getUloga() != Uloga.VODITELJ){
                 throw new RequestDeniedException("Taj korisnik nije voditelj pa ga ne mozete potvrditi");
             }
             // ako nije potvrden potvrdi ga
@@ -110,7 +151,7 @@ public class AdminController {
 
         if(optionalVoditelj.isPresent()) {
             Korisnik korisnik = optionalVoditelj.get();
-            if(korisnik.getUloga() != uloga.VODITELJ){
+            if(korisnik.getUloga() != Uloga.VODITELJ){
                 throw new RequestDeniedException("Taj korisnik nije voditelj pa ga ne mozete odbiti");
             }
             else if(korisnik.getPotvrden() == null || korisnik.getPotvrden()) {

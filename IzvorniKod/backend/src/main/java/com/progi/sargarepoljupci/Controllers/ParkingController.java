@@ -4,6 +4,7 @@ package com.progi.sargarepoljupci.Controllers;
 import com.progi.sargarepoljupci.DTO.Response.BicycleParkingResponse;
 import com.progi.sargarepoljupci.DTO.Response.ParkingResponse;
 import com.progi.sargarepoljupci.DTO.Response.ParkingSpotResponse;
+import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.BicycleParking;
 import com.progi.sargarepoljupci.Models.Parking;
 import com.progi.sargarepoljupci.Models.ParkingSpot;
@@ -199,6 +200,15 @@ public class ParkingController {
             responseList.add(new ParkingResponse(parking));
         }
         return responseList;
+    }
+    @GetMapping("/parkingLot/{parking_id}")
+    public ParkingResponse retrieveParkingLot(@PathVariable Long parking_id) {
+        var parkingOptional = parkingRepository.findById(parking_id);
+        if(parkingOptional.isEmpty())
+            throw new RequestDeniedException("Parking with that id doesn't exist");
+        var parking = parkingOptional.get();
+        return new ParkingResponse(parking);
+
     }
 
 

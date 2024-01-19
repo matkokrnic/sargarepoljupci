@@ -19,7 +19,7 @@ public class Parking {
     @GeneratedValue
     private Long parkingId;
 
-    private String picture;
+    private byte[] picture;
 
     @Column(unique = true)
     private String parkingName;
@@ -42,13 +42,19 @@ public class Parking {
     public Parking() {
     }
 
-
     public Parking(ParkingInformationRequest request) {
         this.parkingName= request.getName();
         this.parkingDescription = request.getDescription();
         this.costPerHour = request.getCostPerHour();
-        this.picture = request.getPhoto();
 
     }
+    public Parking(ParkingInformationRequest request, byte[] photo) {
+        this.parkingName= request.getName();
+        this.parkingDescription = request.getDescription();
+        this.costPerHour = request.getCostPerHour();
+        this.picture = photo;
+
+    }
+
 
 }

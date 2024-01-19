@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -171,14 +173,29 @@ public class ParkingService {
     }
 
 
-    public Parking createNewParking(ParkingInformationRequest request) {
-        var parking = new Parking(request);
-        var voditelj = voditeljRepository.findById(request.getVoditeljID());
-        if(voditelj.isEmpty())
-            throw new RequestDeniedException("Voditelj doesn't exist");
-        parking.setVoditelj(voditelj.get());
-        return parkingRepository.save(parking);
+    public Parking createNewParking(ParkingInformationRequest request) throws SQLException, IOException {
+        //var photo = request.getPhoto();
+        //if (!photo.isEmpty()){
+        //    byte[] photoBytes = photo.getBytes();
+
+            //var parking = new Parking(request, photoBytes);
+             var parking = new Parking(request);
+            var voditelj = voditeljRepository.findById(request.getVoditeljID());
+            if(voditelj.isEmpty())
+                throw new RequestDeniedException("Voditelj doesn't exist");
+            parking.setVoditelj(voditelj.get());
+            return parkingRepository.save(parking);
+        //else
+        //    throw new  RequestDeniedException("Photo can't be empty");
     }
+
+
+
+
+
+
+
+
 
     public void markSpots(ParkingInformationRequest request, Parking parking) {
         var parkingSpotList = request.getParkingSpotList();
