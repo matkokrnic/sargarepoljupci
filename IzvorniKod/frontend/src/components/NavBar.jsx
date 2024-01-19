@@ -36,7 +36,7 @@ export function NavBar() {
                 <div className="flex items-center flex-shrink-0">
                   <img
                     className="w-auto h-8"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                    src="../images/logo_bezteksta.svg"
                     alt="Your Company"
                   />
                 </div>

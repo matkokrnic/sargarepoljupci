@@ -1,4 +1,35 @@
 // RegistrationPage.jsx
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
+import { RegisterForm } from '../components/RegisterForm';
+import {HeaderComponent} from "../components/HeaderComponent.jsx";
+
+export  function RegisterPage() {
+  return (
+    <>
+      <div className="h-full bg-gray-100">
+      <div className="h-full">
+      <div className="min-h-full">
+        <HeaderComponent />
+        <header className="bg-white shadow">
+          <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900">Registracija</h1> 
+          </div>
+        </header>
+        <main>
+          <div className="flex items-center justify-center h-full py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <RegisterForm/>
+            </div>
+        </main>
+      </div>
+      </div>
+      </div>
+    </>
+  )
+}
+
+/* ovaj radi
+// RegistrationPage.jsx
 import React from 'react';
 import { RegisterForm } from '../components/RegisterForm';
 import { Fragment } from 'react'
@@ -47,5 +78,4 @@ export  function RegisterPage() {
       </div>
     </>
   )
-}
-
+}*/

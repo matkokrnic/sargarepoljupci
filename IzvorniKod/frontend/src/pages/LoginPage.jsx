@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {login, reset} from '../features/auth/authSlice';
+import { NavBar } from '../components/NavBar';
 
 export function LoginPage() {
     const navigate = useNavigate();
@@ -67,14 +69,17 @@ export function LoginPage() {
     return (
       <>
       <div className="h-full bg-white">
-        <div className="h-full">         
+        <div className="h-full">    
                 <div className="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+                    <a href='/'>
                     <img
-                    className="w-auto h-10 mx-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                    className="w-auto h-20 mx-auto"
+                    src="../images/slova_pokraj.svg"
                     alt="SpotPicker"
                     />
+                    </a>
+
                     <h2 className="mt-10 text-2xl font-bold leading-9 tracking-tight text-center text-gray-900">
                     Prijavite se u vaš račun
                     </h2>
