@@ -12,6 +12,8 @@ import {WalletPage} from "../pages/WalletPage.jsx";
 import {StatsPage} from "../pages/StatsPage.jsx";
 import {ProfilePage} from "../pages/ProfilePage.jsx";
 import {SettingsPage} from "../pages/SettingsPage.jsx";
+//import {AboutPage} from "../pages/AboutPage.jsx";
+//<Route path="/about" element={<AboutPage/>}/>
 // eslint-disable-next-line no-unused-vars
 export function RouterComponent(props) {
     return (

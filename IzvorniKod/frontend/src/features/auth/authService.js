@@ -4,7 +4,7 @@ import axios from 'axios'
 
 
 const register = async (data) => {
-    const response = await axios.post('/api/registration', data);
+    const response = await axios.post('http://localhost:8080/api/registration', data);
     
     console.log(response);
     return response.data;
