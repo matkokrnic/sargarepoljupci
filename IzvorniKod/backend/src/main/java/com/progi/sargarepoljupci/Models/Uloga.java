@@ -1,5 +1,5 @@
 package com.progi.sargarepoljupci.Models;
 
-public enum uloga {
+public enum Uloga {
     KLIJENT, VODITELJ, ADMIN
 }

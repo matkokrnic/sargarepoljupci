@@ -1,7 +1,7 @@
 package com.progi.sargarepoljupci.Services;
 
 import com.progi.sargarepoljupci.DTO.UserDTO;
-import com.progi.sargarepoljupci.Repository.korisnikRepository;
+import com.progi.sargarepoljupci.Repository.KorisnikRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 public class korisnikDetailsService implements UserDetailsService {
 
 
-    private final korisnikRepository userRepository;
+    private final KorisnikRepository userRepository;
     @Autowired
-    public korisnikDetailsService(korisnikRepository userRepository) {
+    public korisnikDetailsService(KorisnikRepository userRepository) {
         this.userRepository = userRepository;
     }
 

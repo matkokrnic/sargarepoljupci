@@ -1,9 +1,9 @@
 package com.progi.sargarepoljupci.Models;
 
 
-import com.progi.sargarepoljupci.DTO.registrationDTO;
+import com.progi.sargarepoljupci.DTO.RegistrationDTO;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
 import lombok.Data;
 
 
@@ -32,10 +32,10 @@ public class Korisnik {
     private String ime;
     private String prezime;
 
-    @NotNull
-    private String slikaOsobne;
 
-    private uloga uloga;
+    private byte[] slikaOsobne;
+
+    private Uloga uloga;
 
 // potvrden voditelj
     private Boolean potvrden;
@@ -49,19 +49,19 @@ public class Korisnik {
     public Korisnik() {
     }
 
-    public Korisnik(registrationDTO dto) {
+    public Korisnik(RegistrationDTO dto, byte[] picture) {
         this.korisnickoIme = dto.getKorisnickoIme();
         this.lozinka = dto.getLozinka();
         this.email = dto.getEmail();
         this.iban = dto.getIban();
         this.ime = dto.getIme();
         this.prezime = dto.getPrezime();
-        this.slikaOsobne = dto.getSlikaOsobne();
         this.uloga = dto.getUloga();
         this.potvrden = false; // Default value for potvrden
         this.verificiran = false; // Default value for verificiran
         this.verifikacijaToken = null; // Default value for verifikacijaToken
         this.WalletBalance = 0.;
+        this.slikaOsobne=picture;
     }
 
 

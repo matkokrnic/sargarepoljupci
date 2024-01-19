@@ -2,7 +2,7 @@ package com.progi.sargarepoljupci.Services;
 
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.Korisnik;
-import com.progi.sargarepoljupci.Repository.korisnikRepository;
+import com.progi.sargarepoljupci.Repository.KorisnikRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +11,9 @@ import java.util.Optional;
 @Service
 public class WalletService {
 
-    private final korisnikRepository userRepository;
+    private final KorisnikRepository userRepository;
     @Autowired
-    public WalletService(korisnikRepository userRepository) {
+    public WalletService(KorisnikRepository userRepository) {
         this.userRepository = userRepository;
     }
 

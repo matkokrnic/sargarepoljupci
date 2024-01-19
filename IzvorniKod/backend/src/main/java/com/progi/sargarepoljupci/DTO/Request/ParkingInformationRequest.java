@@ -1,19 +1,24 @@
 package com.progi.sargarepoljupci.DTO.Request;
 
 
-import com.progi.sargarepoljupci.Utilities.ParkingSpotReservable;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class ParkingInformationRequest {
-    String name;
-    String description;
-    //@Lob
-    //private Blob photo;
-    private String photo;
+    private String name;
+    private String description;
+
     private double costPerHour;
     private long voditeljID;
-    List<ParkingSpotReservable> parkingSpotList;
+    //List<ParkingSpotReservable> parkingSpotList;
+
+    public ParkingInformationRequest(String name, String description, double costPerHour, long voditeljID) {
+        this.name = name;
+        this.description = description;
+        this.costPerHour = costPerHour;
+        this.voditeljID = voditeljID;
+    }
+
+    public ParkingInformationRequest() {
+    }
 }

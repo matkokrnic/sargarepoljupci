@@ -1,32 +1,36 @@
 package com.progi.sargarepoljupci.Services;
 
-import com.progi.sargarepoljupci.DTO.PersonalInformation;
+import com.progi.sargarepoljupci.DTO.RegistrationDTO;
+import com.progi.sargarepoljupci.DTO.Request.PersonalInformationRequest;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.Korisnik;
+import com.progi.sargarepoljupci.Models.Uloga;
 import com.progi.sargarepoljupci.Models.Voditelj;
-import com.progi.sargarepoljupci.Models.uloga;
+import com.progi.sargarepoljupci.Repository.KorisnikRepository;
 import com.progi.sargarepoljupci.Repository.VoditeljRepository;
-import com.progi.sargarepoljupci.Repository.korisnikRepository;
 import com.progi.sargarepoljupci.Utilities.VerificationTokenGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Slf4j
-public class korisnikService implements korisnikServiceInterface {
+public class KorisnikService implements KorisnikServiceInterface {
 
-    private final korisnikRepository userRepository;
+    private final KorisnikRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final VoditeljRepository voditeljRepository;
 
 
     @Autowired
-    public korisnikService(korisnikRepository userRepository, PasswordEncoder passwordEncoder, VoditeljRepository voditeljRepository) {
+    public KorisnikService(KorisnikRepository userRepository, PasswordEncoder passwordEncoder, VoditeljRepository voditeljRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.voditeljRepository = voditeljRepository;
@@ -45,35 +49,36 @@ public class korisnikService implements korisnikServiceInterface {
      */
 
 
-    //trebao bih pretvoriti URL slike u bytearray
-    public void createKorisnik(Korisnik korisnik) {
 
-        if(userRepository.existsByEmail(korisnik.getEmail())){
+    public Korisnik createKorisnik(RegistrationDTO registrationDTO, MultipartFile photo) throws IOException, SQLException {
+
+        if(userRepository.existsByEmail(registrationDTO.getEmail())){
             throw new RequestDeniedException("Korisnik s tim emailom vec postoji u bazi podataka");
         }
-        if(userRepository.existsByKorisnickoIme(korisnik.getKorisnickoIme())){
+        if(userRepository.existsByKorisnickoIme(registrationDTO.getKorisnickoIme())){
             throw new RequestDeniedException("Korisnik s tim usernameom vec postoji u bazi podataka");
         }
+        if (!photo.isEmpty()){
+            byte[] photoBytes = photo.getBytes();
+            //Blob photoBlob = new SerialBlob(photoBytes);
+            var korisnik = new Korisnik(registrationDTO, photoBytes);
+            log.info(registrationDTO.getLozinka());
+            String encodedPassword = passwordEncoder.encode(registrationDTO.getLozinka());
+            korisnik.setLozinka(encodedPassword);
+            // trebam postaviti verificationToken za mail
+            String verificationToken = VerificationTokenGenerator.generateUniqueVerificationToken();
+            korisnik.setVerifikacijaToken(verificationToken);
+            return userRepository.save(korisnik);
+
+        }else
+            throw new RequestDeniedException("Picture field can't be empty");
 
 
-
-        // trebamo encodirat lozinku
-        log.info(korisnik.getLozinka());
-        String encodedPassword = passwordEncoder.encode(korisnik.getLozinka());
-        korisnik.setLozinka(encodedPassword);
-        // trebam postaviti verificationToken za mail
-        String verificationToken = VerificationTokenGenerator.generateUniqueVerificationToken();
-        korisnik.setVerifikacijaToken(verificationToken);
-
-
-
-
-        userRepository.save(korisnik);
     }
 
 
     @Override
-    public void  updateKorisnik(Long userId, PersonalInformation userRequest)  {
+    public void  updateKorisnik(Long userId, PersonalInformationRequest userRequest) throws SQLException, IOException {
 
         Korisnik existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RequestDeniedException("User not found"));
@@ -88,7 +93,7 @@ public class korisnikService implements korisnikServiceInterface {
             String encryptedPassword = passwordEncoder.encode(userRequest.getPassword());
             existingUser.setLozinka(encryptedPassword);
         }
-        if (existingUser.getUloga() == uloga.VODITELJ) {
+        if (existingUser.getUloga() == Uloga.VODITELJ) {
             var voditelj = new Voditelj();
             voditelj.setKorisnik(existingUser);
             voditeljRepository.save(voditelj);
@@ -99,7 +104,7 @@ public class korisnikService implements korisnikServiceInterface {
         }
     }
 
-    private void updateNonNullFields(Korisnik existingUser, PersonalInformation userRequest) {
+    private void updateNonNullFields(Korisnik existingUser, PersonalInformationRequest userRequest) throws IOException, SQLException {
         // Update fields only if they are not null in the request
         if (userRequest.getUsername() != null) {
             existingUser.setKorisnickoIme(userRequest.getUsername());
@@ -114,8 +119,10 @@ public class korisnikService implements korisnikServiceInterface {
             String encryptedPassword = passwordEncoder.encode(userRequest.getPassword());
             existingUser.setLozinka(encryptedPassword);
         }
-        if (userRequest.getPhoto() != null) {
-            existingUser.setSlikaOsobne(userRequest.getPhoto());
+        if (!userRequest.getPhoto().isEmpty() && userRequest.getPhoto() != null) {
+                byte[] photoBytes = userRequest.getPhoto().getBytes();
+                existingUser.setSlikaOsobne(photoBytes);
+
         }
         if (userRequest.getIban() != null) {
             existingUser.setIban(userRequest.getIban());
@@ -173,7 +180,7 @@ public class korisnikService implements korisnikServiceInterface {
 
     @Override
     public List<Korisnik> findByVoditeljNotApproved() {
-        return userRepository.findByUlogaIsAndPotvrdenNullOrPotvrdenIsFalseAndVerificiranIsTrue(uloga.VODITELJ);
+        return userRepository.findByUlogaIsAndPotvrdenNullOrPotvrdenIsFalseAndVerificiranIsTrue(Uloga.VODITELJ);
     }
 
     @Override

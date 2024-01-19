@@ -1,7 +1,10 @@
 package com.progi.sargarepoljupci.DTO.Response;
 
 import com.progi.sargarepoljupci.Models.Parking;
+import lombok.Data;
+import org.apache.tomcat.util.codec.binary.Base64;
 
+@Data
 public class ParkingResponse {
     private Long parkingId;
     private String picture;
@@ -12,7 +15,19 @@ public class ParkingResponse {
 
     public ParkingResponse(Parking parking) {
         this.parkingId = parking.getParkingId();
-        this.picture = parking.getPicture();
+
+        byte[] photoBytes = parking.getPicture();
+       //Blob photoBlob = parking.getPicture();
+       //System.out.println(photoBlob);
+       //if (photoBlob != null) {
+       //    try {
+       //        photoBytes = photoBlob.getBytes(1, (int) photoBlob.length());
+       //    } catch (SQLException e) {
+       //        throw new RequestDeniedException("Error retrieving photo");
+       //    }
+       //}
+        this.picture = photoBytes != null ? Base64.encodeBase64String(photoBytes) : null;
+
         this.parkingName = parking.getParkingName();
         this.parkingDescription = parking.getParkingDescription();
         this.costPerHour = parking.getCostPerHour();

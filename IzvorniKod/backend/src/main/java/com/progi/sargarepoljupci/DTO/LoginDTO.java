@@ -3,7 +3,7 @@ package com.progi.sargarepoljupci.DTO;
 import lombok.Data;
 
 @Data
-public class loginDTO {
+public class LoginDTO {
     private String korisnickoIme;
     private String lozinka;
 

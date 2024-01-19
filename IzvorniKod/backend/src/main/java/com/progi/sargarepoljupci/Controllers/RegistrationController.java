@@ -1,10 +1,11 @@
 package com.progi.sargarepoljupci.Controllers;
 
+import com.progi.sargarepoljupci.DTO.RegistrationDTO;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
-import com.progi.sargarepoljupci.DTO.Response.ResponseObject;
 import com.progi.sargarepoljupci.Models.Korisnik;
-import com.progi.sargarepoljupci.DTO.registrationDTO;
-import com.progi.sargarepoljupci.Repository.korisnikRepository;
+import com.progi.sargarepoljupci.Models.Uloga;
+import com.progi.sargarepoljupci.Repository.KorisnikRepository;
+import com.progi.sargarepoljupci.Services.KorisnikService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -16,7 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Optional;
 
 @RestController
@@ -24,13 +28,13 @@ import java.util.Optional;
 @Slf4j
 public class RegistrationController {
 
-    private final com.progi.sargarepoljupci.Services.korisnikService korisnikService;
-    private final korisnikRepository repo;
+    private final KorisnikService korisnikService;
+    private final KorisnikRepository repo;
 
 
     private final JavaMailSender mailSender;
     @Autowired
-    public RegistrationController(com.progi.sargarepoljupci.Services.korisnikService korisnikService, korisnikRepository repo, JavaMailSender mailSender) {
+    public RegistrationController(KorisnikService korisnikService, KorisnikRepository repo, JavaMailSender mailSender) {
         this.korisnikService = korisnikService;
 
         this.repo = repo;
@@ -38,29 +42,44 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public ResponseObject registerKorisnik(@RequestBody registrationDTO registerDTO, HttpServletRequest httpServletRequest) throws MessagingException {
-//        return new ResponseEntity<>("OK", HttpStatus.OK);
+    public ResponseEntity<?> registerKorisnik(
+
+            @RequestParam("photo") MultipartFile photo,
+            @RequestParam("korisnickoIme") String korisnickoIme,
+            @RequestParam("lozinka") String lozinka,
+            @RequestParam("email") String email,
+            @RequestParam("iban") String iban,
+            @RequestParam("ime") String ime,
+            @RequestParam("prezime") String prezime,
+            @RequestParam("uloga") int uloga, HttpServletRequest httpServletRequest) throws MessagingException, SQLException, IOException {
+
+        Uloga uloga1 = Uloga.KLIJENT;
+        switch (uloga){
+            case 1:
+                uloga1 = Uloga.VODITELJ;
+                break;
+            case 2:
+                uloga1 = Uloga.ADMIN;
+        }
+        var registerDTO = new RegistrationDTO(korisnickoIme,lozinka, email, iban,ime,prezime, uloga1);
 
         if (korisnikService.doesKorisnikExistByEmail(registerDTO.getEmail())) {
-            ResponseObject responseObject = new ResponseObject();
-            responseObject.setMessage("Email vec postoji");
-            responseObject.setStatus(HttpStatus.BAD_REQUEST.value());
-            return responseObject;
+            //ResponseObject responseObject = new ResponseObject();
+            //responseObject.setMessage("Email vec postoji");
+            //responseObject.setStatus(HttpStatus.BAD_REQUEST.value());
+            //return responseObject;
+            return ResponseEntity.badRequest().body("Email vec postoji");
 
         } else {
 
             log.info(String.valueOf(registerDTO));
-            var user = new Korisnik(registerDTO);
-            korisnikService.createKorisnik(user);
+            //var user = new Korisnik(registerDTO);
+            var user = korisnikService.createKorisnik(registerDTO, photo);
             String url = getSiteURL(httpServletRequest);
             System.out.println(url);
             sendHtmlEmail(user, url);
-
             log.info(String.valueOf(ResponseEntity.status(HttpStatus.CREATED).body("Stvorili smo korisnika " + registerDTO + "\n Provjeriti mail za verifikaciju")));
-            ResponseObject responseObject = new ResponseObject();
-            responseObject.setMessage("Stvorili smo korisnika " + registerDTO + "\n Provjeriti mail za verifikaciju");
-            responseObject.setStatus(HttpStatus.ACCEPTED.value());
-            return responseObject;
+            return ResponseEntity.ok(registerDTO);
         }
     }
 
