@@ -31,9 +31,72 @@ JavaScript je svestrani i objektno orijentirani jezik, uglavnom korišten za stv
 
 
 \subsection{Ispitivanje komponenti}
-\textit{Potrebno je provesti ispitivanje jedinica (engl. unit testing) nad razredima koji implementiraju temeljne funkcionalnosti. Razraditi \textbf{minimalno 6 ispitnih slučajeva} u kojima će se ispitati redovni slučajevi, rubni uvjeti te izazivanje pogreške (engl. exception throwing). Poželjno je stvoriti i ispitni slučaj koji koristi funkcionalnosti koje nisu implementirane. Potrebno je priložiti izvorni kôd svih ispitnih slučajeva te prikaz rezultata izvođenja ispita u razvojnom okruženju (prolaz/pad ispita). }
+
+Ispitivanje komponenti provjerava ispravnost djelovanja pojedinih dijelova programa koji su mogući za odvojeno ispitivanje, poput pojedinačnih funkcija ili metoda unutar objekta.
+
+Ispitivanje komponenti za CreateKorisnikTest fokusira se na verifikaciju funkcionalnosti klase KorisnikService prilikom stvaranja novog korisnika. Testiraju se različiti scenariji, uključujući prepoznavanje već postojećeg emaila ili korisničkog imena te obrada null vrijednosti slike.
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/username.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{1. ispitni slučaj za CreateKorisnikTest}
+	\label{fig:dijagramstanja}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/korisnikslika.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{2. ispitni slučaj za CreateKorisnikTest}
+	\label{fig:dijagramstanja}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/email.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{3. ispitni slučaj za CreateKorisnikTest}
+	\label{fig:dijagramstanja}
+\end{figure}
+
+Ispitivanje komponenti za UpdateKorisnikTest usmjereno je na verifikaciju funkcionalnosti metode updateKorisnik unutar klase KorisnikService. Testiraju se scenariji ažuriranja korisničkih podataka, uključujući promjenu korisničkog imena, imena, lozinke i slike.
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/testupdatekorisnik.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{1. ispitni slučaj za UpdateKorisnikTest}
+	\label{fig:dijagramstanja}
+\end{figure}
 
 
+Ispitivanje komponenti za ParkingServiceTest usmjereno je na verifikaciju funkcionalnosti klase ParkingService. Fokusirano je na ispravno označavanje parkirnih mjesta kao rezervirana i ponašanje sustava u različitim scenarijima(verifikacija ispravnosti označavanja parkirnih mjesta kao rezervirana, provjera ponašanja sustava u slučaju nepostojećeg parkirališta, verifikacija ponašanja sustava kada je parkirno mjesto već označeno i testiranje ispravnosti dobivanja indeksa najmanje udaljenosti).
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/markspotsuccess.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{1. ispitni slučaj za ParkingServiceTest}
+	\label{fig:dijagramstanja}
+\end{figure}
+
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/markspotmarked.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{2. ispitni slučaj za ParkingServiceTest}
+	\label{fig:dijagramstanja}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/testmindistance.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{3. ispitni slučaj za ParkingServiceTest}
+	\label{fig:dijagramstanja}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/markspotparking.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{4. ispitni slučaj za ParkingServiceTest}
+	\label{fig:dijagramstanja}
+\end{figure}
 
 \subsection{Ispitivanje sustava}
 
