@@ -4,7 +4,7 @@ import axios from 'axios'
 
 
 const register = async (data) => {
-    const response = await axios.post('http://localhost:8080/api/registration', data);
+    const response = await axios.post('api/registration', data);
     
     console.log(response);
     return response.data;
@@ -15,7 +15,7 @@ const login = async (jsonData) => {
     console.log(jsonData);
 
 
-    const response = await fetch('http://localhost:8080/api/login', {
+    const response = await fetch('api/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -32,9 +32,14 @@ const login = async (jsonData) => {
 }
 
 const logout = async () => {
+    localStorage.removeItem('user');
+    console.log("mice");
     const response = await axios.post('/api/logout');
-    localStorage.removeItem('user')
     return response.data
+}
+
+export function logout2(){
+    localStorage.removeItem('user');
 }
 
 
