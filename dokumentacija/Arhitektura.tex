@@ -1,285 +1,359 @@
 
 \chapter{Arhitektura i dizajn sustava}
-		
-		
 
-		Arhitektura sustava je struktura sustava koja sadrži: elemente programa, njihove izvana vidljive karakteristike te odnose među njima.
-		Arhitektura sustava se dijeli na tri manja sustava:
-		\begin{packed_item}
-			\item[$\bullet$] Web poslužitelj
-			\item[$\bullet$] Web aplikacija
-			\item[$\bullet$] Baza podataka
-		\end{packed_item}
-		
+
+
+Arhitektura sustava je struktura sustava koja sadrži: elemente programa, njihove izvana vidljive karakteristike te odnose među njima.
+Arhitektura sustava se dijeli na tri manja sustava:
+\begin{packed_item}
+	\item[$\bullet$] Web preglednik
+	\item[$\bullet$] Web aplikacija
+	\item[$\bullet$] Baza podataka
+\end{packed_item}
+
+
+
+\underbar {\textit {Web preglednik}} je program preko kojega korisnik može pregledavati web-stranice te multimedijalne sadržaje od tih web-stranica. Web-stranica je napisana u kodu koji web preglednik prevodi tako da svatko razumije web-stranicu. Web preglednik također služi kao kanal između korisnika i web poslužitelja.
+
+
+\underbar {\textit {Web poslužitelj}} služi za komunikaciju između klijenta i aplikacije. Ta komunikacija se odvija preko HTTP-a. HTTP je protokol koji se koristi za prijenos podataka na webu. Web poslužitelj također pokreće web aplikaciju i prosljeđuje joj zahtjeve.
+
+
+\underbar {\textit {Web aplikacija}} obrađuje zahtjeve od korisnika, a za pojedine zahtjeve ona pristupa bazi podataka nakon čega se odgovor šalje korisniku putem web poslužitelja te web preglednika u HTML obliku.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{slike/arhitektura_sustava.PNG} 
+	\caption{Arhitektura sustava}
+	\label{fig:promjene1} 
+\end{figure}
+
+
+U našemu sustavu za razvoj radnog okvira na poslužiteljskoj strani (backend-u) odlučili smo koristiti \textit {Spring Boot}, a na klijentskoj strani (frontend-u) smo odlučili koristiti \textit {React}. Programske jezike za koje smo se odlučili su \textit {Java} i \textit {JavaScript}.
+
+
+Korišteni razvojni okvir Spring se služi tzv. MVC arhitekturom. Takva arhitektura podrazumijeva sljedeću podjelu:
+\begin{itemize}
+	\item[$\bullet$] \textbf{Model}: Središnja komponenta sustava, dohvat te manipulacija podataka
+	\item[$\bullet$] \textbf{View}: dostupni razni prikazi podataka (tablično, grafom)
+	\item[$\bullet$] \textbf{Controller}: upravlja zahtjevima korisnika te na temelju njih izvodi daljnju interakciju s ostalim komponentama
+\end{itemize}
+
+\vspace{3cm}
+
+Naša web aplikacija koristi višeslojni stil arhitekture. Prednosti višeslojnog stila arhitekture su brojne:
+
+\begin{packed_item}
+	\item[$\bullet$] olakšava razvoj programa
+	\item[$\bullet$] timovi se mogu raspodijeliti na razvoj zasebnih slojeva arhitekture
+	\item[$\bullet$] podjela briga odnosno svaki sloj se mora brinuti za samo svoju zadaću
+	\item[$\bullet$] moguće je jednostavno povećanje i poboljšanje sustava
+\end{packed_item}
+
+
+
+
+
+
+
+\section{Baza podataka}
+
+
+
+
+\subsection{Vrsta i implementacija}
+Za modeliranje sustava je korištena relacijska baza podataka, a nju smo implementirati pomoću open-source sustava za upravljanje bazama podataka PostgreSQL. Za izradu dijagrama ER i generiranje relacijske sheme je korišten besplatan online alat ERDplus (https://erdplus.com/) koji je korišten i u sklopu predmeta Baze podataka. 
+
+
+
+\subsection{Glavne komponente baze podataka}
+Baza podataka sastoji se od sljedećih entiteta:
+
+\begin{itemize}
+	\item \textbf{User} \hspace{0.15cm} (\textit{id}, \textit{email} \textit{username}, \textit{password}, \textit{name}, \textit{lastName}, \textit{IBAN}, \textit{photo}, \textit{role}, \textit{walletBalance}, \textit{approved}, \textit{verified}, \textit{verificationToken})
 	
-		
-		\underbar {\textit {Web preglednik}} je program preko kojega korisnik može pregledavati web-stranice te multimedijalne sadržaje od tih web-stranica. Web-stranica je napisana u kodu koji web preglednik prevodi tako da svatko razumije web-stranicu. Web preglednik također služi kao kanal između korisnika i web poslužitelja.
-		
-		
-		\underbar {\textit {Web poslužitelj}} služi za komunikaciju između klijenta i aplikacije. Ta komunikacija se odvija preko HTTP-a. HTTP je protokol koji se koristi za prijenos podataka na webu. Web poslužitelj također pokreće web aplikaciju i prosljeđuje joj zahtjeve.
-		
-		
-		\underbar {\textit {Web aplikacija}} obrađuje zahtjeve od korisnika, a za pojedine zahtjeve ona pristupa bazi podataka nakon čega se odgovor šalje korisniku putem web poslužitelja te web preglednika u HTML obliku.
-
-
-		\begin{figure}[H]
-			\centering
-			\includegraphics[width=0.75\textwidth]{slike/arhitektura_sustava.PNG} 
-			\caption{Arhitektura sustava}
-			\label{fig:promjene1} 
-		\end{figure}
-		
-		
-		U našemu sustavu za razvoj radnog okvira na poslužiteljskoj strani (backend-u) odlučili smo koristiti \textit {Spring Boot}, a na klijentskoj strani (frontend-u) smo odlučili koristiti \textit {React}. Programske jezike za koje smo se odlučili su \textit {Java} i \textit {JavaScript}.
-		
-		
-		Korišteni razvojni okvir Spring se služi tzv. MVC arhitekturom. Takva arhitektura podrazumijeva sljedeću podjelu:
-		\begin{itemize}
-			\item[$\bullet$] \textbf{Model}: Središnja komponenta sustava, dohvat te manipulacija podataka
-			\item[$\bullet$] \textbf{View}: dostupni razni prikazi podataka (tablično, grafom)
-			\item[$\bullet$] \textbf{Controller}: upravlja zahtjevima korisnika te na temelju njih izvodi daljnju interakciju s ostalim komponentama
-		\end{itemize}
-		
-		\vspace{3cm}
-		
-		Naša web aplikacija koristi višeslojni stil arhitekture. Prednosti višeslojnog stila arhitekture su brojne:
-		
-		\begin{packed_item}
-			\item[$\bullet$] olakšava razvoj programa
-			\item[$\bullet$] timovi se mogu raspodijeliti na razvoj zasebnih slojeva arhitekture
-			\item[$\bullet$] podjela briga odnosno svaki sloj se mora brinuti za samo svoju zadaću
-			\item[$\bullet$] moguće je jednostavno povećanje i poboljšanje sustava
-		\end{packed_item}
-
 	
-		
+	\item \textbf{Parking} (\textit{picture}, \textit{parkingName}, \textit{parkingDescription}, \textit{costPerHour}, \textit{parkingId}, \textit{voditeljId}) 
+	
+	\item \textbf{ParkingSpot} (\textit{parkingSpotId}, \textit{latitude}, \textit{longitude}, \textit{polygon}, \textit{label}, \textit{reserveable}, \textit{parkingId})
+	
+	\item \textbf{Voditelj} (\textit{voditeljId})
+	
+	\item \textbf{Reservation} (\textit{reservationId}, \textit{duration}, \textit{reservationStart}, \textit{reservationEnd}, \textit{korisnikId}, \textit{parkingSpotId})
+	
+	\item \textbf{BicycleParking} (\textit{bicycleId}, \textit{latitude}, \textit{longitude}, \textit{numberOfSpots}, \textit{polygon}, \textit{parkingId})
+\end{itemize}
 
-		
 
-				
-		\section{Baza podataka}
-			
-			
-		
-		
-		\subsection{Vrsta i implementacija}
-		Za modeliranje sustava je korištena relacijska baza podataka, a nju smo implementirati pomoću open-source sustava za upravljanje bazama podataka PostgreSQL. Za izradu dijagrama ER i generiranje relacijske sheme je korišten besplatan online alat ERDplus (https://erdplus.com/) koji je korišten i u sklopu predmeta Baze podataka. 
-		
-		
-		
-		\subsection{Glavne komponente baze podataka}
-		Baza podataka sastoji se od sljedećih entiteta:
-		
-		\begin{itemize}
-			\item \textbf{Korisnik} \hspace{0.15cm}\textit{Korisnicko\_ime}, \textit{Lozinka}, \textit{Ime}, \textit{Prezime}, \textit{Slika\_osobne}, \textit{IBAN}, \textit{email}, \textit{Uloga}, \textit{stanjeNaRacunu}, \textit{potvrdenVoditelj}, \textit{verificiranKorisnik})
-			
-			
-			\item \textbf{ParkiralisteAutomobili} (\textit{fotografija}, \textit{Naziv}, \textit{Opis}, \textit{CijenaPoSatu}, \textit{ParkiralisteId}) 
-			
-			\item \textbf{Parking\_mjesto} (\textit{identifikacija}, \textit{Oznaka}, \textit{Slobodno}, \textit{Dostupno}, \textit{ParkiralisteId})
-			
-			\item \textbf{Voditelj} (\textit{korisnickoIme}, \textit{ParkiralisteId})
-			
-			\item \textbf{Rezervacija} (\textit{RezervacijaID}, \textit{cijena}, \textit{pocetakRezervacije}, \textit{krajRezervacije}, \textit{RRule}, \textit{KorisnickoIme}, \textit{Identifikacija})
-			
-			\item \textbf{BicikliMjesto} (\textit{identifikacija}, \textit{BrojMjesta}, \textit{duljina}, \textit{sirina})
-		\end{itemize}
-		
-		
-		
-			\subsection{Opis tablica}
-			
 
-				
-			
-				
-			\textbf{Korisnik:} sadržava sve bitne informacije o registriranim korisnicima u sustavu. Sadrži atribute: ID korisnika, korisničko ime, lozinka, ime, prezime, slika osobne iskaznice, IBAN, email, uloga (enum za 'klijent', 'voditelj', 'administrator') i stanje na računu. Također sadrži dodatne atribute putem kojih pratimo je li korisnik verificirao e-mail (verificiranKorisnik) te, u slučaju uloge=voditelj, je li potvrđen od strane administratora (potvrdenVoditelj). Ovaj entitet je preko korisnickogImena u vezi One-to-Many s entitetom Rezervacija i u One-to-One vezi s entitetom Voditelj.
-				\begin{longtblr}[
-					label=none,
-					entry=none,
-					]{
-						width = \textwidth,
-						colspec={|X[9,l]|X[5,l]|X[20, l]|},
-						rowhead = 1,
-					}
-					\hline \SetCell[c=3]{c}{\textbf{Korisnik}} \\ \hline[3pt]	
-					\SetCell{LightGreen} KorisničkoIme & VARCHAR & Jedinstveno korisničko ime \\ \hline
-					email & VARCHAR & Email korisnika\\ \hline
-					lozinka & VARCHAR & Hash lozinke dobiven s Bcrypt encoderom\\ \hline
-					Ime & VARCHAR & Ime korisnika\\ \hline
-					Prezime & VARCHAR & Prezime korisnika\\ \hline
-					IBAN & VARCHAR &  IBAN korisnika\\ \hline
-					slikaOsobne & BYTEA & Byte array slike osobne iskaznice\\ \hline
-					Uloga & INT & Enum koji označava ulogu korisnika ('klijent', 'voditelj', 'administrator')\\ \hline
-					stanjeNaRacunu & NUMERIC & Decimalni broj koji označava koliko novaca se nalazi u novčaniku \\ \hline
-					potvrdenVoditelj & BOOLEAN & Označava je li voditelj potvrđen od strane admina. \\ \hline
-					verificiranKorisnik & BOOLEAN & Je li korisnik verificiran preko emaila? \\ \hline
-				
-				\end{longtblr}
-				
-				
-				
-				\noindent\textbf{ParkiralisteAutomobili:} sadrži ključne informacije vezane za parkirališta automobila. Sadrži atribute koje postavlja voditelj parkirališta: fotografija, naziv, opis i cijena po satu. Uz to sadrži i ID parkirališta. Ovaj entitet je u vezi One-to-One s entitetom voditelj putem ID-a parkirališta i One-to-Many vezi s ParkingMjesto preko ID-a parkirališta.
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
-						rowhead = 1,
-					}
-					\hline \SetCell[c=3]{c}{\textbf{ParkiralisteAutomobili}} \\ \hline[3pt]
-					\SetCell{LightGreen}ParkiralisteId & INT & Jedinstveni identifikator parkirališta\\ \hline
-					fotografija & BYTEA & Slika parkirališta koju voditelj može priložiti\\ \hline
-					Naziv & VARCHAR & Naziv parkirališta\\ \hline
-					Opis & VARCHAR & Opis parkirališta\\ \hline
-					CijenaPoSatu & NUMERIC & Cijena po satu koju definira voditelj parkirališta\\ \hline
-				
-				\end{longtblr}
-				
-				\noindent\textbf{Parking\_mjesto:} predstavlja informacije o pojedinačnim parkirnim mjestima unutar parkirališta za automobile. U ovu tablicu ćemo unijeti početne informacije o mjestima za automobile koje smo dobili od overpass API-ja.  Sadrži atribute kao što su identifikacija i koordinate (duljina, širina) koje ćemo dobiti pozivom overpassAPI-a. (@id i "coordinates" iz GeoJSON-a dobivenog pozivom overpassAPI-a), oznaka parkirnog mjesta, informacija o dostupnosti koju postavlja voditelj i slobodnom statusu parkirnog mjesta te ID parkirališta kojem pripada. U U vezi je Many-to-One s entitetom "ParkirališteAutomobili" putem ID-a parkirališta i One-to-many s entitetom Rezervacija putem identifikacije parking mjesta.
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
-						rowhead = 1,
-					}
-					\hline \SetCell[c=3]{c}{\textbf{Parking\_mjesto}} \\ \hline[3pt]
-					\SetCell{LightGreen}identifikacija & VARCHAR & Identifikacija mjesta koje generira overpassAPI koji generira overpassAPI. \newline Npr. "node/11310562209" \\ \hline
-					Oznaka & VARCHAR & Oznaka ili broj parkirnog mjesta\\ \hline
-					Duljina & NUMERICAL & Označuje duljinu (longitude) \\ \hline
-					Sirina & NUMERICAL & Označuje širinu (longitude)\\ \hline
-					Slobodno & BOOLEAN & Je li mjesto slobodno ili nije\\ \hline
-					Dostupno & BOOLEAN & Je li voditelj učinio mjesto dostupnim\\ \hline
-					\SetCell{LightBlue}ParkiralisteId & INT & Jedinstveni identifikator parkirališta \newline (ParkiralisteAutomobili.ParkiralisteID)\\ \hline
-				
-				\end{longtblr}
-				
-				\noindent\textbf{Voditelj:} sadrži informacije o voditeljima parkirališta. Povezuje voditelja sa parkiralištem. Ima vezu s One-to-one s entitetima Korisnik i ParkirališteAutomobila.
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
-						rowhead = 1,
-					}
-					\hline \SetCell[c=3]{c}{\textbf{Voditelj}} \\ \hline[3pt]
-					
-					\SetCell{LightBlue}korisnickoIme & VARCHAR & Jedinstveno korisničko ime \\ \hline
-					\SetCell{LightBlue}ParkiralisteId & INT & Jedinstven ID parkinga \newline(ParkiralisteAutomobili.ParkiralisteID)\\ \hline
-				\end{longtblr}
-				
-				\noindent\textbf{Rezervacija:} sadrži informacije o parking rezervacijama koje su napravili korisnici. Uz cijenu i timestampe za pocetak i kraj rezervacije sadrži i string (TEXT) RRule kojim se definira učestalost ponavljanja rezervacije. Taj string se može parsirati pa generirati instance ponavljućih rezervacija. Ovaj entitet ima vezu Many-to-One s entitetom Korisnik putem jedinstvenog korisničkog imena. Također, ima vezu Many-to-One s entitetom "ParkingMjesto" putem lokacije parkirnog mjesta.
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[9,l]|X[6,l]|X[19, l]|},  % Adjust the width for the second column
-						rowhead = 1,
-					}
-					\hline \SetCell[c=3]{c}{\textbf{Rezervacija}} \\ \hline[3pt]
-					\SetCell{LightGreen}RezervacijaID & INT & Jedistven identifikator rezervacije\\ \hline
-					Cijena & NUMERIC & Ukupna cijena rezervacije\\ \hline
-					pocetakRezervacije & TIMESTAMP & Jedinstveni identifikator rezervacije \\ \hline
-					krajRezervacije & TIMESTAMP & Ukupna cijena rezervacije\\ \hline
-					RRule & TEXT & String koji će definirati učestalost ponavljanja rezervacije na osnovi formata iCalendar (RFC 5545) (ako je NULL onda je jednokratna)\\ \hline
-					\SetCell{LightBlue}korisnickoIme & INT & Jedinstveno korisničko ime\\ \hline
-					\SetCell{LightBlue}identifikacija & INT & Jedinstven identifikator parkirnog mjesta \newline \newline\\ \hline
-				\end{longtblr}
-				
-				\noindent\textbf{BicikliParking:} unosimo početne informacije o biciklističkim mjestima. Pošto se parkirališta za bicikle ne mogu rezervirati niti se naplaćuju, ovaj entitet je odvojen od ostatka sustava. Sadrži atribute: koordinate (širina i duljina) te identifikaciju koje dobivamo pozivom overpassAPI-ja. Duljina je prva vrijednost, a širina druga vrijednost u coordinates arrayu. \\ Npr. "coordinates": [16.0166069 (duljina), 45.8387721 (sirina)]
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[9,l]|X[6,l]|X[19, l]|},  % Adjust the width for the second column
-						rowhead = 1,
-					}
-					\hline \SetCell[c=3]{c}{\textbf{BicikliParking}} \\ \hline[3pt]
-					\SetCell{LightGreen}identifikacija & VARCHAR & Jedistven identifikator mjesta (@id iz GeoJSON-a)\\ \hline
-					brojMjesta & INT & Broj dostupnih mjesta na parkingu za bicikle\\ \hline
-					duljina & NUMERICAL & (longitude) prva vrijednost u "coordinates" nizu\\ \hline
-					sirina & NUMERICAL & (latitude) druga vrijednost u "coordinates nizu"\\ \hline
-					
-					
-				\end{longtblr}
-				
-				\subsection{Dijagram baze podataka}
-				\begin{figure}[H]
-					\includegraphics[width=\textwidth]{slike/erldiagram.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
-					\centering
-					\caption{E-R dijagram baze podataka}
-					\label{fig:erldijagram}
-				\end{figure}
-				
-				\begin{figure}[H]
-					\includegraphics[scale=0.7]{slike/rlcdiagram.PNG} %veličina u odnosu na širinu linije
-					\caption{Relacijska shema}
-					\label{fig:relshema} %label mora biti drugaciji za svaku sliku
-				\end{figure}
-				
-				
-				
-				
-				
-			
-			
-			
-			
-			
-			\eject
-			
-			
-		\section{Dijagram razreda}
-		
-			\begin{figure}[H]
-				\includegraphics[width=\textwidth]{slike/dijagram_razred1.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
-				\centering
-				\caption{Dijagram razreda}
-%				\label{fig:dijagramrazreda1}
-			\end{figure}
-			
-			\begin{figure}[H]
-				\includegraphics[width=\textwidth]{slike/dijagram_razred2.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
-				\centering
-				\caption{Dijagram razreda}
-				\label{fig:dijagramrazreda2}
-			\end{figure}
-			
-			\begin{figure}[H]
-				\includegraphics[width=\textwidth]{slike/dijagram_razred3.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
-				\centering
-				\caption{Dijagram razreda}
-				\label{fig:dijagramrazreda3}
-			\end{figure}
-			
-			
-			
-			\eject
-		
-		\section{Dijagram stanja}
-			
-			
-			\textbf{\textit{dio 2. revizije}}\\
-			
-			\textit{Potrebno je priložiti dijagram stanja i opisati ga. Dovoljan je jedan dijagram stanja koji prikazuje \textbf{značajan dio funkcionalnosti} sustava. Na primjer, stanja korisničkog sučelja i tijek korištenja neke ključne funkcionalnosti jesu značajan dio sustava, a registracija i prijava nisu. }
-			
-			
-			\eject 
-		
-		\section{Dijagram aktivnosti}
-			
-			\textbf{\textit{dio 2. revizije}}\\
-			
-			 \textit{Potrebno je priložiti dijagram aktivnosti s pripadajućim opisom. Dijagram aktivnosti treba prikazivati značajan dio sustava.}
-			
-			\eject
-		\section{Dijagram komponenti}
-		
-			\textbf{\textit{dio 2. revizije}}\\
-		
+
+\subsection{Opis tablica}
+
+
+
+
+
+\textbf{User:} sadržava sve bitne informacije o registriranim korisnicima u sustavu. Sadrži atribute: id, email, username, password, name, lastName, IBAN, photo, role, walletBalance, approved, verified, verificationToken. Također sadrži dodatne atribute putem kojih pratimo je li korisnik verificirao e-mail (verified) te, u slučaju
+role=voditelj, je li potvrđen od strane administratora (approved).
+Ovaj entitet je preko korisničkog identifikatora u One-to-Many vezi s entitetom Rezervacija i u One-to-One vezi s entitetom Voditelj.
+
+\begin{longtblr}[
+	label=none,
+	entry=none,
+	]{
+		width = \textwidth,
+		colspec={|X[9,l]|X[5,l]|X[20, l]|},
+		rowhead = 1,
+	}
+	\hline \SetCell[c=3]{c}{\textbf{User}} \\ \hline[3pt]	
+	\SetCell{LightGreen} id & INT & Jedinstveno korisničko ime \\ \hline
+	email & VARCHAR & Email korisnika\\ \hline
+	username & VARCHAR & Korisničko ime\\ \hline
+	password & VARCHAR & Hash lozinke dobiven s Bcrypt encoderom\\ \hline
+	name & VARCHAR & Ime korisnika\\ \hline
+	lastName & VARCHAR & Prezime korisnika\\ \hline
+	IBAN & VARCHAR &  IBAN korisnika\\ \hline
+	photo & BYTEA & Byte array slike osobne iskaznice\\ \hline
+	role & INT & Enum koji označava ulogu korisnika ('klijent', 'voditelj', 'administrator')\\ \hline
+	walletBalance & NUMERIC & Decimalni broj koji označava koliko novaca se nalazi u novčaniku \\ \hline
+	approved & BOOLEAN & Označava je li voditelj potvrđen od strane admina. \\ \hline
+	verified & BOOLEAN & Je li korisnik verificiran preko emaila? \\ \hline
+	verificationToken & BOOLEAN & Token verifikacije \\ \hline
+	
+\end{longtblr}
+
+
+
+\noindent\textbf{Parking:} Parking: sadrži ključne informacije o parkiralištima. Sadrži atribute koje postavlja voditelj parkirališta: fotografija, naziv, opis i cijena po satu. Uz to sadrži i generiran ID parkirališta. Ovaj entitet je u vezi Many-to-One s entitetom voditelj putem ID-a voditelja i u One-to-Many vezi s ParkingSpotom preko ID-a parkirališta.
+\begin{longtblr}[
+	label=none,
+	entry=none
+	]{
+		width = \textwidth,
+		colspec={|X[10,l]|X[6, l]|X[20, l]|}, 
+		rowhead = 1,
+	}
+	\hline \SetCell[c=3]{c}{\textbf{Parking}} \\ \hline[3pt]
+	\SetCell{LightGreen}parkingId & INT & Jedinstveni identifikator parkirališta\\ \hline
+	picture & BYTEA & Slika parkirališta koju voditelj može priložiti\\ \hline
+	parkingName & VARCHAR & Naziv parkirališta\\ \hline
+	parkingDescription & VARCHAR & Opis parkirališta\\ \hline
+	costPerHour & NUMERIC & Cijena po satu koju definira voditelj parkirališta\\ \hline
+	\SetCell{LightBlue} voditeljId  & INT & Jedinstveni identifikator voditelja parkirališta \\ \hline
+	
+\end{longtblr}
+
+\noindent\textbf{ParkingSpot:} ParkingSpot sadrži informacije o pojedinačnim parkirnim mjestima unutar parkirališta. U ovu tablicu ćemo unijeti početne informacije o mjestima za automobile koje smo dobili od Overpass API-ja. Ti atributi su id, centralne koordinate parkirališta (dužina, širina) i poligon. Također sadrži oznaku parkirališnog mjesta, informaciju o dostupnosti i mogućnosti rezervacije mjesta koje postavlja voditelj, te ID parkirališta kojemu pripada. U vezi je Many-to-One s entitetom "Parking" putem ID-a parkirališta i One-to-Many s entitetom Rezervacija putem identifikacije parkirališnog mjesta.
+
+\begin{longtblr}[
+	label=none,
+	entry=none
+	]{
+		width = \textwidth,
+		colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+		rowhead = 1,
+	}
+	\hline \SetCell[c=3]{c}{\textbf{ParkingSpot}} \\ \hline[3pt]
+	\SetCell{LightGreen}parkingSpotId & VARCHAR & Identifikacija mjesta koje generira overpassAPI koji generira overpassAPI. \newline Npr. "node/11310562209" \\ \hline
+	label & VARCHAR & Oznaka ili broj parkirališnog mjesta\\ \hline
+	longitude & NUMERICAL & Označuje duljinu  \\ \hline
+	latitude & NUMERICAL & Označuje širinu \\ \hline
+	reserveable & BOOLEAN & Je li mjesto slobodno ili nije\\ \hline
+	polygon & VARCHAR & Poligon parkirališnog mjesta\\ \hline
+	\SetCell{LightBlue}parkingId & INT & Jedinstveni identifikator parkirališta \newline (Parking.parkingId)\\ \hline
+	
+\end{longtblr}
+
+\noindent\textbf{Manager:} sadrži informacije o voditeljima parkirališta. Povezuje voditelja sa
+parkiralištem. Ima vezu One-to-One s entitetom Korisnik i One-to-Many s Parkingom.
+\begin{longtblr}[
+	label=none,
+	entry=none
+	]{
+		width = \textwidth,
+		colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+		rowhead = 1,
+	}
+	\hline \SetCell[c=3]{c}{\textbf{Manager}} \\ \hline[3pt]
+	
+	\SetCell{LightGreen}voditeljId & INT & Jedinstveni identifikator voditelja parkirališta \\ \hline
+	
+\end{longtblr}
+
+\noindent\textbf{Reservation:} sadrži sve rezervacije koje su napravili korisnici. Ovaj entitet
+ima vezu Many-to-One s entitetom Korisnik putem korisničkog identifikatora. Također, ima vezu Many-to-One s entitetom ”ParkingSpot” putem lokacije parkirnog mjesta.
+\begin{longtblr}[
+	label=none,
+	entry=none
+	]{
+		width = \textwidth,
+		colspec={|X[9,l]|X[6,l]|X[19, l]|},  % Adjust the width for the second column
+		rowhead = 1,
+	}
+	\hline \SetCell[c=3]{c}{\textbf{Reservation}} \\ \hline[3pt]
+	\SetCell{LightGreen}reservationId & INT & Jedistven identifikator rezervacije\\ \hline
+	duration & INT & Trajanje rezervacije\\ \hline
+	reservationStart & TIMESTAMP & Početak rezervacije \\ \hline
+	reservationEnd & TIMESTAMP & Kraj rezervacije\\ \hline
+	\SetCell{LightBlue}korisnikId & INT & Jedinstveno korisničko ime\\ \hline
+	\SetCell{LightBlue}parkingSpotId & VARCHAR & Jedinstven identifikator parkirališnog mjesta \newline \newline\\ \hline
+\end{longtblr}
+
+\noindent\textbf{BicycleParking:} sadrži atribute koje dobivamo pozivom overpassAPI-a: (id, koordinate, broj dostupnih mjesta) te identifikator parkirališta kojem pripada. U Many-to-One vezi je s Parkingom preko identifikatora parkirališta.
+
+\begin{longtblr}[
+	label=none,
+	entry=none
+	]{
+		width = \textwidth,
+		colspec={|X[9,l]|X[6,l]|X[19, l]|},  % Adjust the width for the second column
+		rowhead = 1,
+	}
+	\hline \SetCell[c=3]{c}{\textbf{BicycleParking}} \\ \hline[3pt]
+	\SetCell{LightGreen}bicycleId & INT & Jedistven identifikator parkirališnog mjesta za bicikle\\\hline
+	numberOfSpots & INT & Broj dostupnih mjesta na parkingu za bicikle\\ \hline
+	longitude & NUMERICAL & Označuje duljinu\\ \hline
+	latitude & NUMERICAL & Označuje širinu\\ \hline
+	polygon & VARCHAR & Poligon parkirališnog mjesta\\ \hline
+	\SetCell{LightBlue}parkingId & INT & Jedinstven identifikator parkirališta \\ \hline
+	
+	
+\end{longtblr}
+
+\subsection{Dijagram baze podataka}
+
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/baza_podataka.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{E-R dijagram baze podataka}
+	%				\label{fig:dijagramrazreda1}
+\end{figure}
+
+
+
+
+
+
+
+
+\eject
+
+
+\section{Dijagram razreda}
+
+Na slikama 4.3, 4.4, 4.5, 4.6, 4.7, i 4.8 su prikazani razredi koji pripadaju backend dijelu MVC
+arhitekture.
+Servisi obično predstavljaju logiku poslovanja (business logic) vaše aplikacije. To su komponente koje obavljaju specifične zadatke ili operacije, a ne direktno vezane za obradu HTTP zahtjeva. Na primjer, servis za korisnike može sadržavati logiku za registraciju, prijavu, promjenu lozinke i slično. Servisi se često koriste kako bi se izdvojila poslovna logika iz kontrolera i omogućila ponovna upotreba koda.
+Modeli predstavljaju podatke vaše aplikacije. Ovi podaci se često mapiraju na bazu podataka. Na primjer, ako imate entitet "Korisnik", model bi predstavljao strukturu podataka koja opisuje korisnika, uključujući atribute kao što su ime, prezime, e-mail adresa, itd.
+DTO-ovi su objekti koji se koriste za prijenos podataka između različitih slojeva aplikacije. Na primjer, kada želite prenijeti podatke iz kontrolera do servisa ili obrnuto, koristit ćete DTO-ove kako biste definirali strukturu podataka koja će se prenositi. Ovo može pomoći u smanjenju količine podataka koja se prenosi, poboljšava čitljivost koda i omogućava bolju kontrolu nad tim koji se podaci šalju.
+Kontroleri su odgovorni za obradu HTTP zahtjeva i komunikaciju s korisničkim sučeljem (frontend). Kontroleri često koriste servise kako bi dobili podatke i obavili određene akcije.
+
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/controllers.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - Controllers}
+	%				\label{fig:dijagramrazreda1}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/dto.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - Data transfer objects}
+	\label{fig:dijagramrazreda2}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/response.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - Response}
+	\label{fig:dijagramrazreda2}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/request.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - Request}
+	\label{fig:dijagramrazreda2}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/models.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - Models}
+	\label{fig:dijagramrazreda2}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/services.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - Service}
+	\label{fig:dijagramrazreda2}
+\end{figure}
+
+
+
+
+
+
+\eject
+
+\section{Dijagram stanja}
+
+UML-dijagram stanja (engl. state machine diagram) je ponašajni UML-dijagram kojim se prikazuje
+diskretno ponašanje objekta ili sustava putem prelazaka izmedu konačnog broja stanja.
+Ova vrsta dijagrama se koristi za modeliranje ponašanja entiteta tijekom vremena, naglašavajući
+odgovor na događaje i okidače. Na slici 4.6 prikazan je dijagram stanja za klijenta, odnosno registriranog korisnika. Nakon prijave, korisniku se prikazuje početna stranica na kojoj može vidjeti vlastite rezervacije. Klijent može pregledavati kartu u stvarnom vremenu te klikom označiti parkirališna mjesta koja ga zanimaju te zatim vidjeti prikaz dostupnih termina za ta parkirališna mjesta. Za klijenta postoji i opcija da prvo odabere termin klikom na odgovarajući termin te zatim bira željena parkirališna mjesta. U slučaju da želi pronaći najbliže parkirališno mjesto, klijent može unijeti odredište, tip vozila i procijenjeno vrijeme trajanja parkinga te će mu aplikacija na karti iscrtati rutu do najbližeg parkirališnog mjesta. Nakon uspješnog plaćanja klijent može vidjeti svoju rezervaciju te ostale rezervacije na početnoj stranici. Klijent u svakom trenutku ima mogućnost pregleda stanja novčanika klikom na "Novčanik" te može po potrebi dodavati sredstva. Klikom na "Osobni podatci" klijent može pregledavati i uređivati osobne podatke ili odabrati opciju brisanja računa.
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/dijagram_stanja.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram stanja}
+	\label{fig:dijagramstanja}
+\end{figure}
+
+
+\eject 
+
+\section{Dijagram aktivnosti}
+
+UML-dijagrami aktivnosti (engl. activity diagrams) su ponašajni UML-dijagrami koji se u programskom inženjerstvu upotrebljavaju za modeliranje i grafički prikaz dinamičkog ponašanja sustava. 
+Na njima je prikazano izvođenje aktivnosti kroz niz akcija koje čine upravljačke tokove i tokove objekata. Pokretanje neke akcije uvjetovano je završetkom jedne ili više prethodnih akcija ili dostupnošću objekata i podataka. Registrirani korisnik se prijavljuje u sustav te otvara kartu koja mu prikazuje parkirališna mjesta te informacije o njihovoj zauzetosti. Klijent odabire odredište, tip vozila i trajanje parkinga nakon čega mu aplikacija na karti iscrtava rutu do najbližeg parkirališnog mjesta. Ako je zadovoljan mjestom, klijent stvara i plaća rezervaciju čime ona postaje aktivnom.
+
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth, height=\textwidth]{slike/dijagram_aktivnosti.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram aktivnosti}
+	\label{fig:dijagramaktivnosti}
+\end{figure}
+
+
+\eject 
+
+
+\section{Dijagram komponenti}
+
+UML-dijagrami komponenti (engl. component diagrams) su vrsta strukturnih UML-dijagrama koji
+prikazuju organizaciju i odnose komponenti koje čine programsku potporu. Pružaju vizualni prikaz 
+arhitekture sustava, naglašavajući modularnu strukturu i interakcije između komponenti. Sustavu se pristupa preko
+dva različita sučelja. Preko sučelja za dohvat HTML, CSS i JS datoteka poslužuju se 
+datoteke koje pripadaju \textit{frontend} dijelu aplikacije. Komponenta \textit{Ruter} na
+upit s url određuje koja datoteka će se poslužiti na sučelje, odnosno prikazati korisniku. \textit{Frontend} dio se sastoji od niza JavaScript datoteka koje su raspoređene u logičke cjeline nazvane po tipovima dijelova aplikacije koje prikazuju, odnosno po aktorima koji tim dijelovima aplikacije pristupaju. Sve JavaScript datoteke ovise o React biblioteci iz
+koje dohvaćaju gotove komponente kao što su gumbi, forme, stil, obavijesti, tablice, itd. Preko sučelja za dohvat JSON podataka pristupa se Overpass API komponenti. Overpass API poslužuje 
+podatke koji pripadaju backend dijelu aplikacije. EF Jezgra zadužena je za dohvaćanje tablica iz baze podataka pomoću SQL upita. Podaci koji su pristigli iz baze se šalju dalje MVC arhitekturi u obliku DTO (Data transfer object).  Web poslužitelj komponenta preko dostupnih sučelja komunicira sa SpotPicker web aplikacijom te ovisno o korisnikovim akcijama osvježava prikaz i dohvaća nove podatke ili datoteke.
+
+\vspace{10cm}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{slike/dijagram_komponenti.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram komponenti}
+	\label{fig:dijagramaktivnosti}
+\end{figure}
+
+
+\eject 
+
