@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +37,11 @@ public class ParkingSpotService {
 //        return false;
 //    }
     public boolean getParkingSpotAvailability(String parkingSpotId) {
-        return reservationService.canParkingSpotBeReserved(parkingSpotId, LocalDateTime.now(), LocalDateTime.now());
+        ZoneId cetZone = ZoneId.of("CET");
+        ZonedDateTime zonedDateTime = LocalDateTime.now().atZone(cetZone);
+
+        LocalDateTime localDateTimeCET = zonedDateTime.toLocalDateTime();
+        return reservationService.canParkingSpotBeReserved(parkingSpotId, localDateTimeCET, localDateTimeCET);
 
     }
 

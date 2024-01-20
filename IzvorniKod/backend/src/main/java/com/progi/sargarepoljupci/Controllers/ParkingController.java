@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,7 +114,11 @@ public class ParkingController {
 
     @GetMapping("/occupied")
     public List<ParkingSpotResponse> getOccupiedParkingSpots() {
-        List<ParkingSpot> parkingSpots = reservationService.findReservedParkingSpotsForTimeSlot(LocalDateTime.now(), LocalDateTime.now());
+        ZoneId cetZone = ZoneId.of("CET");
+        ZonedDateTime zonedDateTime = LocalDateTime.now().atZone(cetZone);
+
+        LocalDateTime localDateTimeCET = zonedDateTime.toLocalDateTime();
+        List<ParkingSpot> parkingSpots = reservationService.findReservedParkingSpotsForTimeSlot(localDateTimeCET, localDateTimeCET);
         List<ParkingSpotResponse> parkingSpotRequests = new ArrayList<>();
 
         for (ParkingSpot parkingSpot : parkingSpots) {
@@ -125,7 +131,11 @@ public class ParkingController {
     // Endpoint to get unoccupied parking spots
     @GetMapping("/unoccupied")
     public List<ParkingSpotResponse> getUnoccupiedParkingSpots() {
-        List<ParkingSpot> parkingSpots = reservationService.findAvailableParkingSpotsForTimeSlot(LocalDateTime.now(), LocalDateTime.now());
+        ZoneId cetZone = ZoneId.of("CET");
+        ZonedDateTime zonedDateTime = LocalDateTime.now().atZone(cetZone);
+
+        LocalDateTime localDateTimeCET = zonedDateTime.toLocalDateTime();
+        List<ParkingSpot> parkingSpots = reservationService.findAvailableParkingSpotsForTimeSlot(localDateTimeCET, localDateTimeCET);
         List<ParkingSpotResponse> parkingSpotRequests = new ArrayList<>();
 
         for (ParkingSpot parkingSpot : parkingSpots) {
