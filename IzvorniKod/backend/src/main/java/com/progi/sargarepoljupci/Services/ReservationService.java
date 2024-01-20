@@ -142,7 +142,7 @@ public class ReservationService {
         for (TimeSlot timeSlot : timeSlots) {
             //Check if the parking spot is reservable for the current time slot
             // ovdje trebam round downat startingTime na 30 min
-            timeSlot.setStartTime(roundToClosest30Minutes(timeSlot.getStartTime()));
+            timeSlot.setStartTime(timeSlot.getStartTime());
             boolean isReservable = canParkingSpotBeReserved(parkingSpotId, timeSlot.getStartTime(), timeSlot.getEndTime());
 
 

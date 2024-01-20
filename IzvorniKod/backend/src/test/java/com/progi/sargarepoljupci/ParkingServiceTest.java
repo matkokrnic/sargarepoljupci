@@ -4,7 +4,6 @@ import com.progi.sargarepoljupci.DTO.Request.MarkParkingRequest;
 import com.progi.sargarepoljupci.Exceptions.RequestDeniedException;
 import com.progi.sargarepoljupci.Models.Parking;
 import com.progi.sargarepoljupci.Models.ParkingSpot;
-import com.progi.sargarepoljupci.Repository.BicycleRepository;
 import com.progi.sargarepoljupci.Repository.ParkingRepository;
 import com.progi.sargarepoljupci.Repository.ParkingSpotRepository;
 import com.progi.sargarepoljupci.Services.ParkingService;
@@ -35,8 +34,6 @@ public class ParkingServiceTest {
     @Mock
     private ParkingSpotRepository parkingSpotRepository;
 
-    @Mock
-    private BicycleRepository bicycleRepository;
 
     @InjectMocks
     private ParkingService parkingService;
@@ -93,6 +90,47 @@ public class ParkingServiceTest {
         verify(parkingSpotRepository, never()).save(any(ParkingSpot.class));
 
         assertEquals("Parking with that id doesn't exist", exception.getMessage());
+
+    }
+    @Test
+    public void markSpotsSomeFoundSomeNot() {
+        Long parkingId = 1L;
+        String parkingSpotId = "2";
+        String parkingSpotId2 = "3";
+
+        ParkingSpotReservable reservable = new ParkingSpotReservable();
+        reservable.setReservable(true);
+        reservable.setSpotId(parkingSpotId);
+
+        ParkingSpotReservable reservable2 = new ParkingSpotReservable();
+        reservable2.setReservable(true);
+        reservable2.setSpotId(parkingSpotId2);
+
+        Parking parking = new Parking();
+        parking.setParkingId(parkingId);
+
+        ParkingSpot parkingSpot = new ParkingSpot();
+        parkingSpot.setId(parkingSpotId);
+
+        ParkingSpot parkingSpot2 = new ParkingSpot();
+        parkingSpot2.setId(parkingSpotId2);
+        parkingSpot2.setParking(parking);
+
+        MarkParkingRequest request = new MarkParkingRequest();
+        request.setParkingId(parkingId);
+        request.setParkingSpotReservableList(Arrays.asList(reservable,reservable2));
+
+        when(parkingRepository.findById(parkingId)).thenReturn(Optional.of(parking));
+        when(parkingSpotRepository.findById(parkingSpotId)).thenReturn(Optional.of(parkingSpot));
+        when(parkingSpotRepository.findById(parkingSpotId2)).thenReturn(Optional.of(parkingSpot2));
+
+        List<ParkingSpotReservable> unmarkableParkingSpots = parkingService.markSpots(request);
+
+        verify(parkingRepository, times(1)).findById(parkingId);
+        verify(parkingSpotRepository, times(1)).findById(parkingSpotId);
+        verify(parkingSpotRepository, times(1)).save(any(ParkingSpot.class));
+
+        assertNotNull(unmarkableParkingSpots, "Return value should be unmarkedParking spots");
 
     }
 

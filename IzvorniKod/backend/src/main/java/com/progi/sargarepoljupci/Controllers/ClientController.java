@@ -72,7 +72,6 @@ public class ClientController {
                 throw new RequestDeniedException("There's no available bicycle parking");
             return ResponseEntity.ok(new NearestBicycleSpotResponse(nearest.getFirst(), nearest.getSecond(), bicycleParking.getBicycle_id(), bicycleParking.getNumAvailableSpots()));
         }
-        currentTime = reservationService.roundToClosest30Minutes(currentTime);
        Pair<Double, Double> nearestCoordinates = parkingService.findNearestAvailableParking(destination, currentTime);
         // provjeriti je li rezervirano mjesto, prvo nadjemo mjesto
        var parkingSpot = parkingSpotService.findByLongitudeAndLatitude(nearestCoordinates.getFirst(), nearestCoordinates.getSecond());
